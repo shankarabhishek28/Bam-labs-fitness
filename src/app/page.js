@@ -1,101 +1,42 @@
-import Image from "next/image";
+"use client";
+import { EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { InputWithLabel } from "@/components/ui/InputWithLabel";
+import ButtonWithLoader from "@/components/ui/ButtonWithLoader";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const router = useRouter();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+  const handleChange = () => {
+    // Handle input changes if needed
+  };
+
+  const handleLogin = () => {
+    router.push("/user-management");
+  };
+
+  return (
+    <div className="flex h-screen flex-col items-center justify-center relative">
+      <div className="absolute inset-0 z-0 bg-cover bg-center" style={{ backgroundImage: `url("/loginbg.jpg")` }}></div>
+
+      <div className="bg-white w-[454px] h-fit  px-8 py-8 pb-10 rounded-[32px] z-10 shadow-xl relative">
+        <div className="flex justify-center font-semibold text-lg w-full">BAM fitness</div>
+        <div className="flex justify-center font-semibold text-sm w-full">(Admin Panel)</div>
+
+
+        <form className="flex flex-col gap-4 mt-10">
+          <div className="font-semibold text-lg w-full">Sign In</div>
+          <InputWithLabel onChange={handleChange} className='w-100' name="email" type="email" placeholder="Enter your email" required />
+          <InputWithLabel onChange={handleChange} name="password" type="password" placeholder="Enter your password" iconType="post">
+            <EyeOff />
+          </InputWithLabel>
+
+          <p className="text-sm text-primary underline text-end cursor-pointer mt-2">Forgot Password?</p>
+          <ButtonWithLoader className='rounded-md py-6' loading={false} onClick={handleLogin}>
+            Sign In
+          </ButtonWithLoader>
+        </form>
+      </div>
     </div>
   );
 }
