@@ -1,11 +1,14 @@
 'use client'
 import React from 'react';
-import VideoCard from '@/components/ContentManagement/VideoCard';
-import FilterIcon from '../../../../../../public/Icons/FilterIcon';
+
 import { Button } from '@/components/ui/button';
 import { InputWithLabel } from '@/components/ui/InputWithLabel';
 import { ChevronLeft, Plus, SearchIcon } from 'lucide-react';
 import Link from 'next/link';
+import ExcerciseTable from '@/components/ContentManagement/ExerciseTable';
+import { content } from '@/app/DummyData/Content';
+import { workoutData } from '@/app/DummyData/ExerciseData';
+import Muscle from '../../../../../../public/Icons/Muscle';
 
 const page = () => {
     const exercises = [
@@ -51,7 +54,8 @@ const page = () => {
                         </Button>
                     </Link>
                 </div>
-                <div className="flex items-center gap-4">
+
+                {/* <div className="flex items-center gap-4">
                     <InputWithLabel
                         placeholder="Search"
                         className="text-zinc-500 w-[300px] rounded-[8px] focus:border"
@@ -69,13 +73,28 @@ const page = () => {
 
                     </div>
 
-                </div>
+                </div> */}
 
 
 
 
             </div>
-            <div className="flex  flex-wrap gap-4 justify-start mt-6">
+            <div>
+                {workoutData.map((item, index) => (
+                    <div key={index} className="mb-8">
+                        {/* Render Muscle as a Heading */}
+                        <div className='flex items-center mb-2 gap-2'>
+                            <Muscle />
+                            <h2 className="text-lg font-semibold text-[#454545] ">{item?.muscle}</h2>
+                        </div>
+
+                        <hr className="h-[0.3px] bg-black border-0 mt-0 mb-4" />
+                        {/* Render ExerciseTable with item.excercises */}
+                        <ExcerciseTable data={item?.exercises} />
+                    </div>
+                ))}
+            </div>
+            {/* <div className="flex  flex-wrap gap-4 justify-start mt-6">
 
                 {exercises.map((exercise) => (
                     <VideoCard
@@ -89,7 +108,7 @@ const page = () => {
                         onView={() => handleView(exercise.id)}
                     />
                 ))}
-            </div>
+            </div> */}
         </div>
     );
 };

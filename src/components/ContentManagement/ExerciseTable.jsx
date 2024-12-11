@@ -8,19 +8,19 @@ import {
     TableHeader,
     TableRow,
 } from "../ui/table";
-import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown, Eye, Ban, SearchIcon, Filter, Delete, Trash2, Pencil } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown, Eye, Ban, SearchIcon, Filter, Delete, Trash2, Pencil, EyeIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 
 
-const ContentTable = ({ data }) => {
-
+const ExcerciseTable = ({ data }) => {
+    console.log("data",data)
 
     return (
         <div className="pt-2 ">
 
-            <Table className="min-w-full overflow-x-auto border border-b">
-                <TableHeader className="border-t-1">
+            <Table className="min-w-full overflow-x-auto border border-b rounded-lg">
+                <TableHeader className="border-t-1 rounded-t-lg">
                     <TableRow className="bg-primary hover:bg-liteOrange">
                         <TableHead className="text-white font-bold text-sm text-left">
                             Sr.no.
@@ -41,31 +41,31 @@ const ContentTable = ({ data }) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data.map((item, index) => (
+                    {data?.map((item, index) => (
                         <TableRow
                             key={index}
                             className="bg-white hover:bg-white cursor-pointer"
                         >
                             <TableCell className='flex min-w-[160px]  mt-1'>
                                 <span className="text-[#454545] font-semibold text-sm text-left truncate...">
-                                    {item.serial_num}
+                                    {item?.srNo}
                                 </span>
 
                             </TableCell>
                             <TableCell className='min-w-[140px] '>
                                 <span className="text-[#454545] font-normal text-sm text-left truncate...">
-                                    {item.content_name}
+                                    {item?.exerciseName}
                                 </span>
                             </TableCell>
 
                             <TableCell className='min-w-[140px]'>
                                 <span className="text-[#454545] font-normal  text-sm text-left truncate...">
-                                    {item.created_on}
+                                    {item?.createdOn}
                                 </span>
                             </TableCell>
                             <TableCell className='min-w-[140px]'>
                                 <span className="text-[#454545] font-normal  text-sm text-left truncate...">
-                                    {item.last_edited}
+                                    {item?.lastEdited}
                                 </span>
                             </TableCell>
 
@@ -75,10 +75,11 @@ const ContentTable = ({ data }) => {
                             <TableCell>
 
                                 <div className="flex items-center justify-start gap-8">
-                                    <Link href={`/content-management/${item.serial_num}`}>
-                                        <Button className=' px-2 h-8 text-[14px] flex gap-2 w-[90px]'>
-                                            <Pencil color="white" size={20} />Edit</Button></Link>
-                                    <Button className='px-2 h-8 text-[14px] flex gap-2 items-center w-[90px]'><Trash2 size={20} color="white" /> Delete</Button>
+                                <Button className='px-2 h-8 text-[14px] flex gap-2 items-center'><EyeIcon size={20} color="white" /></Button>
+                                    <Link href={`/content-management/edit-content`}>
+                                        <Button className=' px-2 h-8 text-[14px] flex gap-2'>
+                                            <Pencil color="white" size={20} /></Button></Link>
+                                    <Button className='px-2 h-8 text-[14px] flex gap-2 items-center'><Trash2 size={20} color="white" /></Button>
                                 </div>
 
                             </TableCell>
@@ -88,7 +89,7 @@ const ContentTable = ({ data }) => {
             </Table>
             <div className="flex items-center  bg-white p-3 justify-between">
                 {/* Entries Per Page */}
-                <div className="flex items-center">
+                {/* <div className="flex items-center">
                     <label htmlFor="entries" className="text-sm text-[#828282] mr-2">
                         Entries per page
                     </label>
@@ -102,10 +103,10 @@ const ContentTable = ({ data }) => {
                         <option value="20">20</option>
                         <option value="50">50</option>
                     </select>
-                </div>
+                </div> */}
 
                 {/* Page Navigation */}
-                <div className="flex items-center">
+                {/* <div className="flex items-center">
                     <button className="flex font-normal  items-center px-3 py-2 border border-gray-400 rounded-md mx-1 text-sm text-[#16161D] mr-4 hover:text-primary gap-2">
                         <ArrowLeft size={16} /> Previous
                     </button>
@@ -124,10 +125,10 @@ const ContentTable = ({ data }) => {
                     <button className="flex font-normal items-center px-3 py-2 border border-gray-400 rounded-md mx-1 text-sm text-[#16161D] ml-4 hover:text-primary gap-2">
                         Next <ArrowRight size={16} />{" "}
                     </button>
-                </div>
+                </div> */}
             </div>
         </div>
     );
 };
 
-export default ContentTable;
+export default ExcerciseTable;

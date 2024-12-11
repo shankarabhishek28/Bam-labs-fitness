@@ -47,10 +47,10 @@ const page = () => {
                 </div>
                 <div className="flex items-center gap-4">
 
-                    <Link href={'/content-management/add-content'} className="flex items-center justify-end mt-2">
+                    {/* <Link href={'/content-management/add-content'} className="flex items-center justify-end mt-2">
                         <Button className='gap-2'><Plus color='white' />New Content</Button>
 
-                    </Link>
+                    </Link> */}
                 </div>
 
 
