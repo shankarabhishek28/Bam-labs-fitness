@@ -67,7 +67,7 @@ const MetricsForm = () => {
                         <label className="flex-1 text-textColor">{metric}:</label>
                         <input
                             type="text"
-                            className="flex-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ml-2"
+                            className="flex-1 p-2 border rounded-md focus:outline-none focus:border-blue-500"
                             placeholder={`Enter ${metric.toLowerCase()}`}
                         />
                         <button onClick={() => removeMetric(metric)} className="text-red-500 hover:text-red-600 ml-2">

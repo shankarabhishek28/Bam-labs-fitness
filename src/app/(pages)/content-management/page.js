@@ -69,7 +69,7 @@ const page = () => {
                         <ExerciseCard
                             image="/push.png"
                             title="Lower Body"
-                            muscles={["Quadriceps", "Hamstrings", "Glutes"]}
+                            muscles={["Chest", "Shuolder", "Triceps"]}
                             updatedDaysAgo={3}
                         />
                         <ExerciseCard
