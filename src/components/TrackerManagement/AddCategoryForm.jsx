@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 
-export default function AddCategoryForm({ setMoveForward }) {
+export default function AddCategoryForm({ onSubmit }) {
     const [image, setImage] = useState(null);
     const [targetedMuscles, setTargetedMuscles] = useState(['']); // One input by default
 
@@ -81,14 +81,14 @@ export default function AddCategoryForm({ setMoveForward }) {
                 <div className="flex items-center gap-2 mb-2">
                     <button
                         onClick={removeMuscleInput}
-                        className="w-8 h-8 bg-blue-500 text-white rounded-md flex items-center justify-center"
+                        className="w-8 h-8 bg-primary text-white rounded-md flex items-center justify-center"
                     >
                         -
                     </button>
                     <span className="w-8 text-center">{targetedMuscles.length}</span>
                     <button
                         onClick={addMuscleInput}
-                        className="w-8 h-8 bg-blue-500 text-white rounded-md flex items-center justify-center"
+                        className="w-8 h-8 bg-primary text-white rounded-md flex items-center justify-center"
                     >
                         +
                     </button>
@@ -111,7 +111,7 @@ export default function AddCategoryForm({ setMoveForward }) {
             </div>
 
             {/* Submit Button */}
-            <button onClick={() => setMoveForward(true)} className="bg-blue-500 mt-4 text-white py-2 px-6 rounded-md w-1/4 hover:bg-blue-600">
+            <button onClick={() => onSubmit(targetedMuscles.length)} className="bg-primary mt-4 text-white py-2 px-6 rounded-md w-1/4 hover:bg-blue-600">
                 Continue
             </button>
         </div>

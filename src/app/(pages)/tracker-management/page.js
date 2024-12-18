@@ -3,11 +3,12 @@ import { Button } from '@/components/ui/button'
 import { Plus, SearchIcon } from 'lucide-react'
 import React from 'react'
 
-import Excercises from '@/components/TrackerManagement/Excercises'
+import Excercises from '@/components/TrackerManagement/Categories'
 import HabitsTable from '@/components/TrackerManagement/HabitsTable'
 import { habitsData } from '@/app/DummyData/Habits'
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
+import Categories from '@/components/TrackerManagement/Categories'
 
 const page = () => {
     const [activeTab, setActiveTab] = React.useState("Exercises");
@@ -66,7 +67,7 @@ const page = () => {
 
 
 
-            {activeTab === 'Exercises' && <Excercises />}
+            {activeTab === 'Exercises' && <Categories />}
             {activeTab === 'Habits' && <HabitsTable data={habitsData} />}
 
             {newHabit && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">

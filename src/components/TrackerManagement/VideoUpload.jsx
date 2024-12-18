@@ -20,7 +20,7 @@ const VideoUpload = () => {
   };
 
   return (
-    <div className="border-2 border-dashed h-full max-h-80 border-gray-300 rounded-md p-2 flex items-center justify-center text-gray-500 relative">
+    <div className="border-2 border-dashed h-full min-h-48 max-h-80  border-gray-300 rounded-md p-2 flex items-center justify-center text-gray-500 relative">
       {!video ? (
         <label className="cursor-pointer flex flex-col items-center">
           <input

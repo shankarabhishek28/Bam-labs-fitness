@@ -1,9 +1,12 @@
 import React from 'react';
 import DotIcon from '../../../public/Icons/DotIcon';
-import { Replace, SearchIcon, Trash2 } from 'lucide-react';
+import { PencilIcon, Replace, SearchIcon, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
+import { useRouter } from 'next/navigation';
 
-const ExerciseCard = ({ imageUrl, title, muscleGroups, onDelete, onReplace }) => {
+const CategoryCard = ({ imageUrl, title, muscleGroups, onDelete }) => {
+    const router = useRouter();
+
     return (
         <div className="flex items-center border-[1px] justify-between pb-0 h-[112px] bg-white shadow-md rounded-lg w-full max-w-xl overflow-hidden">
             <div className="flex items-center h-full ">
@@ -39,7 +42,7 @@ const ExerciseCard = ({ imageUrl, title, muscleGroups, onDelete, onReplace }) =>
                 {/* Delete Button */}
                 <Button
                     onClick={onDelete}
-                    className="flex items-center gap-2 justify-center hover:bg-blue-500"
+                    className="flex items-center gap-2 justify-center hover:bg-primary"
                 >
                     <Trash2 />
                     Delete
@@ -47,16 +50,16 @@ const ExerciseCard = ({ imageUrl, title, muscleGroups, onDelete, onReplace }) =>
 
                 {/* Replace Button */}
                 <Button
-                    onClick={onReplace}
-                    className="flex items-center justify-between gap-2 hover:bg-blue-500"
+                    onClick={()=>router.push('tracker-management/edit-category/1')}
+                    className="flex items-center justify-center gap-2 hover:bg-primary"
                 >
                   
-                    <Replace  />
-                    Replace
+                    <PencilIcon  />
+                    Edit
                 </Button>
             </div>
         </div>
     );
 };
 
-export default ExerciseCard;
+export default CategoryCard;

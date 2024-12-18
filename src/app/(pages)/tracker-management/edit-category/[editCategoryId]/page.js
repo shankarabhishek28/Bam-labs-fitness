@@ -9,44 +9,19 @@ import ExerciseContentTable from '@/components/ContentManagement/ExerciseTable';
 import { content } from '@/app/DummyData/Content';
 import { workoutData } from '@/app/DummyData/ExerciseData';
 import Muscle from '../../../../../../public/Icons/Muscle';
+import CategoryDetailsTable from '@/components/TrackerManagement/CategoryDetailsTable';
 
 
 const page = () => {
-    const exercises = [
-        {
-            id: 1,
-            title: 'Squats',
-            muscleGroups: ['Quadriceps', 'Lower Body'],
-            thumbnail: '/squating.png',
-            isLive: true,
-        },
-        {
-            id: 2,
-            title: 'Push Ups',
-            muscleGroups: ['Chest', 'Upper Body'],
-            thumbnail: '/squating.png',
-            isLive: false,
-        },
-    ];
+  
 
-    const handleEdit = (id) => {
-        console.log('Edit exercise with ID:', id);
-    };
-
-    const handleDelete = (id) => {
-        console.log('Delete exercise with ID:', id);
-    };
-
-    const handleView = (id) => {
-        console.log('View exercise with ID:', id);
-    };
 
     return (
         <div className='px-6 py-8'>
-            <span className='text-secondary font-semibold text-xl'>Content Management</span>
+            <span className='text-secondary font-semibold text-xl'>Tracker Management</span>
             <div className="mb-2 mt-4 flex justify-between items-center">
                 <div className="flex space-x-8 ">
-                    <Link href={'/content-management'}>
+                    <Link href={'/tracker-management'}>
                         <Button variant='outline' className="flex items-center mb-6 space-x-2 gap-4 rounded-[8px] border border-textColor w-20 h-8 mt-4">
                             <div className=" text-sm text-textColor  flex items-center justify-center pr-1">
                                 <ChevronLeft size={20} /> <p>Back</p>
@@ -73,7 +48,7 @@ const page = () => {
 
                         <hr className="h-[0.3px] bg-black border-0 mt-0 mb-4" />
                         {/* Render ExerciseTable with item.excercises */}
-                        <ExerciseContentTable data={item?.exercises} />
+                        <CategoryDetailsTable data={item?.exercises} />
                     </div>
                 ))}
             </div>

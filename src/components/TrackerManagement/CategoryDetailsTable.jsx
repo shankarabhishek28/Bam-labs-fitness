@@ -1,5 +1,5 @@
 'use client'
-import React from "react";
+import React, { useState } from "react";
 import {
     Table,
     TableBody,
@@ -11,11 +11,17 @@ import {
 import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown, Eye, Ban, SearchIcon, Filter, Delete, Trash2, Pencil, EyeIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import Popup from "../ui/Popup";
+import EditExerciseModal from "./EditExerciseComp";
+import EditExerciseComp from "./EditExerciseComp";
 
 
-const ExerciseContentTable = ({ data }) => {
-    console.log("data",data)
-
+const CategoryDetailsTable = ({ data }) => {
+    console.log("data", data)
+    const [isEditOpen,setIsEditOpen] = useState(false);
+    const handleCancel = () => {
+        setIsEditOpen(false);
+    }
     return (
         <div className="pt-2 ">
 
@@ -75,11 +81,11 @@ const ExerciseContentTable = ({ data }) => {
                             <TableCell>
 
                                 <div className="flex items-center justify-start gap-8">
-                                <Button className='px-2 h-8 text-[14px] flex gap-2 items-center'><EyeIcon size={20} color="white" /></Button>
-                                    <Link href={`/content-management/edit-content`}>
-                                        <Button className=' px-2 h-8 text-[14px] flex gap-2'>
-                                            <Pencil color="white" size={20} /></Button></Link>
-                                    <Button className='px-2 h-8 text-[14px] flex gap-2 items-center'><Trash2 size={20} color="white" /></Button>
+
+                                   
+                                        <Button  className=' px-2 h-8 text-[14px] flex gap-2' onClick={()=>setIsEditOpen(true)}>
+                                            <Pencil color="white" size={20} /></Button>
+                                    <Button  className='px-2 h-8 text-[14px] flex gap-2 items-center'><Trash2 size={20} color="white" /></Button>
                                 </div>
 
                             </TableCell>
@@ -87,6 +93,10 @@ const ExerciseContentTable = ({ data }) => {
                     ))}
                 </TableBody>
             </Table>
+            <Popup isOpen={isEditOpen} onClose={()=>setIsEditOpen(false)} footerButtons={[{label:'Cancel',onClick:handleCancel},{label:'Confirm',variant:'primary'}]}>
+                <EditExerciseComp />
+
+            </Popup>
             <div className="flex items-center  bg-white p-3 justify-between">
                 {/* Entries Per Page */}
                 {/* <div className="flex items-center">
@@ -131,4 +141,4 @@ const ExerciseContentTable = ({ data }) => {
     );
 };
 
-export default ExerciseContentTable;
+export default CategoryDetailsTable;

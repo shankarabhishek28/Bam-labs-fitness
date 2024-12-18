@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Plus, SearchIcon } from 'lucide-react'
 import React from 'react'
 
-import Excercises from '@/components/TrackerManagement/Excercises'
+import Excercises from '@/components/TrackerManagement/Categories'
 import HabitsTable from '@/components/TrackerManagement/HabitsTable'
 import { habitsData } from '@/app/DummyData/Habits'
 import { Input } from '@/components/ui/input'
