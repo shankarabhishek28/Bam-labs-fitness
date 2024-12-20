@@ -8,6 +8,7 @@ import { BarChart, Bell, GitGraphIcon, Globe, LogOut, User } from 'lucide-react'
 import Users from '../../../public/Icons/users';
 import Analytics from '../../../public/Icons/Analytics';
 import Tracker from '../../../public/Icons/Tracker';
+import { removeToken, removeUser } from '@/serviceAPI/cookies';
 
 
 export default function Sidebar() {
@@ -22,6 +23,11 @@ export default function Sidebar() {
     const yesConfirmation = async () => {
         router.push("/");
     };
+    const handleLogout = () => {
+        removeToken();
+        removeUser();
+        router.push("/");
+      };
 
     return (
         <div className="w-full bg-secondary fixed bottom-0 left-0 h-16 md:h-dvh md:sticky md:top-0 md:left-0 md:bg-secondary md:flex md:flex-wrap md:flex-col z-30">
@@ -107,8 +113,8 @@ export default function Sidebar() {
                             By clicking on Yes the current session will expire. All the cookies used during the session will be cleared as well.
                         </h3>
                         <div className="w-full grid grid-cols-2 mt-5 gap-3">
-                            <Button variant="primary" onClick={yesConfirmation}>Yes</Button>
-                            <Button variant="secondary" onClick={() => setConfirmation(false)}>No</Button>
+                            <Button onClick={handleLogout} variant="primary" >Yes</Button>
+                            <Button   variant="secondary" className='text-white' onClick={() => setConfirmation(false)}>No</Button>
                         </div>
                     </div>
                 </div>

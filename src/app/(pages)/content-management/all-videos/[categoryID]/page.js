@@ -45,15 +45,16 @@ const page = () => {
         <div className='px-6 py-8'>
             <span className='text-secondary font-semibold text-xl'>Content Management</span>
             <div className="mb-2 mt-4 flex justify-between items-center">
-                <div className="flex space-x-8 ">
+                <div className="  ">
                     <Link href={'/content-management'}>
-                        <Button variant='outline' className="flex items-center mb-6 space-x-2 gap-4 rounded-[8px] border border-textColor w-20 h-8 mt-4">
+                        <Button variant='outline' className="flex items-center mb-2 space-x-2 gap-4 rounded-[8px] border border-textColor w-20 h-8 mt-4">
                             <div className=" text-sm text-textColor  flex items-center justify-center pr-1">
                                 <ChevronLeft size={20} /> <p>Back</p>
 
                             </div>
                         </Button>
                     </Link>
+                    <p className='mb-2 text-sm text-primary font-medium'>Please note that here you have the ability to view, edit, or delete the uploaded videos in the exercises section.</p>
                 </div>
 
                
