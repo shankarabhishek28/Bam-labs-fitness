@@ -4,17 +4,28 @@ import { Button } from '@/components/ui/button'
 import { InputWithLabel } from '@/components/ui/InputWithLabel'
 import UserManagementTable from '@/components/UserManagementComps/UserManagementTable'
 import { Plus, SearchIcon } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import FilterIcon from '../../../../public/Icons/FilterIcon'
 import AccountManagementTable from '@/components/UserManagementComps/AccountManagement'
 import { Input } from '@/components/ui/input'
 import IssuesTable from '@/components/UserManagementComps/IssuesTable'
 import UserAccess from '@/components/UserManagementComps/UserAccess'
+import { getUsersOverview } from '@/serviceAPI/tennant'
 
 const page = () => {
     const [activeTab, setActiveTab] = React.useState("User Overview");
     const [newUser, setNewUser] = React.useState(false);
-
+    const [userOverview, setUserOverview] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const fetUserOverview = async() => {
+        const res = await getUsersOverview()
+        setUserOverview(res?.data?.results)
+        setLoading(false)
+        console.log("res-->",res)
+    }
+    useEffect(()=>{
+        fetUserOverview();
+    },[])
     const [searchTerm, setSearchTerm] = React.useState("wewe");
 
     return (
@@ -128,8 +139,8 @@ const page = () => {
 
                 </div>}
 
-            {activeTab === 'User Overview' && <UserManagementTable data={UserData} />}
-            {activeTab === 'Account management' && <AccountManagementTable data={AMD} />}
+            {activeTab === 'User Overview' && <UserManagementTable data={userOverview} loading={loading} />}
+            {activeTab === 'Account management' && <AccountManagementTable />}
             {activeTab === 'Issues' && <IssuesTable data={AMD} />}
             {activeTab === 'Access' &&
                 <>

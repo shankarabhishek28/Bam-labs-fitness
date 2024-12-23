@@ -4,11 +4,12 @@ import { usePathname, useRouter } from 'next/navigation'; // Import usePathname 
 import { useState } from 'react';
 import { Button } from './button';
 import Image from 'next/image';
-import { BarChart, Bell, GitGraphIcon, Globe, LogOut, User } from 'lucide-react';
+import { BarChart, Bell, GitGraphIcon, Globe, LogOut, SubscriptIcon, User } from 'lucide-react';
 import Users from '../../../public/Icons/users';
 import Analytics from '../../../public/Icons/Analytics';
 import Tracker from '../../../public/Icons/Tracker';
 import { removeToken, removeUser } from '@/serviceAPI/cookies';
+import Subscription from '../../../public/Icons/Subscription';
 
 
 export default function Sidebar() {
@@ -75,6 +76,16 @@ export default function Sidebar() {
                                 }  hover:text-secondary hover:bg-white flex items-center gap-2 font-medium text-lg`}
                         > <Globe />
                             Content Management
+                        </li>
+                    </Link>
+                    <Link href="/subscription">
+                        <li
+                            className={`px-6 py-3 mb-2 ${pathname.startsWith('/subscription')
+                                ? 'bg-white text-secondary  '
+                                : 'text-white '
+                                }  hover:text-secondary hover:bg-white flex items-center gap-2 font-medium text-lg`}
+                        > <Subscription />
+                            Subscription
                         </li>
                     </Link>
                     <Link href="/notification">

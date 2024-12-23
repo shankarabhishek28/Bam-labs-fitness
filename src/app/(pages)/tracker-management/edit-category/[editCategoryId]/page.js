@@ -12,11 +12,15 @@ import Muscle from '../../../../../../public/Icons/Muscle';
 import CategoryDetailsTable from '@/components/TrackerManagement/CategoryDetailsTable';
 import Popup from '@/components/ui/Popup';
 import { Input } from '@/components/ui/input';
+import VideoUpload from '@/components/TrackerManagement/VideoUpload';
+import MetricsForm from '@/components/TrackerManagement/MetricsForm';
 
 
 const page = () => {
     const [editMuscle, setEditMuscle] = useState(false);
+    const [addExcercise, setAddExercise] = useState(false);
     const handleCancel = () => setEditMuscle(false);
+    
 
 
 
@@ -24,7 +28,7 @@ const page = () => {
         <div className='px-6 py-8'>
             <span className='text-secondary font-semibold text-xl'>Tracker Management</span>
             <div className="mb-2 mt-4 flex justify-between items-center">
-                <div className="flex space-x-8 ">
+                <div className="flex w-full items-center justify-between">
                     <Link href={'/tracker-management'}>
                         <Button variant='outline' className="flex items-center mb-6 space-x-2 gap-4 rounded-[8px] border border-textColor w-20 h-8 mt-4">
                             <div className=" text-sm text-textColor  flex items-center justify-center pr-1">
@@ -33,6 +37,11 @@ const page = () => {
                             </div>
                         </Button>
                     </Link>
+                    <div className="flex items-center justify-end mt-2">
+                        <Button onClick={() => setAddExercise(true)} className='gap-2'><Plus color='white' />Add Exercise </Button>
+
+                    </div>
+
                 </div>
 
 
@@ -76,6 +85,43 @@ const page = () => {
                         className="w-full"
                     />
                 </div>
+            </Popup>
+            <Popup isOpen={addExcercise} onClose={() => setAddExercise(false)} footerButtons={[{ label: 'Cancel' }, { label: 'Confirm', variant: 'primary' }]}>
+                <div className="mb-4">
+                    <label className="block text-textColor font-semibold mb-2 ">
+                        Choose Muscle
+                    </label>
+
+                    <select className='block w-full py-2 pr-10 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'>
+                        <option>Chest</option>
+                        <option>Shoulder</option>
+                        <option>Triceps</option>
+                    </select>
+
+
+
+                </div>
+                <div className="mb-6">
+                    <label htmlFor="exerciseName" className="block text-textColor font-semibold mb-2 ">
+                        Exercise name
+                    </label>
+                    <Input
+                        id="exerciseName"
+                        placeholder="Add exercise"
+                        
+                        className="w-full"
+                    />
+                </div>
+
+
+
+                <MetricsForm />
+
+                {/* Video Upload */}
+                <div className="mb-6">
+                    <VideoUpload />
+                </div>
+
             </Popup>
         </div>
     );

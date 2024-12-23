@@ -14,7 +14,7 @@ const EditExerciseComp = () => {
         <div className="bg-white  w-full max-w-[600px] mx-auto">
             {/* Exercise Name Input */}
             <div className="mb-6">
-                <label htmlFor="exerciseName" className="block text-gray-700 text-sm mb-2">
+                <label htmlFor="exerciseName" className="block text-textColor font-semibold mb-2 ">
                     Exercise name
                 </label>
                 <Input
@@ -26,7 +26,7 @@ const EditExerciseComp = () => {
                 />
             </div>
 
-            {/* Change Metrics */}
+            
             
                 <MetricsForm />
 

@@ -27,7 +27,7 @@ const MetricsForm = () => {
     };
 
     return (
-        <div className="max-w-lg mx-auto p-4 bg-white rounded-md ">
+        <div className="max-w-lg mx-auto bg-white rounded-md ">
             <div className="mb-4">
                 <div className=' flex items-center justify-between'>
                     <label className="block text-textColor font-semibold mb-2">Current Metrics</label>

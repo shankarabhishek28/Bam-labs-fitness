@@ -1,5 +1,5 @@
 'use client'
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -15,13 +15,28 @@ import Image from "next/image";
 import { InputWithLabel } from "../ui/InputWithLabel";
 import FilterIcon from "../../../public/Icons/FilterIcon";
 import { Button } from "../ui/button";
+import { getUsersAccount } from "@/serviceAPI/tennant";
+import dayjs from "dayjs";
 
-const AccountManagementTable = ({ data }) => {
+const AccountManagementTable = () => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true)
+  const fetchUsersAccount = async () => {
+    const res = await getUsersAccount();
+    setData(res?.data?.results);
+    setLoading(false);
 
-
+  }
+  useEffect(() => {
+    fetchUsersAccount();
+  }, [])
   return (
     <div className="pt-2 ">
-      
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className="w-6 h-6 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
       <Table className="min-w-full overflow-x-auto">
         <TableHeader className="border-t-1">
           <TableRow className="bg-primary hover:bg-liteOrange">
@@ -35,9 +50,9 @@ const AccountManagementTable = ({ data }) => {
               Created at
             </TableHead>
 
-            <TableHead className="text-white font-bold text-sm text-left">
+            {/* <TableHead className="text-white font-bold text-sm text-left">
               Plan
-            </TableHead>
+            </TableHead> */}
 
 
             <TableHead className="text-white font-bold text-sm text-left">
@@ -52,7 +67,7 @@ const AccountManagementTable = ({ data }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((item, index) => (
+          {data?.map((item, index) => (
             <TableRow
               key={index}
               className="bg-white hover:bg-white cursor-pointer"
@@ -61,43 +76,44 @@ const AccountManagementTable = ({ data }) => {
                 <Link href={`/user-management/${item.userID}`} className="flex items-center gap-2">
                   <Image src={'/dummyUser.png'} width={36} height={36} alt='profile pic' />
                   <span className="text-[#454545] font-semibold text-sm text-left truncate...">
-                    {item.name}
+                    {item?.name}
                   </span>
                 </Link>
 
               </TableCell>
               <TableCell className='min-w-[140px] '>
                 <span className="text-[#454545] font-normal text-sm text-left truncate...">
-                  {item.userID}
+                  {item?._id}
                 </span>
               </TableCell>
 
               <TableCell className='min-w-[140px]'>
                 <span className="text-[#454545] font-normal  text-sm text-left truncate...">
-                  {item.createdAt}
+                  {dayjs(item?.createdAt).format("DD/MM/YYYY")}
+
                 </span>
               </TableCell>
 
-              <TableCell>
+              {/* <TableCell>
                 <span className="text-[#0076AB] font-normal text-sm text-left truncate...">
-                  {item.plan}
+                  {item?.plan}
                 </span>
-              </TableCell>
+              </TableCell> */}
               <TableCell>
                 <span className="text-[#454545] font-normal text-sm text-left gap-2 flex items-center truncate...">
-                  {item.phoneNumber} <CheckCircle2 fill="#ED2015" color="white" />
+                  {item?.phone} <CheckCircle2 fill="#ED2015" color="white" />
                 </span>
               </TableCell>
               <TableCell>
                 <span className="text-[#454545] font-normal text-sm text-left gap-2 flex truncate...">
-                  {item.email}<CircleX fill="#ED2015" color="white" />
+                  {item?.email}<CircleX fill="#ED2015" color="white" />
                 </span>
               </TableCell>
 
               <TableCell>
 
                 <div className="flex items-center justify-start gap-2">
-                  <Button className=' px-2 h-8 text-[12px]'>Verify Email</Button><Button className='px-2 h-8 text-[12px]'>Verify Number</Button>
+                  <Button disabled={!(item?.isEmailVerified)} className=' px-2 h-8 text-[12px]'>Verify Email</Button><Button disabled={!(item?.isPhoneVerified)} className='px-2 h-8 text-[12px]'>Verify Number</Button>
                 </div>
 
               </TableCell>

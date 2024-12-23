@@ -92,3 +92,22 @@ export const apiError = (e) => {
   }
   return { status: false, message: e };
 };
+
+export const appendQueryParams = (payload) => {
+  let queryParams = "?"
+  if(typeof payload !== 'object'){
+      return queryParams;
+  }
+
+  for (const key in payload){
+      queryParams = `${queryParams}${key}=${payload[key]}&`
+  }
+  return queryParams;
+}
+
+export const findInQueryParams = (query, key, value) => {
+  if(query[key] == value){
+      return true;
+  }
+   return false;
+}
