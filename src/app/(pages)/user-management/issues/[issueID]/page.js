@@ -1,9 +1,11 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, File, PaperclipIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { getOneUserIssue } from '@/serviceAPI/tennant';
+import dayjs from 'dayjs';
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 const config = {
@@ -14,9 +16,22 @@ const config = {
     height: 200, // Height of the editor
     placeholder: 'Type in your reply...',
 };
-const page = () => {
+const page = ({ params }) => {
     const [content, setContent] = useState('');
+    const [data, setData] = useState({});
     const router = useRouter();
+    console.log(params);
+    const fetchOneUserIssue = async () => {
+        const res = await getOneUserIssue(params?.issueID);
+        setData(res?.data);
+
+    }
+    useEffect(() => {
+        if (params?.issueID) {
+            fetchOneUserIssue()
+        }
+
+    }, [])
     return (
         <div className="flex flex-col lg:flex-row justify-between py-8 min-h-screen">
             {/* Left side: Ticket Details */}
@@ -29,8 +44,8 @@ const page = () => {
                 </Button>
 
                 <h1 className="text-xl font-semibold text-textColor mb-2"># Ticket ID</h1>
-                <div className="text-sm text-textColor">User name</div>
-                <div className="text-sm text-textColor mb-4">24/08/2024</div>
+                <div className="text-sm text-textColor">{data?.user?.name}</div>
+                <div className="text-sm text-textColor mb-4">{dayjs(item?.createdAt).format("DD/MM/YYYY")}</div>
 
                 <h2 className="text-lg text-textColor font-semibold mb-2">Query</h2>
                 <p className="text-textColor mb-6">
@@ -73,10 +88,10 @@ const page = () => {
                                 {index === 2 && (
                                     <div className="flex space-x-2 ml-2">
                                         <Button variant='outline' className='h-7 w-18 gap-2 bg-primaryLite' ><PaperclipIcon size={12} /> Image</Button>
-                                        
+
                                     </div>
                                 )}
-                              
+
                             </div>
                             <span className=" text-xs text-gray-400">14/04/2024 8:30 PM</span>
 

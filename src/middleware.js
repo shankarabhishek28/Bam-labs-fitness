@@ -25,7 +25,7 @@ export function middleware(req) {
 
     // Redirect authenticated users away from public routes
     if (token && publicRoutes.includes(pathname)) {
-      return NextResponse.redirect(new URL('/dashboard', req.url));
+      return NextResponse.redirect(new URL('/analytics', req.url));
     }
 
     // Allow authenticated users access to all other routes

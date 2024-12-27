@@ -28,9 +28,9 @@ const CategoryCard = ({ imageUrl, title, muscleGroups, onDelete }) => {
                 <div>
                     <h3 className="text-lg font-semibold">{title}</h3>
                     <p className="text-gray-500 text-sm">
-                        {muscleGroups.map((group, index) => (
+                        {muscleGroups.map((item, index) => (
                             <span key={index}>
-                                {group} {index < muscleGroups.length - 1 && <span className="mx-1">•</span>}
+                                {item?.targetedMuscle} {index < muscleGroups.length - 1 && <span className="mx-1">•</span>}
                             </span>
                         ))}
                     </p>

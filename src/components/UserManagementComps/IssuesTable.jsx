@@ -1,5 +1,5 @@
 'use client'
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -16,9 +16,19 @@ import { InputWithLabel } from "../ui/InputWithLabel";
 import FilterIcon from "../../../public/Icons/FilterIcon";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { getUsersIssue } from "@/serviceAPI/tennant";
+import dayjs from "dayjs";
 
-const IssuesTable = ({ data }) => {
+const IssuesTable = () => {
   const router = useRouter()
+  const [data, setData] = useState()
+  const fetchUserIssues = async() => {
+    const res = await getUsersIssue()
+    setData(res?.data?.results);
+  }
+  useEffect(()=>{
+    fetchUserIssues();
+  },[])
 
   return (
     <div className="pt-2 ">
@@ -30,7 +40,7 @@ const IssuesTable = ({ data }) => {
               Name
             </TableHead>
             <TableHead className="text-white font-bold text-sm text-left">
-             Ticket ID
+             Ticket No.
             </TableHead>
             <TableHead className="text-white font-bold text-sm text-left">
               Created on
@@ -49,48 +59,49 @@ const IssuesTable = ({ data }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((item, index) => (
+          {data?.map((item, index) => (
             <TableRow
               key={index}
               className="bg-white hover:bg-white cursor-pointer"
             >
               <TableCell className='flex min-w-[160px]'>
-                <Link href={`/user-management/${item.userID}`} className="flex items-center gap-2">
-                  <Image src={'/dummyUser.png'} width={36} height={36} alt='profile pic' />
+                <Link href={`/user-management/${item._id}`} className="flex items-center gap-2">
+                  <Image src={item?.user?.profilePic?.url} width={36} height={36} alt='profile pic' />
                   <span className="text-[#454545] font-semibold text-sm text-left truncate...">
-                    {item.name}
+                    {item?.name}
                   </span>
                 </Link>
 
               </TableCell>
               <TableCell className='min-w-[140px] '>
                 <span className="text-[#454545] font-normal text-sm text-left truncate...">
-                  {item.userID}
+                  {item?.ticketNo}
                 </span>
               </TableCell>
 
               <TableCell className='min-w-[140px]'>
                 <span className="text-[#454545] font-normal  text-sm text-left truncate...">
-                  {item.createdAt}
+                 {dayjs(item?.createdAt).format("DD/MM/YYYY")}
                 </span>
               </TableCell>
 
               
               <TableCell>
                 <span className="text-[#454545] font-normal text-sm text-left gap-2 flex truncate...">
-                  {item.email}<CircleX fill="#ED2015" color="white" />
+                  {item?.email}
+                  {/* <CircleX fill="#ED2015" color="white" /> */}
                 </span>
               </TableCell>
               <TableCell>
                 <span className="text-[#454545] font-normal text-sm text-left gap-2 flex truncate...">
-                  {item.status}
+                  {item?.status}
                 </span>
               </TableCell>
 
               <TableCell>
 
                 <div className="flex items-center justify-start gap-2">
-                  <Button onClick={()=>router.push(`/user-management/issues/${item.userID}`)} className=' px-2 h-8 text-[12px] flex gap-2 w-[90px]'><EyeIcon color="white" size={20} /> View</Button><Button className='px-2 h-8 text-[12px] flex gap-2 items-center w-[90px]'><Trash2 size={20} color="white" /> Delete</Button>
+                  <Button onClick={()=>router.push(`/user-management/issues/${item._id}`)} className=' px-2 h-8 text-[12px] flex gap-2 w-[90px]'><EyeIcon color="white" size={20} /> View</Button><Button className='px-2 h-8 text-[12px] flex gap-2 items-center w-[90px]'><Trash2 size={20} color="white" /> Delete</Button>
                 </div>
 
               </TableCell>
