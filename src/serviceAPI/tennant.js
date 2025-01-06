@@ -1,6 +1,33 @@
 import { getAuthToken } from "./cookies";
 import { apiError, appendQueryParams, responseValidator, URL } from "./helper";
 
+export const uploadFiles = async (file) => {
+    const sanitizedBaseUrl = URL.replace(/\/admin$/, "");
+    const endpoint = `${sanitizedBaseUrl}/upload/files`;
+    const token = await getAuthToken();
+
+    // Prepare form data
+    const formData = new FormData();
+    formData.append("files", file);
+
+    const requestOptions = {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`, 
+        },
+        body: formData,
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        console.log("response",response)
+        return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
+
 export const getUsersOverview = async () => {
     let endpoint = `${URL}/admin/users/overview`;
     // const queryParams = appendQueryParams(payload);
@@ -99,6 +126,29 @@ export const getOneUserIssue = async (id) => {
         return apiError(error);
     }
 };
+
+export const addNewCategory = async (payload) => {
+    const endpoint = `${URL}/admin/tracker/strength-content`;
+    const token = await getAuthToken();
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/json");
+
+    const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify(payload),
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response,true);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
 
 export const getAllHabits = async () => {
     let endpoint = `${URL}/admin/tracker/habits`;
@@ -215,6 +265,28 @@ export const getStrengthContent = async () => {
     try {
         const response = await fetch(endpoint, requestOptions);
         return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
+export const addStrengthContent = async (payload) => {
+    const endpoint = `${URL}/admin/tracker/strength-content`;
+    const token = await getAuthToken();
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/json");
+
+    const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify(payload),
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response,true);
     } catch (error) {
         return apiError(error);
     }

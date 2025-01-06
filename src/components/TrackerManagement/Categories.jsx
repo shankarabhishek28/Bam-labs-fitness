@@ -22,7 +22,7 @@ const Categories = () => {
       excerciseData.map((item, index) => (
         <CategoryCard
           key={index}
-          imageUrl={'/push.png'} 
+          imageUrl={item?.image?.url} 
           title={item?.categoryName || 'Default Title'} 
           muscleGroups={item?.muscles || []} 
         />

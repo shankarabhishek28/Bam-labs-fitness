@@ -165,3 +165,16 @@ export async function downloadFile(url, filename) {
     console.error("Failed to download the file", error);
   }
 }
+export function removeIds(obj) {
+  if (Array.isArray(obj)) {
+    return obj.map(removeIds);
+  } else if (typeof obj === "object" && obj !== null) {
+    return Object.keys(obj).reduce((acc, key) => {
+      if (key !== "id") {
+        acc[key] = removeIds(obj[key]);
+      }
+      return acc;
+    }, {});
+  }
+  return obj; // Return value directly if it's not an object or array
+}

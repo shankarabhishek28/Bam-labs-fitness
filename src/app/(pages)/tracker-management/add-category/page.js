@@ -6,29 +6,16 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import ExerciseMetrics from '@/components/TrackerManagement/ExerciseMetrics';
 import AddCategoryForm from '@/components/TrackerManagement/AddCategoryForm';
+import { useTracker } from '@/Context/TrackerContext';
+
 
 const page = () => {
-    const [currentMuscleIndex, setCurrentMuscleIndex] = useState(-1); // -1 means still in AddCategoryForm.
-    const [targetedMuscles, setTargetedMuscles] = useState([]);
+   const {  trackerData } = useTracker();
+   console.log("TD",trackerData);
+    const [targetMuscle, setTargetedMuscles] = useState([]);
+    const [canMove, setCanMove] = useState(false);
 
-    const handleAddCategorySubmit = (musclesCount) => {
-        // Create an array of targeted muscles.
-        const muscles = Array.from({ length: musclesCount }, (_, i) => `Muscle ${i + 1}`);
-        setTargetedMuscles(muscles);
-        setCurrentMuscleIndex(0); // Move to the first exercise metrics.
-    };
 
-    const handleNext = () => {
-        if (currentMuscleIndex < targetedMuscles.length - 1) {
-            setCurrentMuscleIndex(currentMuscleIndex + 1);
-        }
-    };
-
-    const handlePrevious = () => {
-        if (currentMuscleIndex > 0) {
-            setCurrentMuscleIndex(currentMuscleIndex - 1);
-        }
-    };
 
     return (
         <div className="px-6 py-8">
@@ -43,42 +30,13 @@ const page = () => {
                         </div>
                     </Button>
                 </Link>
-                <div className='flex items-center justify-end'>
-                    {currentMuscleIndex > 0 && (
-                        <Button
-                            onClick={handlePrevious}
-                            className="flex items-center mb-6 "
-                        >
-                            <div className="text-sm text-white gap-2 flex items-center justify-center">
-                                <ChevronLeft size={20} />
-                                <p>Previous Muscle</p>
-                            </div>
-                        </Button>
-                    )}
-                    {currentMuscleIndex >= 0 && currentMuscleIndex < targetedMuscles.length - 1 && (
-                        <Button
-                            onClick={handleNext}
-                            className="flex items-center mb-6 "
-                        >
-                            <div className="text-sm text-white gap-2 flex items-center justify-center">
-                                <p>Next Muscle</p>
-                                <ChevronRight size={20} />
-                            </div>
-                        </Button>
-                    )}
-
-
-                </div>
+                
 
             </div>
-
-            {currentMuscleIndex === -1 ? (
-                // Render AddCategoryForm only if no muscle data yet.
-                <AddCategoryForm onSubmit={handleAddCategorySubmit} />
-            ) : (
-                // Render ExerciseMetrics for the current muscle.
-                <ExerciseMetrics muscle={targetedMuscles[currentMuscleIndex]} />
-            )}
+        {canMove ? <ExerciseMetrics /> : <AddCategoryForm setCanMove={setCanMove}  />}
+            
+                
+          
         </div>
     );
 };

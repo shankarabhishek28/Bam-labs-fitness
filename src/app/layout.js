@@ -1,6 +1,7 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { ToastContainer } from 'react-toastify';
+import { TrackerProvider } from '@/Context/TrackerContext';
 
 // Import the Inter font from Google
 const inter = Inter({
@@ -18,7 +19,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
-        {children}
+      <TrackerProvider>{children}</TrackerProvider>
         <ToastContainer
           position="bottom-right"
           autoClose={3000}
