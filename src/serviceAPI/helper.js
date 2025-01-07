@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-export const URL = "http://3.110.138.34:9090/v1";
+export const URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
 export const responseValidator = async (
   response,

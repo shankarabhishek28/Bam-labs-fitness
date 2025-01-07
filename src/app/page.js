@@ -1,5 +1,5 @@
 "use client";
-import { EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { InputWithLabel } from "@/components/ui/InputWithLabel";
 import ButtonWithLoader from "@/components/ui/ButtonWithLoader";
@@ -11,6 +11,7 @@ import { verifyEmail, verifyPassword } from "@/utils/helpers";
 export default function Home() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -46,6 +47,10 @@ export default function Home() {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible((prev) => !prev);
+  };
+
   return (
     <div className="flex h-screen flex-col items-center justify-center relative">
       <div
@@ -71,11 +76,15 @@ export default function Home() {
           />
           <InputWithLabel
             name="password"
-            type="password"
+            type={passwordVisible ? "text" : "password"}
             placeholder="Enter your password"
             iconType="post"
           >
-            <EyeOff />
+            {passwordVisible ? (
+              <Eye onClick={togglePasswordVisibility} className="cursor-pointer" />
+            ) : (
+              <EyeOff onClick={togglePasswordVisibility} className="cursor-pointer" />
+            )}
           </InputWithLabel>
 
           <p className="text-sm text-primary underline text-end cursor-pointer mt-2">
@@ -93,4 +102,3 @@ export default function Home() {
     </div>
   );
 }
-
