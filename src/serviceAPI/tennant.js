@@ -291,3 +291,101 @@ export const addStrengthContent = async (payload) => {
         return apiError(error);
     }
 };
+// /admin/tracker/delete/excercise/67728c98e73f3a3931611fc2
+export const deleteStrengthContent = async (id) => {
+    let endpoint = `${URL}/admin/tracker/delete/excercise/${id}`
+    const token = await getAuthToken();
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    
+    const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+
+    try {
+        const response = await fetch(`${endpoint}`, requestOptions);
+        // console.log("RES--->",response)
+        return responseValidator(response,true)
+
+    } catch (error) {
+        return apiError(error)
+    }
+
+}
+
+export const getSpecificStrengthContent = async (id) => {
+    let endpoint = `${URL}/admin/tracker/category/${id}`;
+   
+    
+
+    const token = await getAuthToken();
+    console.log("Token",token)
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
+export const editStrengthContent = async (payload) => {
+    const endpoint = `${URL}/admin/tracker/update/muscle`;
+    const token = await getAuthToken();
+    
+    // Set up headers with authorization
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/json"); // Specify JSON content type for PATCH requests
+
+    // Define request options for PATCH
+    const requestOptions = {
+        method: "PATCH",
+        headers: myHeaders,
+        body: JSON.stringify(payload), // Convert `userData` to JSON for the body
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        console.log("Response",response)
+        return responseValidator(response,true); // Validate response or handle accordingly
+    } catch (error) {
+        return apiError(error); // Handle API error
+    }
+};
+
+export const softDeleteMuscle = async (id) => {
+    let endpoint = `${URL}/admin/tracker/delete/muscle/${id}`
+    const token = await getAuthToken();
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    
+    const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+
+    try {
+        const response = await fetch(`${endpoint}`, requestOptions);
+        // console.log("RES--->",response)
+        return responseValidator(response,true)
+
+    } catch (error) {
+        return apiError(error)
+    }
+
+}

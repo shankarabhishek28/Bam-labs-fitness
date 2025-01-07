@@ -29,11 +29,14 @@ const IssuesTable = () => {
   useEffect(()=>{
     fetchUserIssues();
   },[])
-
+  if (data?.length < 1) {
+    return <div>No Data</div>;
+  }
   return (
     <div className="pt-2 ">
       
       <Table className="min-w-full overflow-x-auto">
+     
         <TableHeader className="border-t-1">
           <TableRow className="bg-primary hover:bg-liteOrange">
             <TableHead className="text-white font-bold text-sm text-left">

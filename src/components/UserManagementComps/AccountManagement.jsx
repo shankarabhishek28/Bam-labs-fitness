@@ -99,9 +99,10 @@ const AccountManagementTable = () => {
                   {item?.plan}
                 </span>
               </TableCell> */}
-              <TableCell>
-                <span className="text-[#454545] font-normal text-sm text-left gap-2 flex items-center truncate...">
-                  {item?.phone} <CheckCircle2 fill="#ED2015" color="white" />
+              <TableCell className="max-w-[180px] overflow-hidden truncate">
+                <span className="text-[#454545] font-normal text-sm text-left gap-2 flex items-center truncate">
+                  <span className="truncate">{item?.phone}</span>
+                  <CheckCircle2 fill="#ED2015" color="white" className="w-4 h-4 flex-shrink-0" />
                 </span>
               </TableCell>
               <TableCell>

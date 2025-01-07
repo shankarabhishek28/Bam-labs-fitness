@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { InputWithLabel } from '@/components/ui/InputWithLabel';
@@ -7,21 +7,57 @@ import { ChevronLeft, Pencil, Plus, SearchIcon, Trash, Trash2 } from 'lucide-rea
 import Link from 'next/link';
 import ExerciseContentTable from '@/components/ContentManagement/ExerciseTable';
 import { content } from '@/app/DummyData/Content';
-import { workoutData } from '@/app/DummyData/ExerciseData';
 import Muscle from '../../../../../../public/Icons/Muscle';
 import CategoryDetailsTable from '@/components/TrackerManagement/CategoryDetailsTable';
 import Popup from '@/components/ui/Popup';
 import { Input } from '@/components/ui/input';
 import VideoUpload from '@/components/TrackerManagement/VideoUpload';
 import MetricsForm from '@/components/TrackerManagement/MetricsForm';
+import { editStrengthContent, getSpecificStrengthContent } from '@/serviceAPI/tennant';
 
 
-const page = () => {
-    const [editMuscle, setEditMuscle] = useState(false);
+const page = ({params}) => {
+    const [workoutData, setWorkoutData] = useState([]);
+    const id = params?.editCategoryId;
+    
+    const [editMuscle, setEditMuscle] = useState({"ok":false, "id":0});
     const [addExcercise, setAddExercise] = useState(false);
-    const handleCancel = () => setEditMuscle(false);
+    const handleCancel = () => setEditMuscle({"ok":false, "id":0});
+    const fetchThisEditContent = async () => {
+        if (!id) {
+            return;
+        }
+        try {
+            const res = await getSpecificStrengthContent(id);
+            console.log("API Response:", res); // Log the entire response
+            if (res?.status ) {
+                setWorkoutData(res.data);
+            } else {
+                console.error("Unexpected response structure:", res);
+            }
+        } catch (error) {
+            console.error("Error fetching content:", error);
+        }
+    };
     
 
+    useEffect(()=>{
+        fetchThisEditContent()
+    },[id])
+
+    const saveEditMuscleName = async() => {
+        const payload = {
+            type:"muscle",
+            id:editMuscle?.id,
+            name:editMuscle?.name
+        }
+        const res = await editStrengthContent(payload);
+        if(res?.status){
+            fetchThisEditContent();
+        }
+        setEditMuscle({"ok":false})
+
+    }
 
 
     return (
@@ -51,16 +87,16 @@ const page = () => {
 
             </div>
             <div>
-                {workoutData.map((item, index) => (
+                {workoutData?.map((item, index) => (
                     <div key={index} className="mb-8">
                         {/* Render Muscle as a Heading */}
                         <div className='flex items-center justify-between'>
                             <div className='flex items-center mb-2 gap-2'>
                                 <Muscle />
-                                <h2 className="text-lg font-semibold text-[#454545] ">{item?.muscle}</h2>
+                                <h2 className="text-lg font-semibold text-[#454545] ">{item?.muscle?.targetedMuscle}</h2>
                             </div>
                             <div className='flex items-center justify-center gap-2'>
-                                <Button onClick={() => setEditMuscle(true)} className='px-2'><Pencil /></Button>
+                                <Button onClick={() => setEditMuscle({"ok":true,"id":item?.muscle?._id,"name":item?.muscle?.targetedMuscle})} className='px-2'><Pencil /></Button>
                                 <Button className='px-2 bg-[#E7E7E7] text-red-600 hover:text-white'><Trash2 /></Button>
                             </div>
 
@@ -69,11 +105,11 @@ const page = () => {
 
                         <hr className="h-[0.3px] bg-black border-0 mt-0 mb-4 w-[90%]" />
                         {/* Render ExerciseTable with item.excercises */}
-                        <CategoryDetailsTable data={item?.exercises} />
+                        <CategoryDetailsTable data={item?.excercizes} />
                     </div>
                 ))}
             </div>
-            <Popup isOpen={editMuscle} onClose={() => setEditMuscle(false)} footerButtons={[{ label: 'Cancel', onClick: handleCancel }, { label: 'Confirm', variant: 'primary' }]}>
+            <Popup isOpen={editMuscle.ok} onClose={() => setEditMuscle({"ok":false})} footerButtons={[{ label: 'Cancel', onClick: handleCancel }, { label: 'Confirm', variant: 'primary', onClick:saveEditMuscleName }]}>
                 <div className="mb-2">
                     <label htmlFor="exerciseName" className="block text-gray-700 text-sm mb-2">
                         Muscle name
@@ -81,7 +117,8 @@ const page = () => {
                     <Input
                         id="exerciseName"
                         placeholder="Add Name"
-
+                        onChange = {(e)=>setEditMuscle((prev)=> ({...prev,'name':e.target.value}))}
+                        value={editMuscle.name}
                         className="w-full"
                     />
                 </div>

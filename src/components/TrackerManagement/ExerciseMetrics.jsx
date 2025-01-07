@@ -1,6 +1,6 @@
 import { useState } from "react";
 import AddExerciseCard from "./AddExerciseCard"; // Assuming the component is in the same directory
-import { Trash2 } from "lucide-react";
+import { PlusCircle, PlusIcon, Trash2 } from "lucide-react";
 import { useTracker } from "@/Context/TrackerContext";
 import VideoUpload from "./VideoUpload";
 import MetricesMultiSelect from "./MetricesMultiSelect";
@@ -81,58 +81,64 @@ const ExerciseMetrics = () => {
     (muscle) => muscle.id === selectedMuscleId
   );
 
-  const saveStrengthContent = async() => {
+  const saveStrengthContent = async () => {
     const res = await addStrengthContent(removeIds(trackerData));
-    if(res?.status){
+    if (res?.status) {
       setTrackerData({
         name: '',
-        image: {"key":"","url":''},
+        image: { "key": "", "url": '' },
         targetMuscle: [{
-            "muscleName": "",
-            "id": Date.now(),
-            "excercizes": [
-    
-                {
-                    "video": {"key":"","url":''},
-                    "id": Date.now(),
-                    "name": "",
-                    "metrices": []
-                }
-            ]
+          "muscleName": "",
+          "id": Date.now(),
+          "excercizes": [
+
+            {
+              "video": { "key": "", "url": '' },
+              "id": Date.now(),
+              "name": "",
+              "metrices": []
+            }
+          ]
         },
         ],
-    })
-    router.push("/tracker-management")
+      })
+      router.push("/tracker-management")
     }
   }
   return (
     <div className="exercise-metrics-container">
-      <label
-        htmlFor="exerciseDropdown"
-        className="block text-lg font-medium text-gray-700 mb-2"
-      >
-        Select Muscle
-      </label>
-      <select
-        id="exerciseDropdown"
-        value={selectedMuscleId}
-        onChange={(e) => setSelectedMuscleId(Number(e.target.value))}
-        className="block w-full bg-white border border-gray-300 rounded-md p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        <option value="" disabled>
-          -- Select a Muscle --
-        </option>
-        {trackerData?.targetMuscle?.map((item) => (
-          <option key={item.id} value={item.id}>
-            {item.muscleName}
-          </option>
-        ))}
-      </select>
+      <div className="flex items-center justify-between">
+        <div className="w-1/2">
+          <label
+            htmlFor="exerciseDropdown"
+            className="block text-lg font-medium text-gray-700 mb-2"
+          >
+            Select Muscle
+          </label>
+          <select
+            id="exerciseDropdown"
+            value={selectedMuscleId}
+            onChange={(e) => setSelectedMuscleId(Number(e.target.value))}
+            className="block w-full bg-white border border-gray-300 rounded-md p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="" disabled>
+              -- Select a Muscle --
+            </option>
+            {trackerData?.targetMuscle?.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.muscleName}
+              </option>
+            ))}
+          </select>
+        </div>
+        {selectedMuscle && <ButtonWithLoader className='mt-0' onClick={saveStrengthContent} >Submit</ButtonWithLoader>}
+        
+      </div>
 
       {selectedMuscle?.excercizes?.map((exercise) => (
         <div
           key={exercise.id}
-          className="relative exercise-card-wrapper mb-6 border rounded-lg shadow-md p-4"
+          className="relative exercise-card-wrapper mb-6 mt-6 border  rounded-lg  p-4"
         >
           <div className="w-full flex bg-white mt-6">
             <div className="flex w-1/2 flex-col gap-8">
@@ -150,8 +156,8 @@ const ExerciseMetrics = () => {
               </div>
               <VideoUpload exerciseId={exercise.id} muscleId={selectedMuscleId} />
             </div>
-            <div className="w-1/2">
-              <MetricesMultiSelect placeholder={'Current Metrices'} exerciseId={exercise.id} muscleId={selectedMuscleId} options={["date", "sessionTime", "reps", "sets", "weight", "totalReps"]} onChange={() => {}} />
+            <div className="w-1/2 ml-12">
+              <MetricesMultiSelect placeholder={'Current Metrices'} exerciseId={exercise.id} muscleId={selectedMuscleId} options={["date", "sessionTime", "reps", "sets", "weight", "totalReps"]} onChange={() => { }} />
             </div>
           </div>
           <button
@@ -162,14 +168,17 @@ const ExerciseMetrics = () => {
           </button>
         </div>
       ))}
+      <div className="flex items-center justify-between">
+        {selectedMuscle && <button
+          onClick={addNewExercise}
+          className="mt-0 px-2 py-2 bg-primary text-white rounded hover:bg-blue-600"
+        >
+          <PlusIcon />
+        </button>}
+        
 
-      <button
-        onClick={addNewExercise}
-        className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-blue-600"
-      >
-        Add New Exercise
-      </button>
-      <ButtonWithLoader onClick={saveStrengthContent} >Submit</ButtonWithLoader>
+      </div>
+
     </div>
   );
 };

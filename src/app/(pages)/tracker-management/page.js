@@ -29,7 +29,7 @@ const page = () => {
         
     }, [])
     
-    const [activeTab, setActiveTab] = useState("Exercises");
+    const [activeTab, setActiveTab] = useState("Category");
     const [habitName, setHabitName] = useState('')
     const [newHabit, setNewHabit] = useState(false);
     const [pLoading, setpLoading] = useState(false);
@@ -51,13 +51,13 @@ const page = () => {
                 <div className="flex space-x-8 ">
 
                     <button
-                        className={`pb-2 ${activeTab === "Exercises"
+                        className={`pb-2 ${activeTab === "Category"
                             ? "border-b-2 border-primary  text-base font-semibold text-secondary "
                             : " text-neutral font-semibold text-secondary"
                             }`}
-                        onClick={() => setActiveTab("Exercises")}
+                        onClick={() => setActiveTab("Category")}
                     >
-                        Exercises
+                        Category
                     </button>
                     <button
                         className={`pb-2 ${activeTab === "Habits"
@@ -95,7 +95,7 @@ const page = () => {
 
 
 
-            {activeTab === 'Exercises' && <Categories />}
+            {activeTab === 'Category' && <Categories />}
             {activeTab === 'Habits' && <HabitsTable data={data} loading={loading} fetchAllHabits={fetchAllHabits} />}
 
             {newHabit && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">

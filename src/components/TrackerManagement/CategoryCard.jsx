@@ -4,7 +4,7 @@ import { PencilIcon, Replace, SearchIcon, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
 
-const CategoryCard = ({ imageUrl, title, muscleGroups, onDelete }) => {
+const CategoryCard = ({ imageUrl, title, muscleGroups, onDelete, onEdit }) => {
     const router = useRouter();
 
     return (
@@ -50,7 +50,7 @@ const CategoryCard = ({ imageUrl, title, muscleGroups, onDelete }) => {
 
                 {/* Replace Button */}
                 <Button
-                    onClick={()=>router.push('tracker-management/edit-category/1')}
+                    onClick={onEdit}
                     className="flex items-center justify-center gap-2 hover:bg-primary"
                 >
                   

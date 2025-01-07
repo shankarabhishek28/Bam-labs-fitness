@@ -9,22 +9,23 @@ export const responseValidator = async (
 ) => {
   if (response.ok) {
     const res = await response.json();
-    if (Array.isArray(res.data)) {
+    if (Array.isArray(res.data) || Array.isArray(res.strengthContent)) {
       console.log("we got inside")
+      console.log(res.strengthContent)
       if (isToaster) {
         toast.success(!message || message.length == 0 ? res.message : message, {
           toastId: `API-Response-success-${Math.random()}`,
         });
       }
       
-      return { status: true, data: [...res.data] };
+      return { status: true, data: res.data ? [...res.data] : [...res.strengthContent] };
     } else if (typeof res?.data === "object") {
       if (isToaster) {
         toast.success(!message || message.length == 0 ? res.message : message, {
           toastId: `API-Response-success-${Math.random()}`,
         });
       }
-      
+     
       return { status: true, data: res.data };
     } else if (typeof res.data === "string") {
       if (isToaster) {

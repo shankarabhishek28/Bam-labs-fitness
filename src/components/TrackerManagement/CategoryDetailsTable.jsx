@@ -14,6 +14,7 @@ import Link from "next/link";
 import Popup from "../ui/Popup";
 import EditExerciseModal from "./EditExerciseComp";
 import EditExerciseComp from "./EditExerciseComp";
+import dayjs from "dayjs";
 
 
 const CategoryDetailsTable = ({ data }) => {
@@ -54,7 +55,7 @@ const CategoryDetailsTable = ({ data }) => {
                         >
                             <TableCell className='flex min-w-[160px]  mt-1'>
                                 <span className="text-[#454545] font-semibold text-sm text-left truncate...">
-                                    {item?.srNo}
+                                    {index+1}
                                 </span>
 
                             </TableCell>
@@ -66,12 +67,12 @@ const CategoryDetailsTable = ({ data }) => {
 
                             <TableCell className='min-w-[140px]'>
                                 <span className="text-[#454545] font-normal  text-sm text-left truncate...">
-                                    {item?.createdOn}
+                                     {dayjs(item?.createdAt).format("DD/MM/YYYY")}
                                 </span>
                             </TableCell>
                             <TableCell className='min-w-[140px]'>
                                 <span className="text-[#454545] font-normal  text-sm text-left truncate...">
-                                    {item?.lastEdited}
+                                    {dayjs(item?.updatedAt).format("DD/MM/YYYY")}
                                 </span>
                             </TableCell>
 
