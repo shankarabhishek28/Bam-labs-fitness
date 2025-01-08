@@ -98,7 +98,7 @@ const page = () => {
 
                 </div>
             }
-            {activeTab === 'Content' && <ContentTable data={content} />}
+            {activeTab === 'Content' && <ContentTable />}
 
             {newHabit && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
                 <div className="w-[408px] md:w-[450px] bg-white px-5 py-7 gap-3 rounded-xl flex flex-wrap shadow">

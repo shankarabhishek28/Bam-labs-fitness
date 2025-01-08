@@ -7,7 +7,8 @@ import UploadOnCloud from '../../../../../public/Icons/UploadOnCloud';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
-const page = () => {
+const page = ({params}) => {
+    console.log("params-->",params);
     const [formData, setFormData] = useState({
         strengthExercise: '',
         exerciseName: '',

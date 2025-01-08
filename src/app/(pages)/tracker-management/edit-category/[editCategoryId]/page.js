@@ -14,15 +14,19 @@ import { Input } from '@/components/ui/input';
 import VideoUpload from '@/components/TrackerManagement/VideoUpload';
 import MetricsForm from '@/components/TrackerManagement/MetricsForm';
 import { editStrengthContent, getSpecificStrengthContent } from '@/serviceAPI/tennant';
+import MultiSelectDropdown from '@/components/ui/MultiSelectDropdown';
 
 
-const page = ({params}) => {
+const page = ({ params }) => {
     const [workoutData, setWorkoutData] = useState([]);
     const id = params?.editCategoryId;
-    
-    const [editMuscle, setEditMuscle] = useState({"ok":false, "id":0});
+    const [excerciseName,setExcerciseName] = useState([]);
+    const [selectedExcercise, setSelectedExercise] = useState('');
+    console.log("SI",selectedExcercise);
+    const [selectedMetrices, setSelectedMetrices] = useState([]);
+    const [editMuscle, setEditMuscle] = useState({ "ok": false, "id": 0 });
     const [addExcercise, setAddExercise] = useState(false);
-    const handleCancel = () => setEditMuscle({"ok":false, "id":0});
+    const handleCancel = () => setEditMuscle({ "ok": false, "id": 0 });
     const fetchThisEditContent = async () => {
         if (!id) {
             return;
@@ -30,7 +34,7 @@ const page = ({params}) => {
         try {
             const res = await getSpecificStrengthContent(id);
             console.log("API Response:", res); // Log the entire response
-            if (res?.status ) {
+            if (res?.status) {
                 setWorkoutData(res.data);
             } else {
                 console.error("Unexpected response structure:", res);
@@ -39,23 +43,37 @@ const page = ({params}) => {
             console.error("Error fetching content:", error);
         }
     };
-    
+    const handleSelectionChange = (selectedItems) => {
+        setSelectedMetrices(selectedItems);
+    };
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchThisEditContent()
-    },[id])
+    }, [id])
 
-    const saveEditMuscleName = async() => {
+    const handleAddExercise = () => {
+        let payload = {
+            type: "excercise",
+            id: selectedExcercise,
+            metrices:selectedMetrices,
+            name:excerciseName,
+
+
+        }
+        console.log("pauload-->",payload)
+    }
+
+    const saveEditMuscleName = async () => {
         const payload = {
-            type:"muscle",
-            id:editMuscle?.id,
-            name:editMuscle?.name
+            type: "muscle",
+            id: editMuscle?.id,
+            name: editMuscle?.name
         }
         const res = await editStrengthContent(payload);
-        if(res?.status){
+        if (res?.status) {
             fetchThisEditContent();
         }
-        setEditMuscle({"ok":false})
+        setEditMuscle({ "ok": false })
 
     }
 
@@ -96,7 +114,7 @@ const page = ({params}) => {
                                 <h2 className="text-lg font-semibold text-[#454545] ">{item?.muscle?.targetedMuscle}</h2>
                             </div>
                             <div className='flex items-center justify-center gap-2'>
-                                <Button onClick={() => setEditMuscle({"ok":true,"id":item?.muscle?._id,"name":item?.muscle?.targetedMuscle})} className='px-2'><Pencil /></Button>
+                                <Button onClick={() => setEditMuscle({ "ok": true, "id": item?.muscle?._id, "name": item?.muscle?.targetedMuscle })} className='px-2'><Pencil /></Button>
                                 <Button className='px-2 bg-[#E7E7E7] text-red-600 hover:text-white'><Trash2 /></Button>
                             </div>
 
@@ -109,7 +127,7 @@ const page = ({params}) => {
                     </div>
                 ))}
             </div>
-            <Popup isOpen={editMuscle.ok} onClose={() => setEditMuscle({"ok":false})} footerButtons={[{ label: 'Cancel', onClick: handleCancel }, { label: 'Confirm', variant: 'primary', onClick:saveEditMuscleName }]}>
+            <Popup isOpen={editMuscle.ok} onClose={() => setEditMuscle({ "ok": false })} footerButtons={[{ label: 'Cancel', onClick: handleCancel }, { label: 'Confirm', variant: 'primary', onClick: saveEditMuscleName }]}>
                 <div className="mb-2">
                     <label htmlFor="exerciseName" className="block text-gray-700 text-sm mb-2">
                         Muscle name
@@ -117,45 +135,56 @@ const page = ({params}) => {
                     <Input
                         id="exerciseName"
                         placeholder="Add Name"
-                        onChange = {(e)=>setEditMuscle((prev)=> ({...prev,'name':e.target.value}))}
+                        onChange={(e) => setEditMuscle((prev) => ({ ...prev, 'name': e.target.value }))}
                         value={editMuscle.name}
                         className="w-full"
                     />
                 </div>
             </Popup>
-            <Popup isOpen={addExcercise} onClose={() => setAddExercise(false)} footerButtons={[{ label: 'Cancel' }, { label: 'Confirm', variant: 'primary' }]}>
+            <Popup isOpen={addExcercise} onClose={() => setAddExercise(false)} footerButtons={[{ label: 'Cancel' }, { label: 'Confirm', variant: 'primary', onClick:handleAddExercise }]}>
                 <div className="mb-4">
                     <label className="block text-textColor font-semibold mb-2 ">
                         Choose Muscle
                     </label>
 
-                    <select className='block w-full py-2 pr-10 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'>
-                        <option>Chest</option>
-                        <option>Shoulder</option>
-                        <option>Triceps</option>
+                    <select
+                        className="block w-full py-2 pr-10 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        onChange={(e) => setSelectedExercise(e.target.value)} // Handle change
+                        value={selectedExcercise} // Bind the state to the select value
+                    >
+                        {workoutData?.map((item) => (
+                            <option key={item?.muscle._id} value={item?.muscle._id}>
+                                {item?.muscle?.targetedMuscle}
+                            </option>
+                        ))}
                     </select>
 
 
 
                 </div>
-                <div className="mb-6">
+                <div className="mb-4">
                     <label htmlFor="exerciseName" className="block text-textColor font-semibold mb-2 ">
                         Exercise name
                     </label>
                     <Input
                         id="exerciseName"
+                        value={excerciseName}
                         placeholder="Add exercise"
-                        
+                        onChange={(e)=>setExcerciseName(e.target.value)}
                         className="w-full"
                     />
                 </div>
 
 
 
-                <MetricsForm />
+                <MultiSelectDropdown
+                    options={["date", "sessionTime", "reps", "sets", "weight", "totalReps"]}
+                    onSelectionChange={handleSelectionChange}
+                    placeholder="Choose your options"
+                />
 
                 {/* Video Upload */}
-                <div className="mb-6">
+                <div className="mb-4 mt-4">
                     <VideoUpload />
                 </div>
 

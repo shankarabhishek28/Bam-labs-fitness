@@ -83,7 +83,7 @@ const page = () => {
 
 
 
-            {activeTab === 'All' && <NotificationTable data={notificationData} />}
+            {activeTab === 'All' && <NotificationTable />}
             {activeTab === 'Personalized' && <PersonalizedNotificationTable data={notificationData} />}
 
 

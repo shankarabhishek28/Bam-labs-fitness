@@ -178,3 +178,7 @@ export function removeIds(obj) {
   }
   return obj; // Return value directly if it's not an object or array
 }
+
+export function stripHTML(html) {
+  return html?.replace(/<[^>]*>/g, ''); // Removes all tags
+}

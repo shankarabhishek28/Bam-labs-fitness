@@ -293,7 +293,7 @@ export const addStrengthContent = async (payload) => {
 };
 // /admin/tracker/delete/excercise/67728c98e73f3a3931611fc2
 export const deleteStrengthContent = async (id) => {
-    let endpoint = `${URL}/admin/tracker/delete/excercise/${id}`
+    let endpoint = `${URL}/admin/tracker/delete/${id}`
     const token = await getAuthToken();
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
@@ -389,3 +389,123 @@ export const softDeleteMuscle = async (id) => {
     }
 
 }
+
+export const getAllContent = async () => {
+    let endpoint = `${URL}/content`;
+   
+    
+
+    const token = await getAuthToken();
+    console.log("Token",token)
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
+export const getContentById = async(id) => {
+    let endpoint = `${URL}/content/${id}`;
+   
+    
+
+    const token = await getAuthToken();
+    console.log("Token",token)
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+}
+
+export const updateContent = async (id,payload) => {
+    const endpoint = `${URL}/content/${id}`;
+    const token = await getAuthToken();
+    
+    // Set up headers with authorization
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/json"); // Specify JSON content type for PATCH requests
+
+    // Define request options for PATCH
+    const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: JSON.stringify(payload), // Convert `userData` to JSON for the body
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        console.log("Response",response)
+        return responseValidator(response,true); // Validate response or handle accordingly
+    } catch (error) {
+        return apiError(error); // Handle API error
+    }
+};
+
+export const getNotification = async () => {
+    let endpoint = `${URL}/notification`;
+    // const queryParams = appendQueryParams(payload);
+    // endpoint += queryParams;
+
+    const token = await getAuthToken();
+    console.log("Token",token)
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
+export const addNewNotification = async (payload) => {
+    const endpoint = `${URL}/admin/tracker/strength-content`;
+    const token = await getAuthToken();
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/json");
+
+    const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify(payload),
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response,true);
+    } catch (error) {
+        return apiError(error);
+    }
+};

@@ -33,7 +33,7 @@ export default function Sidebar() {
     return (
         <div className="w-full bg-secondary fixed bottom-0 left-0 h-16 md:h-dvh md:sticky md:top-0 md:left-0 md:bg-secondary md:flex md:flex-wrap md:flex-col z-30">
             <div className="p-6 pb-12 text-2xl mx-auto font-bold">
-                <Image src='/bamLogo.svg' width={100} height={100} />
+                <Image src='/BamLogo.svg' width={100} height={100} />
             </div>
             <nav className="flex-grow">
                 <ul className='mt-12'>

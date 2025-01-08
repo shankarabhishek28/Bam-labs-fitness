@@ -1,5 +1,5 @@
 'use client'
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -9,14 +9,32 @@ import {
   TableRow,
 } from "../ui/table";
 import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown, Eye, Ban, SearchIcon, Filter, Delete, Trash2 } from "lucide-react";
+import { getNotification } from "@/serviceAPI/tennant";
+import dayjs from "dayjs";
 
 
-const NotificationTable = ({ data }) => {
+const NotificationTable = () => {
+  const [tableData, setTableData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const fetchNotification = async () => {
+    const res = await getNotification();
+    if (res?.status) {
+      setTableData(res?.data?.results);
+      setLoading(false);
+    }
 
+  }
+  useEffect(() => {
+    fetchNotification();
+  }, [])
 
   return (
     <div className="pt-2 ">
-      
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className="w-6 h-6 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
       <Table className="min-w-full overflow-x-auto">
         <TableHeader className="border-t-1">
           <TableRow className="bg-primary hover:bg-liteOrange">
@@ -38,38 +56,43 @@ const NotificationTable = ({ data }) => {
             <TableHead className="text-white font-bold text-sm text-left">
               User Type
             </TableHead>
-            <TableHead className="text-white font-bold text-sm text-left">
+            {/* <TableHead className="text-white font-bold text-sm text-left">
               Status
-            </TableHead>
+            </TableHead> */}
             <TableHead className="text-white font-bold text-sm text-left">
               Action
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((item, index) => (
+          {tableData?.map((item, index) => (
             <TableRow
               key={index}
               className="bg-white hover:bg-white cursor-pointer"
             >
-              <TableCell className='flex min-w-[160px]  mt-1'>
-                <div className="flex items-center gap-2">
-                  <input type="checkbox" className="transform scale-150"/>
-                  <span className="text-[#454545] font-semibold text-sm text-left truncate...">
-                    {item.title}
-                  </span>
-                </div>
+              <TableCell className="max-w-[140px] overflow-hidden mt-1 truncate">
+
+                <span
+                  className="text-[#454545] font-semibold text-sm text-left truncate"
+                  title={item.title} // Tooltip on hover
+                >
+                  {item.title}
+                </span>
 
               </TableCell>
-              <TableCell className='min-w-[140px] '>
-                <span className="text-[#454545] font-normal text-sm text-left truncate...">
+              <TableCell className=" max-w-[160px] overflow-hidden truncate">
+                <span
+                  className="text-[#454545] font-normal text-sm text-left truncate"
+                  title={item.description} // Tooltip on hover
+                >
                   {item.description}
                 </span>
               </TableCell>
 
+
               <TableCell className='min-w-[140px]'>
                 <span className="text-[#454545] font-normal  text-sm text-left truncate...">
-                  {item.createdAt}
+                  {dayjs(item.createdAt).format('DD/MM/YYYY') }
                 </span>
               </TableCell>
 
@@ -78,28 +101,30 @@ const NotificationTable = ({ data }) => {
                   {item.type}
                 </span>
               </TableCell>
-              
+
               <TableCell>
                 <span className="text-[#454545] font-normal text-sm text-left truncate...">
                   {item.userType}
                 </span>
               </TableCell>
-              <TableCell>
+              {/* <TableCell>
                 <span className="text-textColor p-2 rounded-sm bg-[#FFC8C5] font-normal text-sm text-left truncate...">
                   {item.status}
                 </span>
-              </TableCell>
+              </TableCell> */}
 
               <TableCell>
 
                 <div className="flex items-center justify-between ">
-                  <Eye color="#888888" /><Trash2 color="#888888" />
+                  {/* <Eye color="#888888" /> */}
+                  <Trash2 color="#888888" />
                 </div>
 
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
+
       </Table>
       <div className="flex items-center  bg-white p-3 justify-between">
         {/* Entries Per Page */}
