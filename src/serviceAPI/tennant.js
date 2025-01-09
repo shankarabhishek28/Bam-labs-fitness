@@ -464,10 +464,10 @@ export const updateContent = async (id,payload) => {
     }
 };
 
-export const getNotification = async () => {
+export const getNotification = async (payload) => {
     let endpoint = `${URL}/notification`;
-    // const queryParams = appendQueryParams(payload);
-    // endpoint += queryParams;
+    const queryParams = appendQueryParams(payload);
+    endpoint += queryParams;
 
     const token = await getAuthToken();
     console.log("Token",token)
@@ -489,7 +489,7 @@ export const getNotification = async () => {
 };
 
 export const addNewNotification = async (payload) => {
-    const endpoint = `${URL}/admin/tracker/strength-content`;
+    const endpoint = `${URL}/notification`;
     const token = await getAuthToken();
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
@@ -509,3 +509,28 @@ export const addNewNotification = async (payload) => {
         return apiError(error);
     }
 };
+
+export const deleteNotification = async (id) => {
+    let endpoint = `${URL}/notification/${id}`
+    const token = await getAuthToken();
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    
+    const requestOptions = {
+        method: "DELETE",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+
+    try {
+        const response = await fetch(`${endpoint}`, requestOptions);
+        // console.log("RES--->",response)
+        return responseValidator(response,true)
+
+    } catch (error) {
+        return apiError(error)
+    }
+
+}
+

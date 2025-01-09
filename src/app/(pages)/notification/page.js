@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { InputWithLabel } from '@/components/ui/InputWithLabel'
 import UserManagementTable from '@/components/UserManagementComps/UserManagementTable'
 import { Plus, SearchIcon } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import FilterIcon from '../../../../public/Icons/FilterIcon'
 import AccountManagementTable from '@/components/UserManagementComps/AccountManagement'
 import { Input } from '@/components/ui/input'
@@ -15,12 +15,33 @@ import { notificationData } from '@/app/DummyData/Notification'
 import AddNotification from '@/components/Notification/AddNewNotification'
 import PersonalizedNotificationTable from '@/components/Notification/PersonalizedNotificationTable'
 import AddPersonalizedNotification from '@/components/Notification/AddPersonalizedNotification'
+import { getNotification } from '@/serviceAPI/tennant'
 
 const page = () => {
-    const [activeTab, setActiveTab] = React.useState("All");
-    const [newNotification, setNewNotification] = React.useState(false);
-    const [personalizedNotification, setPersonalizedNotification] = React.useState(false);
+    const [activeTab, setActiveTab] = useState("All");
+    const [newNotification, setNewNotification] = useState(false);
+    const [personalizedNotification, setPersonalizedNotification] = useState(false);
+    const [tableData, setTableData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
+
+    const fetchNotification = async (payload) => {
+        const res = await getNotification(payload);
+        if (res?.status) {
+            setTableData(res?.data?.results);
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if(activeTab === 'All'){
+            fetchNotification()
+        }
+        else{
+            fetchNotification({ userType: 'individual' });
+        }
+        
+    }, [activeTab]);
     const [searchTerm, setSearchTerm] = React.useState("wewe");
 
     return (
@@ -63,17 +84,20 @@ const page = () => {
                         <FilterIcon />
                     </div>
                     <div className="flex items-center justify-end mt-2">
-                        <Button onClick={() => {activeTab === 'All' ? setNewNotification(true) : setPersonalizedNotification(true)}} className='gap-2'><Plus color='white' />Create New Notification</Button>
+                        <Button onClick={() => setNewNotification(true)} className='gap-2'><Plus color='white' />Create New Notification</Button>
 
                     </div>
                 </div>
-                {newNotification && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
-                    <AddNotification setNewNotification={setNewNotification} />
+                {/* {newNotification && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
+                    <AddNotification fetchNotification={fetchNotification} setNewNotification={setNewNotification} />
+                </div>} */}
+                {newNotification  && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
+                    <AddNotification activeTab={activeTab} setActiveTab={setActiveTab} fetchNotification={fetchNotification} setNewNotification={setNewNotification} />
                 </div>}
-                {personalizedNotification && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
+                {/* {personalizedNotification && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
                     <AddPersonalizedNotification setPersonalizedNotification={setPersonalizedNotification} />
                 </div>
-                }
+                } */}
 
 
 
@@ -83,8 +107,8 @@ const page = () => {
 
 
 
-            {activeTab === 'All' && <NotificationTable />}
-            {activeTab === 'Personalized' && <PersonalizedNotificationTable data={notificationData} />}
+            {activeTab === 'All' && <NotificationTable fetchNotification={fetchNotification} tableData={tableData} loading={loading} />}
+            {activeTab === 'Personalized' && <PersonalizedNotificationTable fetchNotification={fetchNotification} tableData={tableData} loading={loading} />}
 
 
 

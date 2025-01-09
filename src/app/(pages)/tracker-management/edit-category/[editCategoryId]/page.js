@@ -19,10 +19,11 @@ import MultiSelectDropdown from '@/components/ui/MultiSelectDropdown';
 
 const page = ({ params }) => {
     const [workoutData, setWorkoutData] = useState([]);
+    const [loading, setLoading] = useState(true);
     const id = params?.editCategoryId;
-    const [excerciseName,setExcerciseName] = useState([]);
-    const [selectedExcercise, setSelectedExercise] = useState('');
-    console.log("SI",selectedExcercise);
+    const [excerciseName, setExcerciseName] = useState([]);
+    const [selectedMuscle, setSelectedMuscle] = useState('');
+    console.log("SI", selectedMuscle);
     const [selectedMetrices, setSelectedMetrices] = useState([]);
     const [editMuscle, setEditMuscle] = useState({ "ok": false, "id": 0 });
     const [addExcercise, setAddExercise] = useState(false);
@@ -36,6 +37,7 @@ const page = ({ params }) => {
             console.log("API Response:", res); // Log the entire response
             if (res?.status) {
                 setWorkoutData(res.data);
+                setLoading(false);
             } else {
                 console.error("Unexpected response structure:", res);
             }
@@ -54,13 +56,13 @@ const page = ({ params }) => {
     const handleAddExercise = () => {
         let payload = {
             type: "excercise",
-            id: selectedExcercise,
-            metrices:selectedMetrices,
-            name:excerciseName,
+            id: selectedMuscle,
+            metrices: selectedMetrices,
+            name: excerciseName,
 
 
         }
-        console.log("pauload-->",payload)
+        console.log("payload-->", payload)
     }
 
     const saveEditMuscleName = async () => {
@@ -80,6 +82,11 @@ const page = ({ params }) => {
 
     return (
         <div className='px-6 py-8'>
+            {loading && (
+                <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+                    <div className="w-6 h-6 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            )}
             <span className='text-secondary font-semibold text-xl'>Tracker Management</span>
             <div className="mb-2 mt-4 flex justify-between items-center">
                 <div className="flex w-full items-center justify-between">
@@ -141,7 +148,7 @@ const page = ({ params }) => {
                     />
                 </div>
             </Popup>
-            <Popup isOpen={addExcercise} onClose={() => setAddExercise(false)} footerButtons={[{ label: 'Cancel' }, { label: 'Confirm', variant: 'primary', onClick:handleAddExercise }]}>
+            <Popup isOpen={addExcercise} onClose={() => setAddExercise(false)} footerButtons={[{ label: 'Cancel' }, { label: 'Confirm', variant: 'primary', onClick: handleAddExercise }]}>
                 <div className="mb-4">
                     <label className="block text-textColor font-semibold mb-2 ">
                         Choose Muscle
@@ -149,8 +156,8 @@ const page = ({ params }) => {
 
                     <select
                         className="block w-full py-2 pr-10 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        onChange={(e) => setSelectedExercise(e.target.value)} // Handle change
-                        value={selectedExcercise} // Bind the state to the select value
+                        onChange={(e) => setSelectedMuscle(e.target.value)} // Handle change
+                        value={selectedMuscle} // Bind the state to the select value
                     >
                         {workoutData?.map((item) => (
                             <option key={item?.muscle._id} value={item?.muscle._id}>
@@ -170,7 +177,7 @@ const page = ({ params }) => {
                         id="exerciseName"
                         value={excerciseName}
                         placeholder="Add exercise"
-                        onChange={(e)=>setExcerciseName(e.target.value)}
+                        onChange={(e) => setExcerciseName(e.target.value)}
                         className="w-full"
                     />
                 </div>
