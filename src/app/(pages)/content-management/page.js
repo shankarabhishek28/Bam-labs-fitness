@@ -24,7 +24,7 @@ const page = () => {
             <div className="mb-2 mt-4 flex justify-between items-center">
                 <div className="flex space-x-8 ">
 
-                    <button
+                    {/* <button
                         className={`pb-2 ${activeTab === "Categories"
                             ? "border-b-2 border-primary  text-base font-semibold text-secondary "
                             : " text-neutral font-semibold text-secondary"
@@ -32,8 +32,8 @@ const page = () => {
                         onClick={() => setActiveTab("Categories")}
                     >
                         Categories
-                    </button>
-                    <button
+                    </button> */}
+                    {/* <button
                         className={`pb-2 ${activeTab === "Content"
                             ? "border-b-2 border-primary  text-base font-semibold text-secondary "
                             : " text-neutral font-semibold text-secondary"
@@ -42,7 +42,7 @@ const page = () => {
                     >
                         Content
 
-                    </button>
+                    </button> */}
 
                 </div>
                 <div className="flex items-center gap-4">
@@ -63,7 +63,7 @@ const page = () => {
 
 
 
-            {activeTab === 'Categories' &&
+            {/* {activeTab === 'Categories' &&
                 <div className=''>
                     <div className='flex gap-6 mb-6' >
                         <ExerciseCard
@@ -97,8 +97,8 @@ const page = () => {
 
 
                 </div>
-            }
-            {activeTab === 'Content' && <ContentTable />}
+            } */}
+            {<ContentTable />}
 
             {newHabit && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
                 <div className="w-[408px] md:w-[450px] bg-white px-5 py-7 gap-3 rounded-xl flex flex-wrap shadow">
