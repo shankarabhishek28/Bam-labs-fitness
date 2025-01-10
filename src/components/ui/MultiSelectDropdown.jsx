@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { ChevronDown, Trash2 } from "lucide-react";
 
-const MultiSelectDropdown = ({ options, onSelectionChange, placeholder }) => {
+const MultiSelectDropdown = ({ options,preFetched, onSelectionChange, placeholder }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState(preFetched || []);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -60,9 +60,7 @@ const MultiSelectDropdown = ({ options, onSelectionChange, placeholder }) => {
           )}
         </div>
         <ChevronDown
-          className={`h-5 w-5 transition-transform ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`h-5 w-10 transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
       </div>
 
@@ -72,9 +70,8 @@ const MultiSelectDropdown = ({ options, onSelectionChange, placeholder }) => {
           {options.map((option, index) => (
             <div
               key={index}
-              className={`flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-gray-100 ${
-                selectedOptions.includes(option) ? "bg-gray-200" : ""
-              }`}
+              className={`flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-gray-100 ${selectedOptions.includes(option) ? "bg-gray-200" : ""
+                }`}
               onClick={() => handleOptionClick(option)}
             >
               <span>{option}</span>

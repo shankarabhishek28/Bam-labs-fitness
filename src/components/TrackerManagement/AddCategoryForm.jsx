@@ -2,13 +2,14 @@
 import { useTracker } from '@/Context/TrackerContext';
 import { uploadFiles } from '@/serviceAPI/tennant';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 export default function AddCategoryForm({ setCanMove }) {
     const { setTrackerData, trackerData } = useTracker();
     const [image, setImage] = useState(null);
 
   
-
+    console.log("imae",image)
     const handleImageUpload = async(e) => {
         
         const file = e.target.files[0];
@@ -51,6 +52,10 @@ export default function AddCategoryForm({ setCanMove }) {
     };
 
     const removeMuscleInput = () => {
+        if (trackerData?.targetMuscle?.length <= 1){
+            toast.error('Enter at least one muscle!');
+            return
+        }
         setTrackerData((prev) => ({
             ...prev,
             targetMuscle: prev.targetMuscle.slice(0, -1),
@@ -70,17 +75,20 @@ export default function AddCategoryForm({ setCanMove }) {
     
 
     const handleSubmit = () => {
-        console.log(trackerData)
-        if(trackerData?.targetMuscle?.length > 0){
+        console.log(trackerData);
+        console.log("==>",trackerData?.image?.key, trackerData?.name,trackerData.targetMuscle[0]?.muscleName);
+        let moveForward = !(trackerData?.image?.key === '' || trackerData?.name === '' || trackerData.targetMuscle[0]?.muscleName === '')
+        if(moveForward){
             setCanMove(true);
         }
         else{
-            alert('Add muscles ')
+            toast.error('Fields Are Missing!');
+            return
         }
 
 
     };
-
+    console.log(trackerData?.targetMuscle[0]?.muscleName)
     return (
         <div className="w-full bg-white rounded-md">
             <span className="font-medium text-[#454545] text-lg">Add category name</span>
@@ -89,9 +97,9 @@ export default function AddCategoryForm({ setCanMove }) {
             <div className="mb-4 mt-4">
                 <label className="block text-gray-700 mb-2">Upload Image</label>
                 <div className="border-dashed border-2 border-gray-300 rounded-md w-32 h-32 flex items-center justify-center relative">
-                    {image ? (
+                    {trackerData.image?.url ? (
                         <img
-                            src={image}
+                            src={trackerData?.image?.url}
                             alt="Preview"
                             className="absolute top-0 left-0 w-full h-full object-cover rounded-md"
                         />
@@ -101,6 +109,7 @@ export default function AddCategoryForm({ setCanMove }) {
                     <input
                         type="file"
                         accept="image/*"
+                        
                         onChange={handleImageUpload}
                         className="absolute w-full h-full opacity-0 cursor-pointer"
                     />
@@ -112,7 +121,7 @@ export default function AddCategoryForm({ setCanMove }) {
                 <input
                     type="text"
                     placeholder="Lower body"
-                    value={trackerData?.categoryName}
+                    value={trackerData?.name || ''}
                     onChange={(e) => setTrackerData((prev) => ({
                         ...prev, "name": e.target.value
                     }))}
@@ -153,7 +162,8 @@ export default function AddCategoryForm({ setCanMove }) {
             </div>
 
             <button onClick={handleSubmit}
-            disabled={!(trackerData?.targetMuscle?.length > 0)} className="bg-primary mt-4 text-white py-2 px-6 rounded-md w-1/4 hover:bg-blue-600">
+            // disabled={!(trackerData?.targetMuscle?.length > 0 && trackerData.targetMuscle[0]?.muscleName !== '' )}
+             className="bg-primary mt-4 text-white py-2 px-6 rounded-md w-1/4 hover:bg-blue-600">
                 Continue
             </button>
         </div>

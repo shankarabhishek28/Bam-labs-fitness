@@ -11,7 +11,6 @@ import { useTracker } from '@/Context/TrackerContext';
 
 const page = () => {
    const {  trackerData } = useTracker();
-   console.log("TD",trackerData);
     const [targetMuscle, setTargetedMuscles] = useState([]);
     const [canMove, setCanMove] = useState(false);
 
@@ -20,16 +19,17 @@ const page = () => {
     return (
         <div className="px-6 py-8">
             <div className="flex items-center justify-between">
-                <Link href={'/tracker-management'}>
+               
                     <Button
                         variant="outline"
+                        onClick={()=>setCanMove(false)}
                         className="flex items-center mb-6 space-x-2 gap-4 rounded-[8px] border border-textColor w-20 h-8 mt-4"
                     >
                         <div className="text-sm text-textColor flex items-center justify-center pr-1">
                             <ChevronLeft size={20} /> <p>Back</p>
                         </div>
                     </Button>
-                </Link>
+                
                 
 
             </div>

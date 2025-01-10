@@ -390,6 +390,75 @@ export const softDeleteMuscle = async (id) => {
 
 }
 
+export const addExcerciseForAMuscle = async (payload) => {
+    const endpoint = `${URL}/admin/tracker/muscle/exercise`;
+    const token = await getAuthToken();
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/json");
+
+    const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify(payload),
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response,true);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
+export const deleteExcercise = async (id) => {
+    let endpoint = `${URL}/admin/tracker/delete/excercise/${id}`
+    const token = await getAuthToken();
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    
+    const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+
+    try {
+        const response = await fetch(`${endpoint}`, requestOptions);
+        // console.log("RES--->",response)
+        return responseValidator(response,true)
+
+    } catch (error) {
+        return apiError(error)
+    }
+
+}
+export const deleteMuscle = async (id) => {
+    let endpoint = `${URL}/admin/tracker/delete/muscle/${id}`
+    const token = await getAuthToken();
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    
+    const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+
+    try {
+        const response = await fetch(`${endpoint}`, requestOptions);
+        // console.log("RES--->",response)
+        return responseValidator(response,true)
+
+    } catch (error) {
+        return apiError(error)
+    }
+
+}
+
 export const getAllContent = async () => {
     let endpoint = `${URL}/content`;
    

@@ -13,12 +13,17 @@ import Popup from '@/components/ui/Popup';
 import { Input } from '@/components/ui/input';
 import VideoUpload from '@/components/TrackerManagement/VideoUpload';
 import MetricsForm from '@/components/TrackerManagement/MetricsForm';
-import { editStrengthContent, getSpecificStrengthContent } from '@/serviceAPI/tennant';
+import { addExcerciseForAMuscle, deleteMuscle, editStrengthContent, getSpecificStrengthContent } from '@/serviceAPI/tennant';
 import MultiSelectDropdown from '@/components/ui/MultiSelectDropdown';
+import UploadAnyVideo from '@/components/ui/UploadAnyVideo';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 
 const page = ({ params }) => {
     const [workoutData, setWorkoutData] = useState([]);
+    const [uploadedVideo, setUploadedVideo] = useState(null);
+    const router = useRouter()
     const [loading, setLoading] = useState(true);
     const id = params?.editCategoryId;
     const [excerciseName, setExcerciseName] = useState([]);
@@ -41,7 +46,9 @@ const page = ({ params }) => {
             } else {
                 console.error("Unexpected response structure:", res);
             }
+            setLoading(false);
         } catch (error) {
+            setLoading(false);
             console.error("Error fetching content:", error);
         }
     };
@@ -53,23 +60,43 @@ const page = ({ params }) => {
         fetchThisEditContent()
     }, [id])
 
-    const handleAddExercise = () => {
+    const handleAddExercise = async () => {
         let payload = {
-            type: "excercise",
+
             id: selectedMuscle,
             metrices: selectedMetrices,
             name: excerciseName,
+            video: uploadedVideo
 
 
         }
-        console.log("payload-->", payload)
-    }
+        console.log(payload)
+        if (!selectedMuscle || !selectedMetrices || !excerciseName || !uploadedVideo) {
+            toast.error("Fields are empty!")
+            return; // Prevent API call if any field is empty
+        }
+        const res = await addExcerciseForAMuscle(payload);
+        if (res?.status) {
+            setAddExercise(false);
+            fetchThisEditContent();
+            setExcerciseName('');
+            setUploadedVideo(null);
+            setSelectedMetrices(null);
+            setSelectedMuscle(null);
 
+        }
+    }
+    const deleteThisMuscle = async (id) => {
+        const res = await deleteMuscle(id);
+        if (res?.status) {
+            fetchThisEditContent();
+        }
+    }
     const saveEditMuscleName = async () => {
         const payload = {
             type: "muscle",
             id: editMuscle?.id,
-            name: editMuscle?.name
+            name: editMuscle?.name,
         }
         const res = await editStrengthContent(payload);
         if (res?.status) {
@@ -79,7 +106,20 @@ const page = ({ params }) => {
 
     }
 
-
+    const handleVideoUpload = (videoData) => {
+        if (videoData) {
+            console.log("Uploaded Video Data:", videoData);
+            setUploadedVideo(videoData); // Store the video data in the state
+        } else {
+            console.log("Video removed.");
+            setUploadedVideo(null); // Clear the state if the video is removed
+        }
+    };
+    useEffect(() => {
+        if (workoutData.length > 0 && !selectedMuscle) {
+            setSelectedMuscle(workoutData[0]?.muscle?._id);
+        }
+    }, [workoutData]);
     return (
         <div className='px-6 py-8'>
             {loading && (
@@ -122,7 +162,7 @@ const page = ({ params }) => {
                             </div>
                             <div className='flex items-center justify-center gap-2'>
                                 <Button onClick={() => setEditMuscle({ "ok": true, "id": item?.muscle?._id, "name": item?.muscle?.targetedMuscle })} className='px-2'><Pencil /></Button>
-                                <Button className='px-2 bg-[#E7E7E7] text-red-600 hover:text-white'><Trash2 /></Button>
+                                <Button onClick={() => deleteThisMuscle(item?.muscle?._id)} className='px-2 bg-[#E7E7E7] text-red-600 hover:text-white'><Trash2 /></Button>
                             </div>
 
                         </div>
@@ -130,7 +170,7 @@ const page = ({ params }) => {
 
                         <hr className="h-[0.3px] bg-black border-0 mt-0 mb-4 w-[90%]" />
                         {/* Render ExerciseTable with item.excercises */}
-                        <CategoryDetailsTable data={item?.excercizes} />
+                        <CategoryDetailsTable fetchThisEditContent={fetchThisEditContent} data={item?.excercizes} />
                     </div>
                 ))}
             </div>
@@ -182,17 +222,22 @@ const page = ({ params }) => {
                     />
                 </div>
 
+                <div>
+                    <label htmlFor="exerciseName" className="block text-textColor font-semibold mb-2 ">
+                        Metrices
+                    </label>
+                    <MultiSelectDropdown
+                        options={["date", "sessionTime", "reps", "sets", "weight", "totalReps"]}
+                        onSelectionChange={handleSelectionChange}
+                        placeholder="Choose your options"
+                    />
+                </div>
 
 
-                <MultiSelectDropdown
-                    options={["date", "sessionTime", "reps", "sets", "weight", "totalReps"]}
-                    onSelectionChange={handleSelectionChange}
-                    placeholder="Choose your options"
-                />
 
                 {/* Video Upload */}
                 <div className="mb-4 mt-4">
-                    <VideoUpload />
+                    <UploadAnyVideo onVideoUpload={handleVideoUpload} />
                 </div>
 
             </Popup>
