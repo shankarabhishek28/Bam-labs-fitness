@@ -182,3 +182,12 @@ export function removeIds(obj) {
 export function stripHTML(html) {
   return html?.replace(/<[^>]*>/g, ''); // Removes all tags
 }
+
+export function formatNumber(num) {
+  if (num >= 1_000_000) {
+      return `${Math.floor(num / 1_000_000)}M`; // Millions
+  } else if (num >= 1_000) {
+      return `${Math.floor(num / 1_000)}k`; // Thousands
+  }
+  return num.toString(); // Less than a thousand
+}

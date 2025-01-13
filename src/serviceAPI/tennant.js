@@ -27,6 +27,150 @@ export const uploadFiles = async (file) => {
     }
 };
 
+export const getMetrices = async () => {
+    let endpoint = `${URL}/admin/dashboard/user-stats`;
+    // const queryParams = appendQueryParams(payload);
+    // endpoint += queryParams;
+
+    const token = await getAuthToken();
+    console.log("Token",token)
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
+export const getHabitStat = async () => {
+    let endpoint = `${URL}/admin/dashboard/habbit-stats`;
+    // const queryParams = appendQueryParams(payload);
+    // endpoint += queryParams;
+
+    const token = await getAuthToken();
+    console.log("Token",token)
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
+export const getExerciseStats = async () => {
+    let endpoint = `${URL}/admin/dashboard/excercise-activity`;
+    // const queryParams = appendQueryParams(payload);
+    // endpoint += queryParams;
+
+    const token = await getAuthToken();
+    console.log("Token",token)
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
+export const getUserSignupStats = async (payload) => {
+    let endpoint = `${URL}/admin/dashboard/signup-summary`;
+    const queryParams = appendQueryParams(payload);
+    endpoint += queryParams;
+
+    const token = await getAuthToken();
+    console.log("Token",token)
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
+export const getTimeSpentStats = async (payload) => {
+    let endpoint = `${URL}/admin/dashboard/user-activity`;
+    const queryParams = appendQueryParams(payload);
+    endpoint += queryParams;
+
+    const token = await getAuthToken();
+    console.log("Token",token)
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
+export const getAgeGenderStats = async () => {
+    let endpoint = `${URL}/admin/dashboard/age-gender-distribution`;
+    // const queryParams = appendQueryParams(payload);
+    // endpoint += queryParams;
+
+    const token = await getAuthToken();
+    console.log("Token",token)
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
 
 export const getUsersOverview = async () => {
     let endpoint = `${URL}/admin/users/overview`;
