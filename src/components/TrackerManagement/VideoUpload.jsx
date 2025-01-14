@@ -63,7 +63,7 @@ const VideoUpload = ({ exerciseId, muscleId }) => {
               exercise.id === exerciseId
                 ? {
                     ...exercise,
-                    video: null,
+                    video: {key:'',url:''},
                   }
                 : exercise
             ),
