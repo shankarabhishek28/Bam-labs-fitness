@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 const ExerciseMetrics = () => {
   const { trackerData, setTrackerData } = useTracker();
-  
+
   const [selectedMuscleId, setSelectedMuscleId] = useState("");
   const router = useRouter()
   const addNewExercise = () => {
@@ -65,34 +65,34 @@ const ExerciseMetrics = () => {
     let isValid = true;
 
     for (const muscle of targetMuscle) {
-        const { muscleName, excercizes } = muscle;
-        let missingFieldsMessage = "";
+      const { muscleName, excercizes } = muscle;
+      let missingFieldsMessage = "";
 
-        for (const exercise of excercizes) {
-            const { video, name, metrices } = exercise;
+      for (const exercise of excercizes) {
+        const { video, name, metrices } = exercise;
 
-            // Check each field and append to the message if missing
-            if (!video.key) {
-                missingFieldsMessage += "video field, ";
-            }
-            if (!name) {
-                missingFieldsMessage += "name field, ";
-            }
-            if (!metrices || metrices.length === 0) {
-                missingFieldsMessage += "metrics field, ";
-            }
+        // Check each field and append to the message if missing
+        if (!video.key) {
+          missingFieldsMessage += "video field, ";
         }
-
-        // If there are missing fields, remove the trailing comma and space
-        if (missingFieldsMessage) {
-            missingFieldsMessage = missingFieldsMessage.slice(0, -2); // Remove last ", "
-            toast.error(`The muscle "${muscleName}" has missing fields: ${missingFieldsMessage}.`);
-            isValid = false;
+        if (!name) {
+          missingFieldsMessage += "name field, ";
         }
+        if (!metrices || metrices.length === 0) {
+          missingFieldsMessage += "metrics field, ";
+        }
+      }
+
+      // If there are missing fields, remove the trailing comma and space
+      if (missingFieldsMessage) {
+        missingFieldsMessage = missingFieldsMessage.slice(0, -2); // Remove last ", "
+        toast.error(`The muscle "${muscleName}" has missing fields: ${missingFieldsMessage}.`);
+        isValid = false;
+      }
     }
 
     return isValid; // Return true if all validations pass
-};
+  };
 
   const handleExerciseNameChange = (exerciseId, updatedName) => {
     setTrackerData((prevData) => {
@@ -121,8 +121,8 @@ const ExerciseMetrics = () => {
 
     // If validation fails, stop further execution
     if (!isValid) {
-        return;
-    }    const res = await addStrengthContent(removeIds(trackerData));
+      return;
+    } const res = await addStrengthContent(removeIds(trackerData));
     if (res?.status) {
       setTrackerData({
         name: '',
@@ -166,14 +166,14 @@ const ExerciseMetrics = () => {
             </option>
             {trackerData?.targetMuscle?.map((item) => (
               <option key={item.id} value={item.id}>
-                {item.muscleName}
+                {item.muscleName.charAt(0).toUpperCase() + item.muscleName.slice(1)}
               </option>
             ))}
           </select>
         </div>
 
         {selectedMuscle && <ButtonWithLoader className='mt-0' onClick={saveStrengthContent} >Submit</ButtonWithLoader>}
-        
+
       </div>
 
       {selectedMuscle?.excercizes?.map((exercise) => (
@@ -216,7 +216,7 @@ const ExerciseMetrics = () => {
         >
           <PlusIcon />
         </button>}
-        
+
 
       </div>
 
