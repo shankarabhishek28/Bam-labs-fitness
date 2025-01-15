@@ -210,7 +210,7 @@ const page = ({ params }) => {
                 <p>This Muscle and its corresponding exercises will no longer be available in app!</p>
             </Popup>
 
-            <Popup isOpen={addExcercise} onClose={() => setAddExercise(false)} footerButtons={[{ label: 'Cancel' }, {
+            <Popup isOpen={addExcercise} onClose={() => setAddExercise(false)} footerButtons={[{ label: 'Cancel',onClick:()=>setAddExercise(false) }, {
                 label: isLoading ? 'Processing...' : 'Confirm',
                 variant: 'primary',
                 onClick: handleAddExercise,
