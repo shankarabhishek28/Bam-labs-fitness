@@ -82,9 +82,9 @@ console.log("check ",trackerData)
         let missingFieldsMessage = "";
         const { video, name, metrices } = exercise;
   
-        if (!video.key) {
-          missingFieldsMessage += "video field, ";
-        }
+        // if (!video.key) {
+        //   missingFieldsMessage += "video field, ";
+        // }
         if (!name) {
           missingFieldsMessage += "name field, ";
         }

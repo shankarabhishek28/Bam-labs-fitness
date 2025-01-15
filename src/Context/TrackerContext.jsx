@@ -14,7 +14,7 @@ export const TrackerProvider = ({ children }) => {
             "excercizes": [
     
                 {
-                    "video": {"key":"","url":''},
+                    "video": {},
                     "id": Date.now(),
                     "name": "",
                     "metrices": []

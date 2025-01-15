@@ -23,24 +23,25 @@ import { toast } from 'react-toastify';
 const page = ({ params }) => {
     const [workoutData, setWorkoutData] = useState([]);
     const [uploadedVideo, setUploadedVideo] = useState(null);
-    const router = useRouter()
+    const [deleteMuscleModal, setDeleteMuscleModal] = useState({ id: '', open: false });
     const [isLoading, setIsLoading] = useState(false);
     const [loading, setLoading] = useState(true);
     const id = params?.editCategoryId;
     const [excerciseName, setExcerciseName] = useState([]);
     const [selectedMuscle, setSelectedMuscle] = useState('');
-    console.log("SI", selectedMuscle);
+
     const [selectedMetrices, setSelectedMetrices] = useState([]);
     const [editMuscle, setEditMuscle] = useState({ "ok": false, "id": 0 });
     const [addExcercise, setAddExercise] = useState(false);
     const handleCancel = () => setEditMuscle({ "ok": false, "id": 0 });
+    console.log("modal",deleteMuscleModal)
     const fetchThisEditContent = async () => {
         if (!id) {
             return;
         }
         try {
             const res = await getSpecificStrengthContent(id);
-            console.log("API Response:", res); // Log the entire response
+            console.log("API Response:", res); 
             if (res?.status) {
                 setWorkoutData(res.data);
                 setLoading(false);
@@ -104,7 +105,9 @@ const page = ({ params }) => {
         const res = await deleteMuscle(id);
         if (res?.status) {
             fetchThisEditContent();
+            setDeleteMuscleModal({id:0,open:false})
         }
+        setDeleteMuscleModal({id:0,open:false})
     }
     const saveEditMuscleName = async () => {
         const payload = {
@@ -176,7 +179,7 @@ const page = ({ params }) => {
                             </div>
                             <div className='flex items-center justify-center gap-2'>
                                 <Button onClick={() => setEditMuscle({ "ok": true, "id": item?.muscle?._id, "name": item?.muscle?.targetedMuscle })} className='px-2'><Pencil /></Button>
-                                <Button onClick={() => deleteThisMuscle(item?.muscle?._id)} className='px-2 bg-[#E7E7E7] text-red-600 hover:text-white'><Trash2 /></Button>
+                                <Button onClick={() => setDeleteMuscleModal({open:true,id:item?.muscle?._id})} className='px-2 bg-[#E7E7E7] text-red-600 hover:text-white'><Trash2 /></Button>
                             </div>
 
                         </div>
@@ -202,6 +205,11 @@ const page = ({ params }) => {
                     />
                 </div>
             </Popup>
+
+            <Popup title={'Are you sure you wish to delete this muscle?'} isOpen={deleteMuscleModal.open} onClose={() => setDeleteMuscleModal({id:0,open:false})} footerButtons={[{ label: 'Cancel',onClick:()=>setDeleteMuscleModal({open:false,id:0})}, { label: 'Confirm', variant: 'primary',onClick:()=>deleteThisMuscle(deleteMuscleModal?.id) }]}>
+                <p>This Muscle and its corresponding exercises will no longer be available in app!</p>
+            </Popup>
+
             <Popup isOpen={addExcercise} onClose={() => setAddExercise(false)} footerButtons={[{ label: 'Cancel' }, {
                 label: isLoading ? 'Processing...' : 'Confirm',
                 variant: 'primary',
