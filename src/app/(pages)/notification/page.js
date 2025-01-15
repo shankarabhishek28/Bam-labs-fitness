@@ -16,6 +16,7 @@ import AddNotification from '@/components/Notification/AddNewNotification'
 import PersonalizedNotificationTable from '@/components/Notification/PersonalizedNotificationTable'
 import AddPersonalizedNotification from '@/components/Notification/AddPersonalizedNotification'
 import { getNotification } from '@/serviceAPI/tennant'
+import Head from 'next/head'
 
 const page = () => {
     const [activeTab, setActiveTab] = useState("All");
@@ -34,18 +35,22 @@ const page = () => {
     };
 
     useEffect(() => {
-        if(activeTab === 'All'){
+        if (activeTab === 'All') {
             fetchNotification()
         }
-        else{
+        else {
             fetchNotification({ userType: 'individual' });
         }
-        
+
     }, [activeTab]);
     const [searchTerm, setSearchTerm] = React.useState("wewe");
 
     return (
         <div className='px-6 py-8'>
+            <Head>
+                <title>Analytics - BAM Labs Admin</title>
+                <meta name="description" content="" />
+            </Head>
             <span className='text-secondary font-semibold text-xl'>Notifications</span>
             <div className="mb-2 mt-4 flex justify-between items-center">
                 <div className="flex space-x-8 ">
@@ -91,7 +96,7 @@ const page = () => {
                 {/* {newNotification && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
                     <AddNotification fetchNotification={fetchNotification} setNewNotification={setNewNotification} />
                 </div>} */}
-                {newNotification  && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
+                {newNotification && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
                     <AddNotification activeTab={activeTab} setActiveTab={setActiveTab} fetchNotification={fetchNotification} setNewNotification={setNewNotification} />
                 </div>}
                 {/* {personalizedNotification && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">

@@ -7,8 +7,10 @@ import MetricsCard from '@/components/Analytics/MetricsCard';
 import { getAgeGenderStats, getExerciseStats, getHabitStat, getMetrices, getTimeSpentStats, getUserSignupStats } from '@/serviceAPI/tennant';
 import { formatNumber } from '@/utils/helpers';
 import { interval } from 'date-fns';
+import Head from 'next/head';
 
 ChartJS.register(LineElement, BarElement, PointElement, LinearScale, CategoryScale, ArcElement, Tooltip, Legend);
+
 
 
 const page = () => {
@@ -251,9 +253,10 @@ if(ageGender){
       },
     },
   };
-
+  
   return (
     <div className='px-6 py-8'>
+      
       {isLoading && (
                 <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
                     <div className="w-6 h-6 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>

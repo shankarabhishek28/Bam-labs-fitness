@@ -172,10 +172,10 @@ export const getAgeGenderStats = async () => {
 };
 
 
-export const getUsersOverview = async () => {
+export const getUsersOverview = async (payload) => {
     let endpoint = `${URL}/admin/users/overview`;
-    // const queryParams = appendQueryParams(payload);
-    // endpoint += queryParams;
+    const queryParams = appendQueryParams(payload);
+    endpoint += queryParams;
 
     const token = await getAuthToken();
     console.log("Token",token)

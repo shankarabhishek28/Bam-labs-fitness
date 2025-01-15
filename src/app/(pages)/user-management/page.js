@@ -11,22 +11,41 @@ import { Input } from '@/components/ui/input'
 import IssuesTable from '@/components/UserManagementComps/IssuesTable'
 import UserAccess from '@/components/UserManagementComps/UserAccess'
 import { getUsersOverview } from '@/serviceAPI/tennant'
+import { debounce } from 'lodash'
 
 const page = () => {
     const [activeTab, setActiveTab] = React.useState("User Overview");
     const [newUser, setNewUser] = React.useState(false);
     const [userOverview, setUserOverview] = useState([]);
     const [loading, setLoading] = useState(true);
-    const fetUserOverview = async() => {
-        const res = await getUsersOverview()
-        setUserOverview(res?.data?.results)
-        setLoading(false)
-        console.log("res-->",res)
-    }
-    useEffect(()=>{
-        fetUserOverview();
-    },[])
-    const [searchTerm, setSearchTerm] = React.useState("wewe");
+    const [searchTerm, setSearchTerm] = React.useState("");
+    const [isFirstFetch, setIsFirstFetch] = React.useState(true); // To track the first fetch
+    console.log("isFirstFetch",isFirstFetch)
+    const fetUserOverview = async () => {
+        setLoading(true);
+        const res = await getUsersOverview({ search: searchTerm });
+        setUserOverview(res?.data?.results);
+        setLoading(false);
+        console.log("res-->", res);
+    };
+
+    // Debounced version of fetUserOverview
+    const debouncedFetch = React.useMemo(() => debounce(fetUserOverview, 500), [searchTerm]);
+
+    useEffect(() => {
+        // For the first fetch, no delay
+        if (isFirstFetch) {
+            console.log("yes")
+            fetUserOverview();
+            setIsFirstFetch(false); // Set to false after the first fetch
+        } else {
+            console.log("no")
+            debouncedFetch(); // Apply debounce for subsequent fetches
+        }
+
+        return () => debouncedFetch.cancel(); // Cleanup debounce when component unmounts or searchTerm changes
+    }, [searchTerm, debouncedFetch]);
+
 
     return (
         <div className='px-6 py-8'>
@@ -62,7 +81,7 @@ const page = () => {
                         Issues
 
                     </button>
-                    <button
+                    {/* <button
                         className={`pb-2 ${activeTab === "Access"
                             ? "border-b-2 border-primary  text-base font-semibold text-secondary "
                             : " text-neutral font-semibold text-secondary"
@@ -71,7 +90,7 @@ const page = () => {
                     >
                         Access
 
-                    </button>
+                    </button> */}
                 </div>
                 {activeTab !== 'Access' && <div className="flex items-center gap-4">
                     <InputWithLabel
@@ -80,6 +99,8 @@ const page = () => {
                         inputClass='bg-primaryLite h-[40px] rounded-[8px]'
                         inputParent='bg-primaryLite focus-within:border-primary rounded-[8px]'
                         iconType={"pre"}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     >
                         <SearchIcon />
                     </InputWithLabel>
@@ -91,8 +112,8 @@ const page = () => {
                     activeTab === 'Access' && <div className="flex items-center justify-end mt-2">
                         <Button onClick={() => setNewUser(true)} className='gap-2'><Plus color='white' />Create New User</Button>
 
-                    </div>} 
-                
+                    </div>}
+
 
 
 
@@ -142,7 +163,7 @@ const page = () => {
             {activeTab === 'User Overview' && <UserManagementTable data={userOverview} loading={loading} />}
             {activeTab === 'Account management' && <AccountManagementTable />}
             {activeTab === 'Issues' && <IssuesTable data={AMD} />}
-            {activeTab === 'Access' &&
+            {/* {activeTab === 'Access' &&
                 <>
                     <span className='font-medium text-lg'>Search User</span>
                     <div className='w-full border-b-[1px] border-opacity-20 border-textColor mt-4'></div>
@@ -164,7 +185,7 @@ const page = () => {
                     <Button className='h-8 mt-6 mb-4'>Search</Button>
                     <UserAccess data={UAD} />
 
-                </>}
+                </>} */}
 
 
 
