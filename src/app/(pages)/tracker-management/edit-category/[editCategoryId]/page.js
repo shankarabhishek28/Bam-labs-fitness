@@ -24,6 +24,7 @@ const page = ({ params }) => {
     const [workoutData, setWorkoutData] = useState([]);
     const [uploadedVideo, setUploadedVideo] = useState(null);
     const router = useRouter()
+    const [isLoading, setIsLoading] = useState(false);
     const [loading, setLoading] = useState(true);
     const id = params?.editCategoryId;
     const [excerciseName, setExcerciseName] = useState([]);
@@ -61,31 +62,44 @@ const page = ({ params }) => {
     }, [id])
 
     const handleAddExercise = async () => {
-        let payload = {
+        // Prevent double clicks
+        if (isLoading) return;
 
+        setIsLoading(true); // Set loading state
+        let payload = {
             id: selectedMuscle,
             metrices: selectedMetrices,
             name: excerciseName,
-            video: uploadedVideo
+            video: uploadedVideo,
+        };
 
+        console.log(payload);
 
-        }
-        console.log(payload)
         if (!selectedMuscle || !selectedMetrices || !excerciseName || !uploadedVideo) {
-            toast.error("Fields are empty!")
-            return; // Prevent API call if any field is empty
+            toast.error("Fields are empty!");
+            setIsLoading(false); // Reset loading state
+            return;
         }
-        const res = await addExcerciseForAMuscle(payload);
-        if (res?.status) {
-            setAddExercise(false);
-            fetchThisEditContent();
-            setExcerciseName('');
-            setUploadedVideo(null);
-            setSelectedMetrices(null);
-            setSelectedMuscle(null);
 
+        try {
+            const res = await addExcerciseForAMuscle(payload);
+            if (res?.status) {
+                setAddExercise(false);
+                fetchThisEditContent();
+                setExcerciseName('');
+                setUploadedVideo(null);
+                setSelectedMetrices(null);
+                setSelectedMuscle(null);
+            }
+        } catch (error) {
+            toast.error("Something went wrong!");
+        } finally {
+            setIsLoading(false); // Reset loading state
         }
-    }
+    };
+
+    // Add state for loading
+
     const deleteThisMuscle = async (id) => {
         const res = await deleteMuscle(id);
         if (res?.status) {
@@ -188,7 +202,12 @@ const page = ({ params }) => {
                     />
                 </div>
             </Popup>
-            <Popup isOpen={addExcercise} onClose={() => setAddExercise(false)} footerButtons={[{ label: 'Cancel' }, { label: 'Confirm', variant: 'primary', onClick: handleAddExercise }]}>
+            <Popup isOpen={addExcercise} onClose={() => setAddExercise(false)} footerButtons={[{ label: 'Cancel' }, {
+                label: isLoading ? 'Processing...' : 'Confirm',
+                variant: 'primary',
+                onClick: handleAddExercise,
+                disabled: isLoading // Disable button while loading
+            }]}>
                 <div className="mb-4">
                     <label className="block text-textColor font-semibold mb-2 ">
                         Choose Muscle

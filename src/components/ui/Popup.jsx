@@ -32,6 +32,7 @@ export default function Popup({ isOpen, onClose, title, children, footerButtons 
                       : "border border-primary text-sm font-medium text-primary"
                   }`}
                   onClick={button.onClick}
+                  disabled={button.disabled}
                 >
                   {button.label}
                 </button>

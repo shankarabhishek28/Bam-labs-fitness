@@ -75,9 +75,8 @@ export default function AddCategoryForm({ setCanMove }) {
     
 
     const handleSubmit = () => {
-        console.log(trackerData);
-        console.log("==>",trackerData?.image?.key, trackerData?.name,trackerData.targetMuscle[0]?.muscleName);
-        let moveForward = !(trackerData?.image?.key === '' || trackerData?.name === '' || trackerData.targetMuscle[0]?.muscleName === '')
+        
+        let moveForward = !(trackerData?.image?.key === '' || trackerData?.name === '' || trackerData.targetMuscle.some((item)=> item.muscleName === ''))
         if(moveForward){
             setCanMove(true);
         }

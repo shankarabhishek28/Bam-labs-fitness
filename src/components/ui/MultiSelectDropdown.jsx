@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Trash2 } from "lucide-react";
 
 const MultiSelectDropdown = ({ options,preFetched, onSelectionChange, placeholder }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(preFetched || []);
-
+  const dropdownRef = useRef(null);
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   const handleOptionClick = (option) => {
@@ -29,8 +29,21 @@ const MultiSelectDropdown = ({ options,preFetched, onSelectionChange, placeholde
     onSelectionChange(updatedSelection);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="relative w-full max-w-sm">
+    <div className="relative w-full max-w-sm" ref={dropdownRef}>
       {/* Dropdown header */}
       <div
         className="flex items-center justify-between bg-white border border-gray-300 rounded-lg px-4 py-2 cursor-pointer"

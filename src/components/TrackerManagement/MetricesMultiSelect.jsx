@@ -18,7 +18,6 @@ const MetricesMultiSelect = ({ options, placeholder, exerciseId, muscleId }) => 
               ...muscle,
               excercizes: muscle.excercizes.map((exercise) => {
                 if (exercise.id === exerciseId) {
-                  // Add the selected option to the metrices array
                   return {
                     ...exercise,
                     metrices: [...(exercise.metrices || []), option],
@@ -72,28 +71,28 @@ const MetricesMultiSelect = ({ options, placeholder, exerciseId, muscleId }) => 
         onClick={toggleDropdown}
       >
         <div className="flex flex-wrap gap-2">
-        {selectedOptions.length > 0 ? (
-  selectedOptions.map((option, index) => {
-    const capitalizedOption = option.charAt(0).toUpperCase() + option.slice(1); // Capitalize the first letter
-    return (
-      <span
-        key={index}
-        className="flex items-center bg-blue-100 gap-2 text-blue-600 px-2 py-1 rounded-lg text-sm"
-      >
-        {capitalizedOption}
-        <Trash2
-          size={16}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleRemove(option);
-          }}
-        />
-      </span>
-    );
-  })
-) : (
-  <span className="text-gray-400">{placeholder || "Select options"}</span>
-)}
+          {selectedOptions.length > 0 ? (
+            selectedOptions.map((option, index) => {
+              const capitalizedOption = option.charAt(0).toUpperCase() + option.slice(1); // Capitalize the first letter
+              return (
+                <span
+                  key={index}
+                  className="flex items-center bg-blue-100 gap-2 text-blue-600 px-2 py-1 rounded-lg text-sm"
+                >
+                  {capitalizedOption}
+                  <Trash2
+                    size={16}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemove(option);
+                    }}
+                  />
+                </span>
+              );
+            })
+          ) : (
+            <span className="text-gray-400">{placeholder || "Select options"}</span>
+          )}
 
         </div>
         <ChevronDown />
