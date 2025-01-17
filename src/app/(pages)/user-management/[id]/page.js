@@ -1,21 +1,45 @@
 'use client'
 import { Button } from '@/components/ui/button'
+import { getUserDetails } from '@/serviceAPI/tennant'
+import dayjs from 'dayjs'
 import { ArrowLeft, ArrowLeftIcon, BlocksIcon, ChevronLeft, Delete, RemoveFormatting } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-const page = ({params}) => {
-    console.log("params_id",params.id)
+const page = ({ params }) => {
+    console.log("params_id", params.id)
     const router = useRouter();
+    const [details, setUserDetails] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const fetchThisUsersDetail = async () => {
+        if (params?.id) {
+            const res = await getUserDetails(params.id);
+            if (res?.status) {
+                setUserDetails(res?.data);
+            }
+            setLoading(false);
+
+
+        }
+
+    }
+    useEffect(() => {
+        fetchThisUsersDetail()
+    }, [])
     return (
         <div className="px-6 py-8">
+            {loading && (
+                <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+                    <div className="w-6 h-6 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            )}
             {/* Back Button */}
             <span className='text-secondary font-semibold text-xl'>Users</span>
 
-            <Button variant='outline' onClick={()=>router.push("/user-management")} className="flex items-center mb-6 space-x-2 gap-4 rounded-[8px] border border-textColor w-20 h-8 mt-4">
+            <Button variant='outline' onClick={() => router.push("/user-management")} className="flex items-center mb-6 space-x-2 gap-4 rounded-[8px] border border-textColor w-20 h-8 mt-4">
                 <div className=" text-sm text-textColor  flex items-center justify-center pr-1">
-                    <ChevronLeft size={20}/> <p>Back</p>
+                    <ChevronLeft size={20} /> <p>Back</p>
 
                 </div>
             </Button>
@@ -26,16 +50,16 @@ const page = ({params}) => {
                     <div className="flex space-x-6 items-center">
                         {/* Profile Picture */}
                         <Image
-                            src="/dummyUser.png" // replace with actual path
+                            src={details?.profilePic ? details.profilePic?.url : '/noImage.png'} // replace with actual path
                             alt="Profile Picture"
                             width={120}
                             height={120}
-                            className="rounded-full object-cover"
+                            className="rounded-md object-cover"
                         />
                         {/* User Info */}
                         <div>
-                            <h2 className="text-2xl font-semibold">Margot Foster</h2>
-                            <p className="text-[#7B7B7B] text-xl">ID: 11342</p>
+                            <h2 className="text-2xl font-semibold">{details?.name}</h2>
+                            <p className="text-[#7B7B7B] text-md">ID: {details?._id}</p>
                         </div>
                     </div>
                     {/* Deactivate Button */}
@@ -46,35 +70,38 @@ const page = ({params}) => {
                 </div>
 
                 <p className='font-semibold text-xl mt-4 text-[#454545]'>Profile Details</p>
-                <div className="grid grid-cols-3 xl:grid-cols-5 gap-6 mt-3 text-sm text-gray-600">
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mt-3 text-sm text-gray-600">
                     <div>
                         <p className="font-semibold text-[#888888] text-xl">Full Name</p>
-                        <p className='text-textColor text-[16px] pt-[4px]'>Margot Foster</p>
+                        <p className='"text-textColor cursor-pointer text-[16px] pt-[4px] truncate w-full"'>{details?.name || '--'}</p>
                     </div>
                     <div>
                         <p className="font-semibold text-[#888888] text-xl">Email Address</p>
-                        <p className='text-textColor text-[16px] pt-[4px]'>Megan2114@gmail.com</p>
+                        <p className="text-textColor cursor-pointer text-[16px] pt-[4px] truncate w-full" title={details?.email || '--'}>
+                            {details?.email || '--'}
+                        </p>
                     </div>
-               
+
+
                     <div>
                         <p className="font-semibold text-[#888888] text-xl">Phone No.</p>
-                        <p className='text-textColor text-[16px] pt-[4px]'>+1-245-326-4521</p>
+                        <p className='"text-textColor cursor-pointer text-[16px] pt-[4px] truncate w-full"'>{details?.phone || "--"}</p>
                     </div>
                     <div>
                         <p className="font-semibold text-[#888888] text-xl">Created On</p>
-                        <p className='text-textColor text-[16px] pt-[4px]'>20/08/2024</p>
+                        <p className='"text-textColor cursor-pointer text-[16px] pt-[4px] truncate w-full"'>{dayjs(details?.createdAt).format('DD/MM/YYYY')}</p>
                     </div>
                     <div>
                         <p className="font-semibold text-[#888888] text-xl">Gender</p>
-                        <p className='text-textColor text-[16px] pt-[4px]'>Female</p>
+                        <p className='"text-textColor cursor-pointer text-[16px] pt-[4px] truncate w-full"'>{details?.gender || '--'}</p>
                     </div>
                     <div>
                         <p className="font-semibold text-[#888888] text-xl">Height</p>
-                        <p className='text-textColor text-[16px] pt-[4px]'>5ft 5 inch</p>
+                        <p className='"text-textColor cursor-pointer text-[16px] pt-[4px] truncate w-full"'>{details?.height || '--'}cm</p>
                     </div>
                     <div>
                         <p className="font-semibold text-[#888888] text-xl">Weight</p>
-                        <p className='text-textColor text-[16px] pt-[4px]'>56 kgs</p>
+                        <p className='"text-textColor cursor-pointer text-[16px] pt-[4px] truncate w-full"'>{details?.weight || '--'} kgs</p>
                     </div>
                     <div>
                         <p className="font-semibold text-[#888888] text-xl">Subscription</p>
@@ -82,7 +109,7 @@ const page = ({params}) => {
                     </div>
                     <div>
                         <p className="font-semibold text-[#888888] text-xl">Plan</p>
-                        <p className='text-textColor text-[16px] pt-[4px]'>Annual</p>
+                        <p className='"text-textColor cursor-pointer text-[16px] pt-[4px] truncate w-full"'>Annual</p>
                     </div>
                 </div>
             </div>

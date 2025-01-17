@@ -19,16 +19,16 @@ import { useRouter } from "next/navigation";
 import { getUsersIssue } from "@/serviceAPI/tennant";
 import dayjs from "dayjs";
 
-const IssuesTable = () => {
+const IssuesTable = ({payload,setPayload}) => {
   const router = useRouter()
   const [data, setData] = useState()
   const fetchUserIssues = async() => {
-    const res = await getUsersIssue()
-    setData(res?.data?.results);
+    const res = await getUsersIssue(payload)
+    setData(res?.data);
   }
   useEffect(()=>{
     fetchUserIssues();
-  },[])
+  },[payload])
   if (data?.length < 1) {
     return <div>No Data</div>;
   }
@@ -62,14 +62,14 @@ const IssuesTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.map((item, index) => (
+          {data?.results?.map((item, index) => (
             <TableRow
               key={index}
               className="bg-white hover:bg-white cursor-pointer"
             >
               <TableCell className='flex min-w-[160px]'>
                 <Link href={`/user-management/${item._id}`} className="flex items-center gap-2">
-                  <Image src={item?.user?.profilePic?.url} width={36} height={36} alt='profile pic' />
+                  <Image src={item?.user?.profilePic?.url || '/notAvailable.jpg'} width={36} height={36} alt='profile pic' />
                   <span className="text-[#454545] font-semibold text-sm text-left truncate...">
                     {item?.name}
                   </span>
@@ -112,16 +112,21 @@ const IssuesTable = () => {
           ))}
         </TableBody>
       </Table>
-      <div className="flex items-center  bg-white p-3 justify-between">
+      <div className="flex bg-white items-center justify-between p-4">
         {/* Entries Per Page */}
         <div className="flex items-center">
-          <label htmlFor="entries" className="text-sm text-[#828282] mr-2">
-            Entries per page
-          </label>
+          <label htmlFor="entries" className="text-sm text-[#828282] mr-2">Entries per page</label>
           <select
             id="entries"
-            className="bg-white border border-gray-400 rounded-[4px] mx-1 px-2 text-sm p-1 focus:border-primary focus:outline-none "
+            className="bg-white border border-black rounded-[4px] mx-1 px-4 text-sm p-1 focus:border-primary focus:outline-none "
             defaultValue="10"
+            onChange={(e) =>
+              setPayload((prev) => ({
+                ...prev,
+                limit: e.target.value,
+                page: 1 // Update the 'limit' in state with selected value
+              }))
+            }
           >
             <option value="5">5</option>
             <option value="10">10</option>
@@ -132,25 +137,122 @@ const IssuesTable = () => {
 
         {/* Page Navigation */}
         <div className="flex items-center">
-          <button className="flex font-normal  items-center px-3 py-2 border border-gray-400 rounded-md mx-1 text-sm text-[#16161D] mr-4 hover:text-primary gap-2">
-            <ArrowLeft size={16} /> Previous
+          <button
+            className="px-3 py-1 text-sm text-[#828282] hover:text-primary"
+            disabled={payload?.page === 1}
+            onClick={() =>
+              setPayload((prev) => ({
+                ...prev,
+                page: Math.max(prev?.page - 1, 1),
+              }))
+            }
+          >
+            Previous
           </button>
-          <button className="py-2 mx-1 px-4 bg-[#E5F0FF] text-primary rounded-md">
-            1
-          </button>
-          <button className="px-3 py-2 mx-1 text-black hover:bg-[#E5F0FF]  hover:text-primary rounded-md">
-            2
-          </button>
-          <button className="px-3 py-2 mx-1 text-black hover:bg-[#E5F0FF] hover:text-primary rounded-md">
-            3
-          </button>
-          <button className="px-3 py-2 mx-1 text-black hover:bg-[#E5F0FF] hover:text-primary rounded-md">
-            4
-          </button>
-          <button className="flex font-normal items-center px-3 py-2 border border-gray-400 rounded-md mx-1 text-sm text-[#16161D] ml-4 hover:text-primary gap-2">
-            Next <ArrowRight size={16} />{" "}
+
+          {data?.totalPages > 5 ? (
+            <>
+              {/* First Page */}
+              <button
+                className={`px-3 py-1 border border-primary rounded-full mx-1 ${payload?.page === 1
+                  ? "bg-primary text-white"
+                  : "text-[#828282] hover:bg-primary hover:text-white"
+                  }`}
+                onClick={() =>
+                  setPayload((prev) => ({
+                    ...prev,
+                    page: 1,
+                  }))
+                }
+              >
+                1
+              </button>
+
+              {/* Ellipsis before the visible range */}
+              {payload?.page > 3 && <span className="px-2">...</span>}
+
+              {/* Middle Pages */}
+              {Array.from({ length: 5 }, (_, index) => {
+                const pageNumber = payload?.page - 2 + index;
+                if (pageNumber > 1 && pageNumber < data?.totalPages) {
+                  return (
+                    <button
+                      key={pageNumber}
+                      className={`px-3 py-1 border border-primary rounded-full mx-1 ${payload?.page === pageNumber
+                        ? "bg-primary text-white"
+                        : "text-[#828282] hover:bg-primary hover:text-white"
+                        }`}
+                      onClick={() =>
+                        setPayload((prev) => ({
+                          ...prev,
+                          page: pageNumber,
+                        }))
+                      }
+                    >
+                      {pageNumber}
+                    </button>
+                  );
+                }
+                return null;
+              })}
+
+              {/* Ellipsis after the visible range */}
+              {payload?.page < data?.totalPages - 2 && <span className="px-2">...</span>}
+
+              {/* Last Page */}
+              <button
+                className={`px-3 py-1 border border-primary rounded-full mx-1 ${payload?.page === data?.totalPages
+                  ? "bg-primary text-white"
+                  : "text-[#828282] hover:bg-primary hover:text-white"
+                  }`}
+                onClick={() =>
+                  setPayload((prev) => ({
+                    ...prev,
+                    page: data?.totalPages,
+                  }))
+                }
+              >
+                {data?.totalPages}
+              </button>
+            </>
+          ) : (
+            // Show all pages when totalPages <= 5
+            Array.from({ length: data?.totalPages }, (_, index) => {
+              const pageNumber = index + 1;
+              return (
+                <button
+                  key={pageNumber}
+                  className={`px-3 py-1 border border-primary rounded-full mx-1 ${payload?.page === pageNumber
+                    ? "bg-primary text-white"
+                    : "text-[#828282] hover:bg-primary hover:text-white"
+                    }`}
+                  onClick={() =>
+                    setPayload((prev) => ({
+                      ...prev,
+                      page: pageNumber,
+                    }))
+                  }
+                >
+                  {pageNumber}
+                </button>
+              );
+            })
+          )}
+
+          <button
+            className="px-3 py-1 text-sm text-[#828282] hover:text-primary"
+            disabled={payload?.page === data?.totalPages}
+            onClick={() =>
+              setPayload((prev) => ({
+                ...prev,
+                page: Math.min(prev?.page + 1, data?.totalPages),
+              }))
+            }
+          >
+            Next
           </button>
         </div>
+
       </div>
     </div>
   );

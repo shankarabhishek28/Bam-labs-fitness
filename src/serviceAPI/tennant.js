@@ -195,11 +195,35 @@ export const getUsersOverview = async (payload) => {
         return apiError(error);
     }
 };
+//admin/users/user/677e4dffdb67cb2b6b222f72
 
-export const getUsersAccount = async () => {
-    let endpoint = `${URL}/admin/users/management`;
+export const getUserDetails = async (userId) => {
+    let endpoint = `${URL}/admin/users/user/${userId}`;
     // const queryParams = appendQueryParams(payload);
     // endpoint += queryParams;
+
+    const token = await getAuthToken();
+    console.log("Token",token)
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+export const getUsersAccount = async (payload) => {
+    let endpoint = `${URL}/admin/users/management`;
+    const queryParams = appendQueryParams(payload);
+    endpoint += queryParams;
 
     const token = await getAuthToken();
     console.log("Token",token)

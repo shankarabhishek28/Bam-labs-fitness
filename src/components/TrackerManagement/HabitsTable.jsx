@@ -98,7 +98,7 @@ const HabitsTable = ({ data, loading, fetchAllHabits, setNewHabit }) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data?.map((item, index) => (
+                    {data?.results?.map((item, index) => (
                         <TableRow
                             key={index}
                             className="bg-white hover:bg-white cursor-pointer"

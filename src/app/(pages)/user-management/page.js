@@ -15,36 +15,37 @@ import { debounce } from 'lodash'
 
 const page = () => {
     const [activeTab, setActiveTab] = React.useState("User Overview");
+    const [payload, setPayload] = useState({ search: "", page: 1, limit: 10 });
+
     const [newUser, setNewUser] = React.useState(false);
     const [userOverview, setUserOverview] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = React.useState("");
     const [isFirstFetch, setIsFirstFetch] = React.useState(true); // To track the first fetch
     console.log("isFirstFetch",isFirstFetch)
-    const fetUserOverview = async () => {
+    const fetchUserOverview = async () => {
         setLoading(true);
-        const res = await getUsersOverview({ search: searchTerm });
-        setUserOverview(res?.data?.results);
+        const res = await getUsersOverview(payload);
+        setUserOverview(res?.data);
         setLoading(false);
         console.log("res-->", res);
     };
 
     // Debounced version of fetUserOverview
-    const debouncedFetch = React.useMemo(() => debounce(fetUserOverview, 500), [searchTerm]);
+    const debouncedFetch = React.useMemo(() => debounce(fetchUserOverview, 500), [payload]);
 
     useEffect(() => {
         // For the first fetch, no delay
-        if (isFirstFetch) {
-            console.log("yes")
-            fetUserOverview();
-            setIsFirstFetch(false); // Set to false after the first fetch
-        } else {
-            console.log("no")
-            debouncedFetch(); // Apply debounce for subsequent fetches
+        if (activeTab === "User Overview") {
+            if (isFirstFetch) {
+                fetchUserOverview();
+                setIsFirstFetch(false);
+            } else {
+                debouncedFetch();
+            }
         }
 
         return () => debouncedFetch.cancel(); // Cleanup debounce when component unmounts or searchTerm changes
-    }, [searchTerm, debouncedFetch]);
+    }, [payload, debouncedFetch]);
 
 
     return (
@@ -99,8 +100,8 @@ const page = () => {
                         inputClass='bg-primaryLite h-[40px] rounded-[8px]'
                         inputParent='bg-primaryLite focus-within:border-primary rounded-[8px]'
                         iconType={"pre"}
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        value={payload?.search}
+                        onChange={(e) => setPayload((prev)=>({...prev,search:e.target.value,page: 1 }))}
                     >
                         <SearchIcon />
                     </InputWithLabel>
@@ -160,9 +161,9 @@ const page = () => {
 
                 </div>}
 
-            {activeTab === 'User Overview' && <UserManagementTable data={userOverview} loading={loading} />}
-            {activeTab === 'Account management' && <AccountManagementTable />}
-            {activeTab === 'Issues' && <IssuesTable data={AMD} />}
+            {activeTab === 'User Overview' && <UserManagementTable payload={payload} setPayload={setPayload} data={userOverview} loading={loading} />}
+            {activeTab === 'Account management' && <AccountManagementTable setPayload={setPayload} payload={payload} />}
+            {activeTab === 'Issues' && <IssuesTable payload={payload} setPayload={setPayload}  />}
             {/* {activeTab === 'Access' &&
                 <>
                     <span className='font-medium text-lg'>Search User</span>

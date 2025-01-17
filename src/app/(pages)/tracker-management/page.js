@@ -17,7 +17,7 @@ const page = () => {
     const fetchAllHabits = async () => {
         const res = await getAllHabits();
         if (res?.status) {
-            setData(res?.data?.results);
+            setData(res?.data);
             setLoading(false);
         }
 
