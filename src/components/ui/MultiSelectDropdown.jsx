@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Trash2 } from "lucide-react";
 
-const MultiSelectDropdown = ({ options,preFetched, onSelectionChange, placeholder }) => {
+const MultiSelectDropdown = ({ options, preFetched, onSelectionChange, placeholder }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(preFetched || []);
   const dropdownRef = useRef(null);
@@ -50,28 +50,34 @@ const MultiSelectDropdown = ({ options,preFetched, onSelectionChange, placeholde
         onClick={toggleDropdown}
       >
         <div className="flex flex-wrap gap-1">
-          {selectedOptions.length ? (
-            selectedOptions.map((option) => (
-              <span
-                key={option}
-                className="flex items-center bg-blue-500 text-white rounded-full px-3 py-1 text-sm"
-              >
-                {option}
-                <button
-                  className="ml-2"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeSelection(option);
-                  }}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </span>
-            ))
-          ) : (
-            <span className="text-gray-400">{placeholder || "Select options"}</span>
-          )}
-        </div>
+  {selectedOptions.length ? (
+    selectedOptions.map((option) => {
+      // Format the option for display (e.g., "totalReps" -> "Total Reps")
+      const formattedOption = option.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+
+      return (
+        <span
+          key={option}
+          className="flex items-center bg-blue-500 text-white rounded-full px-3 py-1 text-sm"
+        >
+          {formattedOption}
+          <button
+            className="ml-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              removeSelection(option);
+            }}
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </span>
+      );
+    })
+  ) : (
+    <span className="text-gray-400">{placeholder || "Select options"}</span>
+  )}
+</div>
+
         <ChevronDown
           className={`h-5 w-10 transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
@@ -80,21 +86,27 @@ const MultiSelectDropdown = ({ options,preFetched, onSelectionChange, placeholde
       {/* Dropdown options */}
       {isOpen && (
         <div className="absolute z-10 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-full max-h-60 overflow-y-auto">
-          {options.map((option, index) => (
-            <div
-              key={index}
-              className={`flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-gray-100 ${selectedOptions.includes(option) ? "bg-gray-200" : ""
-                }`}
-              onClick={() => handleOptionClick(option)}
-            >
-              <span>{option}</span>
-              {selectedOptions.includes(option) && (
-                <span className="text-blue-500 font-semibold">✔</span>
-              )}
-            </div>
-          ))}
+          {options.map((option, index) => {
+            // Format the option for display (e.g., "totalReps" -> "Total Reps")
+            const formattedOption = option.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+
+            return (
+              <div
+                key={index}
+                className={`flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-gray-100 ${selectedOptions.includes(option) ? "bg-gray-200" : ""
+                  }`}
+                onClick={() => handleOptionClick(option)}
+              >
+                <span>{formattedOption}</span>
+                {selectedOptions.includes(option) && (
+                  <span className="text-blue-500 font-semibold">✔</span>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
+
     </div>
   );
 };

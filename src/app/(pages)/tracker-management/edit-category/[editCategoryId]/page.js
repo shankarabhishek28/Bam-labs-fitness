@@ -34,14 +34,14 @@ const page = ({ params }) => {
     const [editMuscle, setEditMuscle] = useState({ "ok": false, "id": 0 });
     const [addExcercise, setAddExercise] = useState(false);
     const handleCancel = () => setEditMuscle({ "ok": false, "id": 0 });
-    console.log("modal",deleteMuscleModal)
+    console.log("modal", deleteMuscleModal)
     const fetchThisEditContent = async () => {
         if (!id) {
             return;
         }
         try {
             const res = await getSpecificStrengthContent(id);
-            console.log("API Response:", res); 
+            console.log("API Response:", res);
             if (res?.status) {
                 setWorkoutData(res.data);
                 setLoading(false);
@@ -71,12 +71,15 @@ const page = ({ params }) => {
             id: selectedMuscle,
             metrices: selectedMetrices,
             name: excerciseName,
-            video: uploadedVideo,
         };
+
+        if (uploadedVideo) {
+            payload.video = uploadedVideo;
+        }
 
         console.log(payload);
 
-        if (!selectedMuscle || !selectedMetrices || !excerciseName || !uploadedVideo) {
+        if (!selectedMuscle || !selectedMetrices || !excerciseName) {
             toast.error("Fields are empty!");
             setIsLoading(false); // Reset loading state
             return;
@@ -105,9 +108,9 @@ const page = ({ params }) => {
         const res = await deleteMuscle(id);
         if (res?.status) {
             fetchThisEditContent();
-            setDeleteMuscleModal({id:0,open:false})
+            setDeleteMuscleModal({ id: 0, open: false })
         }
-        setDeleteMuscleModal({id:0,open:false})
+        setDeleteMuscleModal({ id: 0, open: false })
     }
     const saveEditMuscleName = async () => {
         const payload = {
@@ -179,7 +182,7 @@ const page = ({ params }) => {
                             </div>
                             <div className='flex items-center justify-center gap-2'>
                                 <Button onClick={() => setEditMuscle({ "ok": true, "id": item?.muscle?._id, "name": item?.muscle?.targetedMuscle })} className='px-2'><Pencil /></Button>
-                                <Button onClick={() => setDeleteMuscleModal({open:true,id:item?.muscle?._id})} className='px-2 bg-[#E7E7E7] text-red-600 hover:text-white'><Trash2 /></Button>
+                                <Button onClick={() => setDeleteMuscleModal({ open: true, id: item?.muscle?._id })} className='px-2 bg-[#E7E7E7] text-red-600 hover:text-white'><Trash2 /></Button>
                             </div>
 
                         </div>
@@ -206,11 +209,11 @@ const page = ({ params }) => {
                 </div>
             </Popup>
 
-            <Popup title={'Are you sure you wish to delete this muscle?'} isOpen={deleteMuscleModal.open} onClose={() => setDeleteMuscleModal({id:0,open:false})} footerButtons={[{ label: 'Cancel',onClick:()=>setDeleteMuscleModal({open:false,id:0})}, { label: 'Confirm', variant: 'primary',onClick:()=>deleteThisMuscle(deleteMuscleModal?.id) }]}>
+            <Popup title={'Are you sure you wish to delete this muscle?'} isOpen={deleteMuscleModal.open} onClose={() => setDeleteMuscleModal({ id: 0, open: false })} footerButtons={[{ label: 'Cancel', onClick: () => setDeleteMuscleModal({ open: false, id: 0 }) }, { label: 'Confirm', variant: 'primary', onClick: () => deleteThisMuscle(deleteMuscleModal?.id) }]}>
                 <p>This Muscle and its corresponding exercises will no longer be available in app!</p>
             </Popup>
 
-            <Popup isOpen={addExcercise} onClose={() => setAddExercise(false)} footerButtons={[{ label: 'Cancel',onClick:()=>setAddExercise(false) }, {
+            <Popup isOpen={addExcercise} onClose={() => setAddExercise(false)} footerButtons={[{ label: 'Cancel', onClick: () => setAddExercise(false) }, {
                 label: isLoading ? 'Processing...' : 'Confirm',
                 variant: 'primary',
                 onClick: handleAddExercise,
