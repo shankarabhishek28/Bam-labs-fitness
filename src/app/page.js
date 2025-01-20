@@ -7,6 +7,7 @@ import { getToken } from "@/serviceAPI/authService";
 import { setToken, setUser } from "@/serviceAPI/cookies";
 import { useState } from "react";
 import { verifyEmail, verifyPassword } from "@/utils/helpers";
+import Link from "next/link";
 
 export default function Home() {
   const router = useRouter();
@@ -88,7 +89,11 @@ export default function Home() {
           </InputWithLabel>
 
           <p className="text-sm text-primary underline text-end cursor-pointer mt-2">
-            Forgot Password?
+            <Link
+              href="/reset-password"
+            >
+              Forgot Password?
+            </Link>
           </p>
           <ButtonWithLoader
             className="rounded-md py-6"

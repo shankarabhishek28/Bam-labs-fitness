@@ -1,6 +1,47 @@
 import { getAuthToken } from "./cookies";
 import { apiError, appendQueryParams, responseValidator, URL } from "./helper";
 
+export const forgotPassword = async (payload) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${getAuthToken()}`);
+    myHeaders.append("Content-Type", "application/json");
+  
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: JSON.stringify(payload),
+      redirect: "follow",
+    };
+  
+    try {
+      const response = await fetch(URL + `/admin/forgot-password`, requestOptions);
+      return responseValidator(response, true);
+    } catch (e) {
+      return apiError(e);
+    }
+  };
+  
+  //reset-password
+  export const resetPassword = async (payload) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${getAuthToken()}`);
+    myHeaders.append("Content-Type", "application/json");
+  
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: JSON.stringify(payload),
+      redirect: "follow",
+    };
+  
+    try {
+      const response = await fetch(URL + `/admin/reset-password`, requestOptions);
+      return responseValidator(response, true);
+    } catch (e) {
+      return apiError(e);
+    }
+  };
+
 export const uploadFiles = async (file) => {
     const sanitizedBaseUrl = URL.replace(/\/admin$/, "");
     const endpoint = `${sanitizedBaseUrl}/upload/files`;

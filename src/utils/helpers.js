@@ -183,6 +183,20 @@ export function stripHTML(html) {
   return html?.replace(/<[^>]*>/g, ''); // Removes all tags
 }
 
+
+
+export const comparePasswords = (a, b, message = true) => {
+  if (a != b) {
+    if (message) {
+      toast.error(`Password mismatch`, {
+        toastId: "password-verification-error",
+      });
+    }
+    return false;
+  }
+  return true;
+};
+
 export function formatNumber(num) {
   if (num >= 1_000_000) {
       return `${Math.floor(num / 1_000_000)}M`; // Millions

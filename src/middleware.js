@@ -8,7 +8,7 @@ export function middleware(req) {
     return NextResponse.next();
   }
 
-  const publicRoutes = ['/', '/forgot-password'];
+  const publicRoutes = ['/', '/forgot-password','/reset-password'];
 
   try {
     // Get the token from cookies
