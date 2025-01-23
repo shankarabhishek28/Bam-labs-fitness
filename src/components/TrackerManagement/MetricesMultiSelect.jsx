@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ChevronDown, Trash2 } from "lucide-react";
 import { useTracker } from "@/Context/TrackerContext";
 
 const MetricesMultiSelect = ({ options, placeholder, exerciseId, muscleId }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { trackerData, setTrackerData } = useTracker();
-
+  const dropdownRef = useRef(null);
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
   const handleSelect = (option) => {
@@ -63,8 +63,24 @@ const MetricesMultiSelect = ({ options, placeholder, exerciseId, muscleId }) => 
     ?.find((muscle) => muscle.id === muscleId)
     ?.excercizes.find((exercise) => exercise.id === exerciseId)?.metrices || [];
 
+    useEffect(() => {
+      const handleClickOutside = (e) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+          setDropdownOpen(false);
+        }
+      };
+  
+      // Adding the event listener when the component mounts
+      document.addEventListener("mousedown", handleClickOutside);
+  
+      // Cleanup the event listener on unmount
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+  
   return (
-    <div className="relative w-full max-w-sm">
+    <div className="relative w-full max-w-sm " ref={dropdownRef}>
       {/* Dropdown Trigger */}
       <div
         className="flex items-center justify-between bg-white border border-gray-300 rounded-lg px-3 py-2 cursor-pointer shadow-sm"
@@ -73,13 +89,13 @@ const MetricesMultiSelect = ({ options, placeholder, exerciseId, muscleId }) => 
         <div className="flex flex-wrap gap-2">
           {selectedOptions.length > 0 ? (
             selectedOptions.map((option, index) => {
-              const capitalizedOption = option.charAt(0).toUpperCase() + option.slice(1); // Capitalize the first letter
+              const formattedOption = option.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
               return (
                 <span
                   key={index}
                   className="flex items-center bg-blue-100 gap-2 text-blue-600 px-2 py-1 rounded-lg text-sm"
                 >
-                  {capitalizedOption}
+                  {formattedOption}
                   <Trash2
                     size={16}
                     onClick={(e) => {
@@ -102,7 +118,9 @@ const MetricesMultiSelect = ({ options, placeholder, exerciseId, muscleId }) => 
       {dropdownOpen && (
         <div className="absolute left-0 right-0 mt-2 max-h-48 bg-white border border-gray-300 rounded-lg shadow-lg z-10 overflow-y-auto">
           {options.map((option, index) => {
-            const capitalizedOption = option.charAt(0).toUpperCase() + option.slice(1); // Capitalize the first letter
+             const formattedOption = option.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+
+           
             return (
               <div
                 key={index}
@@ -110,7 +128,7 @@ const MetricesMultiSelect = ({ options, placeholder, exerciseId, muscleId }) => 
                   }`}
                 onClick={() => handleSelect(option)}
               >
-                {capitalizedOption}
+                {formattedOption}
               </div>
             );
           })}

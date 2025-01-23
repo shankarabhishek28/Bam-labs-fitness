@@ -8,13 +8,12 @@ export default function AddCategoryForm({ setCanMove }) {
     const { setTrackerData, trackerData } = useTracker();
     const [image, setImage] = useState(null);
 
-  
-    console.log("imae",image)
-    const handleImageUpload = async(e) => {
-        
+
+    const handleImageUpload = async (e) => {
+
         const file = e.target.files[0];
         const res = await uploadFiles(file);
-        if(res?.status){
+        if (res?.status) {
             console.log(res);
             setTrackerData((prev) => ({
                 ...prev, "image": {
@@ -22,7 +21,7 @@ export default function AddCategoryForm({ setCanMove }) {
                 }
             }))
         }
-        
+
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -33,7 +32,7 @@ export default function AddCategoryForm({ setCanMove }) {
     };
 
     const addMuscleInput = () => {
-        
+
         setTrackerData((prev) => ({
             ...prev, "targetMuscle": [...trackerData?.targetMuscle, {
                 "muscleName": "",
@@ -41,7 +40,7 @@ export default function AddCategoryForm({ setCanMove }) {
                 "excercizes": [
 
                     {
-                        "video": { "key": "", "url": '' },
+                        "video": {},
                         "id": Date.now(),
                         "name": "",
                         "metrices": []
@@ -52,7 +51,7 @@ export default function AddCategoryForm({ setCanMove }) {
     };
 
     const removeMuscleInput = () => {
-        if (trackerData?.targetMuscle?.length <= 1){
+        if (trackerData?.targetMuscle?.length <= 1) {
             toast.error('Enter at least one muscle!');
             return
         }
@@ -65,22 +64,22 @@ export default function AddCategoryForm({ setCanMove }) {
     const handleInputChange = (index, value) => {
         setTrackerData((prev) => {
             const updatedMuscles = [...prev.targetMuscle];
-            updatedMuscles[index].muscleName = value; 
+            updatedMuscles[index].muscleName = value;
             return {
                 ...prev,
                 targetMuscle: updatedMuscles,
             };
         });
     };
-    
+
 
     const handleSubmit = () => {
-        
-        let moveForward = !(trackerData?.image?.key === '' || trackerData?.name === '' || trackerData.targetMuscle.some((item)=> item.muscleName === ''))
-        if(moveForward){
+
+        let moveForward = !(trackerData?.image?.key === '' || trackerData?.name === '' || trackerData.targetMuscle.some((item) => item.muscleName === ''))
+        if (moveForward) {
             setCanMove(true);
         }
-        else{
+        else {
             toast.error('Fields Are Missing!');
             return
         }
@@ -89,8 +88,8 @@ export default function AddCategoryForm({ setCanMove }) {
     };
     console.log(trackerData?.targetMuscle[0]?.muscleName)
     return (
-        <div className="w-full bg-white rounded-md">
-            <span className="font-medium text-[#454545] text-lg">Add category name</span>
+        <div className="w-full bg-white rounded-md mt-4">
+            {/* <span className="font-medium text-[#454545] text-lg">Add Category</span> */}
             <hr className="mt-0" />
 
             <div className="mb-4 mt-4">
@@ -108,7 +107,7 @@ export default function AddCategoryForm({ setCanMove }) {
                     <input
                         type="file"
                         accept="image/*"
-                        
+
                         onChange={handleImageUpload}
                         className="absolute w-full h-full opacity-0 cursor-pointer"
                     />
@@ -120,12 +119,16 @@ export default function AddCategoryForm({ setCanMove }) {
                 <input
                     type="text"
                     placeholder="Lower body"
+                    maxLength={30}
                     value={trackerData?.name || ''}
                     onChange={(e) => setTrackerData((prev) => ({
                         ...prev, "name": e.target.value
                     }))}
                     className="w-1/3 border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
                 />
+                <div className="text-xs text-gray-500 mt-1">
+                    {trackerData?.name?.length || 0}/30 characters used
+                </div>
             </div>
 
             <div className="mb-4 flex w-1/2 items-center justify-start gap-12">
@@ -148,21 +151,32 @@ export default function AddCategoryForm({ setCanMove }) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 mb-4">
-                {trackerData?.targetMuscle?.map((muscle, index) => (
-                    <input
-                        key={index}
-                        type="text"
-                        placeholder={`Enter muscle #${index + 1}`}
-                        value={muscle.muscleName || ''} // Default to empty string if undefined
-                        onChange={(e) => handleInputChange(index, e.target.value)}
-                        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
-                    />
-                ))}
+                {trackerData?.targetMuscle?.map((muscle, index) => {
+                    // Calculate the total length of all muscle names up to the current input
+                    const totalLength = trackerData?.targetMuscle?.reduce((acc, curr) => acc + (curr.muscleName?.length || 0), 0);
+
+                    return (
+                        <div key={index} className="mb-3">
+                            <input
+                                type="text"
+                                maxLength={40}
+                                placeholder={`Enter muscle #${index + 1}`}
+                                value={muscle.muscleName || ''} // Default to empty string if undefined
+                                onChange={(e) => handleInputChange(index, e.target.value)}
+                                className="border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
+                            />
+                            <div className="text-xs text-gray-500 mt-1">
+                                {totalLength}/{40}characters used
+                            </div>
+                        </div>
+                    );
+                })}
+
             </div>
 
             <button onClick={handleSubmit}
-            // disabled={!(trackerData?.targetMuscle?.length > 0 && trackerData.targetMuscle[0]?.muscleName !== '' )}
-             className="bg-primary mt-4 text-white py-2 px-6 rounded-md w-1/4 hover:bg-blue-600">
+                // disabled={!(trackerData?.targetMuscle?.length > 0 && trackerData.targetMuscle[0]?.muscleName !== '' )}
+                className="bg-primary mt-4 text-white py-2 px-6 rounded-md w-1/4 hover:bg-blue-600">
                 Continue
             </button>
         </div>

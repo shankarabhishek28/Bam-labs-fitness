@@ -18,6 +18,7 @@ import MultiSelectDropdown from '@/components/ui/MultiSelectDropdown';
 import UploadAnyVideo from '@/components/ui/UploadAnyVideo';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import DynamicBreadcrumb from '@/components/ui/DynamicBreadcrumb';
 
 
 const page = ({ params }) => {
@@ -34,7 +35,6 @@ const page = ({ params }) => {
     const [editMuscle, setEditMuscle] = useState({ "ok": false, "id": 0 });
     const [addExcercise, setAddExercise] = useState(false);
     const handleCancel = () => setEditMuscle({ "ok": false, "id": 0 });
-    console.log("modal", deleteMuscleModal)
     const fetchThisEditContent = async () => {
         if (!id) {
             return;
@@ -77,9 +77,9 @@ const page = ({ params }) => {
             payload.video = uploadedVideo;
         }
 
-        console.log(payload);
+        console.log("payload",payload);
 
-        if (!selectedMuscle || !selectedMetrices || !excerciseName) {
+        if (!selectedMuscle || (selectedMetrices?.length < 1) || !excerciseName) {
             toast.error("Fields are empty!");
             setIsLoading(false); // Reset loading state
             return;
@@ -140,6 +140,13 @@ const page = ({ params }) => {
             setSelectedMuscle(workoutData[0]?.muscle?._id);
         }
     }, [workoutData]);
+
+    const breadcrumbs = [
+        { label: 'Tracker Management', href: '/tracker-management' },
+        { label: 'Edit Category', href: '' },
+
+       
+    ];
     return (
         <div className='px-6 py-8'>
             {loading && (
@@ -147,13 +154,15 @@ const page = ({ params }) => {
                     <div className="w-6 h-6 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
                 </div>
             )}
-            <span className='text-secondary font-semibold text-xl'>Tracker Management</span>
+           
+
             <div className="mb-2 mt-4 flex justify-between items-center">
                 <div className="flex w-full items-center justify-between">
                     <Link href={'/tracker-management'}>
                         <Button variant='outline' className="flex items-center mb-6 space-x-2 gap-4 rounded-[8px] border border-textColor w-20 h-8 mt-4">
                             <div className=" text-sm text-textColor  flex items-center justify-center pr-1">
                                 <ChevronLeft size={20} /> <p>Back</p>
+                                
 
                             </div>
                         </Button>
@@ -171,6 +180,8 @@ const page = ({ params }) => {
 
 
             </div>
+            <DynamicBreadcrumb breadcrumbs={breadcrumbs} />
+            <hr className="mt-3 mb-4" />
             <div>
                 {workoutData?.map((item, index) => (
                     <div key={index} className="mb-8">
@@ -178,7 +189,7 @@ const page = ({ params }) => {
                         <div className='flex items-center justify-between'>
                             <div className='flex items-center mb-2 gap-2'>
                                 <Muscle />
-                                <h2 className="text-lg font-semibold text-[#454545] ">{item?.muscle?.targetedMuscle}</h2>
+                                <h2 className="text-lg font-semibold text-[#454545] ">{item?.muscle?.targetedMuscle?.toUpperCase()}</h2>
                             </div>
                             <div className='flex items-center justify-center gap-2'>
                                 <Button onClick={() => setEditMuscle({ "ok": true, "id": item?.muscle?._id, "name": item?.muscle?.targetedMuscle })} className='px-2'><Pencil /></Button>
@@ -245,7 +256,9 @@ const page = ({ params }) => {
                     </label>
                     <Input
                         id="exerciseName"
+                        type='text'
                         value={excerciseName}
+                        maxLength={30}
                         placeholder="Add exercise"
                         onChange={(e) => setExcerciseName(e.target.value)}
                         className="w-full"

@@ -21,10 +21,12 @@ import dayjs from "dayjs";
 
 const IssuesTable = ({payload,setPayload}) => {
   const router = useRouter()
-  const [data, setData] = useState()
+  const [data, setData] = useState();
+  const [loading, setLoading] = useState(true);
   const fetchUserIssues = async() => {
     const res = await getUsersIssue(payload)
     setData(res?.data);
+    setLoading(false);
   }
   useEffect(()=>{
     fetchUserIssues();
@@ -34,7 +36,11 @@ const IssuesTable = ({payload,setPayload}) => {
   }
   return (
     <div className="pt-2 ">
-      
+        {loading && (
+                <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+                    <div className="w-6 h-6 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            )}
       <Table className="min-w-full overflow-x-auto">
      
         <TableHeader className="border-t-1">

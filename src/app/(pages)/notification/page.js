@@ -2,19 +2,14 @@
 import { AMD, UAD, UserData } from '@/app/DummyData/UserData'
 import { Button } from '@/components/ui/button'
 import { InputWithLabel } from '@/components/ui/InputWithLabel'
-import UserManagementTable from '@/components/UserManagementComps/UserManagementTable'
 import { Plus, SearchIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import FilterIcon from '../../../../public/Icons/FilterIcon'
-import AccountManagementTable from '@/components/UserManagementComps/AccountManagement'
-import { Input } from '@/components/ui/input'
-import IssuesTable from '@/components/UserManagementComps/IssuesTable'
-import UserAccess from '@/components/UserManagementComps/UserAccess'
+
+
 import NotificationTable from '@/components/Notification/NotificationTable'
-import { notificationData } from '@/app/DummyData/Notification'
 import AddNotification from '@/components/Notification/AddNewNotification'
 import PersonalizedNotificationTable from '@/components/Notification/PersonalizedNotificationTable'
-import AddPersonalizedNotification from '@/components/Notification/AddPersonalizedNotification'
 import { getNotification } from '@/serviceAPI/tennant'
 import Head from 'next/head'
 
@@ -80,7 +75,7 @@ const page = () => {
                         placeholder="Search"
                         className="text-zinc-500 w-[300px] rounded-[8px] focus:border"
                         inputClass='bg-primaryLite h-[40px] rounded-[8px]'
-                        inputParent='bg-primaryLite focus-within:border-primary rounded-[8px]'
+                        // inputParent='bg-primaryLite focus-within:border-primary rounded-[8px]'
                         iconType={"pre"}
                     >
                         <SearchIcon />

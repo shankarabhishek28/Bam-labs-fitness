@@ -16,7 +16,7 @@ const CategoryCard = ({ imageUrl, title, muscleGroups, onDelete, onEdit }) => {
                 </div>
 
                 {/* Image */}
-                <div className="w-20 h-20 ml-3 bg-gray-300 rounded-lg mr-4">
+                <div className="w-20 h-20 ml-3 bg-gray-300 rounded-lg mr-4  flex-shrink-0">
                     {imageUrl ? (
                         <img src={imageUrl} alt={title} className="object-cover w-full h-full rounded-lg" />
                     ) : (
@@ -25,12 +25,17 @@ const CategoryCard = ({ imageUrl, title, muscleGroups, onDelete, onEdit }) => {
                 </div>
 
                 {/* Exercise Info */}
-                <div>
-                    <h3 className="text-lg font-semibold">{title}</h3>
-                    <p className="text-gray-500 text-sm">
+                <div className='max-w-[260px] overflow-hidden truncate'>
+                    <h3 title={title} className="text-lg font-semibold truncate">{title?.toUpperCase()}</h3>
+                    <p className="text-gray-500 text-sm flex flex-wrap">
                         {muscleGroups.map((item, index) => (
-                            <span key={index}>
-                                {item?.targetedMuscle} {index < muscleGroups.length - 1 && <span className="mx-1">•</span>}
+                            <span
+                                title={item?.targetedMuscle}
+                                key={index}
+                                className="truncate"
+                            >
+                                {item?.targetedMuscle?.toUpperCase()}
+                                {index < muscleGroups.length - 1 && <span className="mx-1">•</span>}
                             </span>
                         ))}
                     </p>
@@ -53,8 +58,8 @@ const CategoryCard = ({ imageUrl, title, muscleGroups, onDelete, onEdit }) => {
                     onClick={onEdit}
                     className="flex items-center justify-center gap-2 hover:bg-primary"
                 >
-                  
-                    <PencilIcon  />
+
+                    <PencilIcon />
                     Edit
                 </Button>
             </div>

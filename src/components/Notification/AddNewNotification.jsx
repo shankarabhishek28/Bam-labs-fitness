@@ -93,6 +93,7 @@ const AddNotification = ({ setNewNotification,setActiveTab, fetchNotification, a
         <Input
           type="text"
           name="title"
+          requi
           placeholder="Title"
           className="w-full p-2 mt-1 border border-gray-300 rounded-md"
         />
@@ -104,7 +105,9 @@ const AddNotification = ({ setNewNotification,setActiveTab, fetchNotification, a
         <Input
           as="textarea"
           name="description"
-          placeholder="Description"
+          maxLength={200}
+          placeholder="Write your description here (max 200 characters)"
+          minLength={10}
           className="w-full p-2 mt-1 border border-gray-300 rounded-md"
         />
       </div>

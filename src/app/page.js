@@ -40,7 +40,7 @@ export default function Home() {
       const expiry = new Date().getTime() + 60 * 60 * 1000; // 1 hour expiry
       setToken(res?.data.token, expiry);
       setUser(res?.data, expiry);
-      router.push("/user-management");
+      router.push("/analytics");
     } catch (error) {
       console.error("Error during login:", error);
     } finally {

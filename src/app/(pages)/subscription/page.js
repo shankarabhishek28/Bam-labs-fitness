@@ -22,7 +22,7 @@ const page = () => {
                         placeholder="Search"
                         className="text-zinc-500 w-[300px] rounded-[8px] focus:border"
                         inputClass='bg-primaryLite h-[40px] rounded-[8px]'
-                        inputParent='bg-primaryLite focus-within:border-primary rounded-[8px]'
+                        // inputParent='bg-primaryLite focus-within:border-primary rounded-[8px]'
                         iconType={"pre"}
                     >
                         <SearchIcon />

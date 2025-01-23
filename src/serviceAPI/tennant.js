@@ -68,6 +68,28 @@ export const uploadFiles = async (file) => {
     }
 };
 
+export const registerNewUser = async (payload) => {
+    const endpoint = `${URL}/auth/register-user`;
+    const token = await getAuthToken();
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/json");
+
+    const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify(payload),
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response,true);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
 export const getMetrices = async () => {
     let endpoint = `${URL}/admin/dashboard/user-stats`;
     // const queryParams = appendQueryParams(payload);

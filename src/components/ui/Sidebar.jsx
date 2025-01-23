@@ -28,13 +28,18 @@ export default function Sidebar() {
         removeToken();
         removeUser();
         router.push("/");
-      };
+    };
 
     return (
         <div className="w-full bg-black fixed bottom-0 left-0 h-16 md:h-dvh md:sticky md:top-0 md:left-0 md:bg-black md:flex md:flex-wrap md:flex-col z-30">
+
             <div className="p-6 pb-12 text-2xl mx-auto font-bold">
-                <Image src='/BamLogo.svg' width={100} height={100} />
+                <Link href={'/analytics'}>
+                    <Image src='/BamLogo.svg' width={100} height={100} />
+                </Link>
             </div>
+
+
             <nav className="flex-grow">
                 <ul className='mt-12'>
                     <Link href="/analytics">
@@ -43,7 +48,7 @@ export default function Sidebar() {
                                 ? 'bg-white text-secondary  '
                                 : 'text-white '
                                 }  hover:text-secondary hover:bg-white flex items-center gap-2 font-medium text-lg`}
-                        > <Analytics  />
+                        > <Analytics />
                             Analytics
                         </li>
                     </Link>
@@ -104,7 +109,7 @@ export default function Sidebar() {
                     <div className="absolute bottom-0 left-0 w-[280px] flex justify-center items-center">
 
                         <div
-                            
+
                             onClick={logoutHandler}
                             className={`px-6 flex justify-center gap-2 cursor-pointer items-center w-full py-3 mb-2 text-white`}
                         >
@@ -125,7 +130,7 @@ export default function Sidebar() {
                         </h3>
                         <div className="w-full grid grid-cols-2 mt-5 gap-3">
                             <Button onClick={handleLogout} variant="primary" >Yes</Button>
-                            <Button   variant="secondary" className='text-white' onClick={() => setConfirmation(false)}>No</Button>
+                            <Button variant="secondary" className='text-white' onClick={() => setConfirmation(false)}>No</Button>
                         </div>
                     </div>
                 </div>

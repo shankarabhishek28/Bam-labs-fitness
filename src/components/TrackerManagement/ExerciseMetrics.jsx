@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 const ExerciseMetrics = () => {
   const { trackerData, setTrackerData } = useTracker();
-console.log("check ",trackerData)
+  console.log("check ", trackerData)
   const [selectedMuscleId, setSelectedMuscleId] = useState("");
   const router = useRouter()
   const addNewExercise = () => {
@@ -24,7 +24,7 @@ console.log("check ",trackerData)
     const newExercise = {
       id: Date.now(),
       name: "",
-      video: { key: "", url: "" },
+      video: {},
       metrices: [],
     };
 
@@ -63,25 +63,25 @@ console.log("check ",trackerData)
   const validateExercises = (data) => {
     const { targetMuscle } = data;
     let isValid = true;
-  
+
     for (const muscle of targetMuscle) {
       const { muscleName, excercizes } = muscle;
-  
+
       // Remove empty exercises
       muscle.excercizes = excercizes.filter((exercise) => exercise.name || exercise.video.key || (exercise.metrices && exercise.metrices.length > 0));
-  
+
       // Check if there are any exercises left after cleanup
       if (muscle.excercizes.length === 0) {
         toast.error(`The muscle "${muscleName}" has no exercises added.`);
         isValid = false;
         continue;
       }
-  
+
       // Validate remaining exercises
       for (const exercise of muscle.excercizes) {
         let missingFieldsMessage = "";
         const { video, name, metrices } = exercise;
-  
+
         // if (!video.key) {
         //   missingFieldsMessage += "video field, ";
         // }
@@ -91,7 +91,7 @@ console.log("check ",trackerData)
         if (!metrices || metrices.length === 0) {
           missingFieldsMessage += "metrics field, ";
         }
-  
+
         if (missingFieldsMessage) {
           missingFieldsMessage = missingFieldsMessage.slice(0, -2); // Remove last ", "
           toast.error(`The muscle "${muscleName}" has missing fields: ${missingFieldsMessage}.`);
@@ -99,10 +99,10 @@ console.log("check ",trackerData)
         }
       }
     }
-  
+
     return isValid;
   };
-  
+
 
   const handleExerciseNameChange = (exerciseId, updatedName) => {
     setTrackerData((prevData) => {
@@ -143,7 +143,7 @@ console.log("check ",trackerData)
           "excercizes": [
 
             {
-              "video": { "key": "", "url": '' },
+              "video": {},
               "id": Date.now(),
               "name": "",
               "metrices": []
@@ -156,7 +156,7 @@ console.log("check ",trackerData)
     }
   }
   return (
-    <div className="exercise-metrics-container">
+    <div className="exercise-metrics-container mt-4">
       <div className="flex items-center justify-between">
         <div className="w-1/2">
           <label
@@ -197,6 +197,7 @@ console.log("check ",trackerData)
                 <input
                   id="exercise"
                   type="text"
+                  maxLength={30}
                   placeholder="Add exercise"
                   value={exercise.name}
                   onChange={(e) =>
@@ -204,6 +205,9 @@ console.log("check ",trackerData)
                   }
                   className="w-full p-2 border rounded-md focus:outline-none focus:border-blue-500"
                 />
+                <div className="text-sm text-gray-500 mt-1">
+                  {exercise?.name?.length}/30 characters used
+                </div>
               </div>
               <VideoUpload exerciseId={exercise.id} muscleId={selectedMuscleId} />
             </div>

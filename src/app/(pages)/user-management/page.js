@@ -7,11 +7,12 @@ import { Plus, SearchIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import FilterIcon from '../../../../public/Icons/FilterIcon'
 import AccountManagementTable from '@/components/UserManagementComps/AccountManagement'
-import { Input } from '@/components/ui/input'
+import { Input } from '@/components/ui/Input'
 import IssuesTable from '@/components/UserManagementComps/IssuesTable'
 import UserAccess from '@/components/UserManagementComps/UserAccess'
-import { getUsersOverview } from '@/serviceAPI/tennant'
+import { getUsersOverview, registerNewUser } from '@/serviceAPI/tennant'
 import { debounce } from 'lodash'
+import { verifyEmail } from '@/utils/helpers'
 
 const page = () => {
     const [activeTab, setActiveTab] = React.useState("User Overview");
@@ -21,7 +22,7 @@ const page = () => {
     const [userOverview, setUserOverview] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isFirstFetch, setIsFirstFetch] = React.useState(true); // To track the first fetch
-    console.log("isFirstFetch",isFirstFetch)
+    console.log("isFirstFetch", isFirstFetch)
     const fetchUserOverview = async () => {
         setLoading(true);
         const res = await getUsersOverview(payload);
@@ -46,7 +47,29 @@ const page = () => {
 
         return () => debouncedFetch.cancel(); // Cleanup debounce when component unmounts or searchTerm changes
     }, [payload, debouncedFetch]);
+    const handleSubmit = async(e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
 
+        const payload = {
+            email: formData.get('email'),
+            password: formData.get('password'),
+            name: formData.get('name'),
+            gender: formData.get('gender'),
+            dob: formData.get('dob'),
+            phone: formData.get('phone'),
+        };
+        if(!verifyEmail(payload?.email)){
+            return 
+        }
+        const res =  await registerNewUser(payload);
+        if(res?.status){
+            setNewUser(false);
+        }
+        
+
+        console.log(payload);
+    };
 
     return (
         <div className='px-6 py-8'>
@@ -97,11 +120,11 @@ const page = () => {
                     <InputWithLabel
                         placeholder="Search"
                         className="text-zinc-500 w-[300px] rounded-[8px] focus:border"
-                        inputClass='bg-primaryLite h-[40px] rounded-[8px]'
-                        inputParent='bg-primaryLite focus-within:border-primary rounded-[8px]'
+                        // InputClass='bg-primaryLite h-[40px] rounded-[8px]'
+                        // InputParent='bg-primaryLite focus-within:border-primary rounded-[8px]'
                         iconType={"pre"}
                         value={payload?.search}
-                        onChange={(e) => setPayload((prev)=>({...prev,search:e.target.value,page: 1 }))}
+                        onChange={(e) => setPayload((prev) => ({ ...prev, search: e.target.value, page: 1 }))}
                     >
                         <SearchIcon />
                     </InputWithLabel>
@@ -120,39 +143,56 @@ const page = () => {
 
             </div>
             {newUser && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
-                <div className="w-[408px] md:w-[450px] bg-white px-5 py-7 gap-3 rounded-xl flex flex-wrap shadow">
+                <form
+                    onSubmit={handleSubmit}
+                    className="w-[408px] md:w-[450px] bg-white px-5 py-7 gap-3 rounded-xl flex flex-wrap shadow"
+                >
                     <label className="flex flex-wrap w-full">
-                        <span className="w-full text-sm  mb-1">Enter Full name</span>
-                        <Input name="email" invalidmessage="Please enter a valid email." className='w-full border border-[#D1D1D1]' />
+                        <span className="w-full text-sm mb-1">Enter Full Name</span>
+                        <Input name="name" required className="w-full border border-[#D1D1D1]" />
                     </label>
-                    <div className='flex w-full gap-4'>
+                    <div className="flex w-full gap-4">
                         <label className="flex flex-wrap w-1/2">
-                            <span className="w-full text-sm  mb-1">Enter DOB</span>
-                            <Input name="dob" invalidmessage="Please enter a valid email." className='w-full border border-[#D1D1D1]' />
+                            <span className="w-full text-sm mb-1">Enter DOB</span>
+                            <Input type="date" name="dob" required className="w-full border border-[#D1D1D1]" />
                         </label>
                         <label className="flex flex-wrap w-1/2">
-                            <span className="w-full text-sm  mb-1">Enter Gender</span>
-                            <Input name="gender" invalidmessage="Please enter a valid email." className='w-full border border-[#D1D1D1]' />
+                            <span className="w-full text-sm mb-1">Enter Gender</span>
+                            <select name="gender" required className="w-full border border-[#D1D1D1]">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
                         </label>
-
                     </div>
                     <label className="flex flex-wrap w-full">
-                        <span className="w-full text-sm  mb-1">Enter Phone No.</span>
-                        <Input name="email" invalidmessage="Please enter a valid email." className='w-full border border-[#D1D1D1]' />
+                        <span className="w-full text-sm mb-1">Enter Phone No.</span>
+                        <Input type="tel" name="phone" required className="w-full border border-[#D1D1D1]" />
                     </label>
                     <label className="flex flex-wrap w-full">
-                        <span className="w-full text-sm  mb-1">Enter Email</span>
-                        <Input name="email" invalidmessage="Please enter a valid email." className='w-full border border-[#D1D1D1]' />
+                        <span className="w-full text-sm mb-1">Enter Email</span>
+                        <Input type="email" name="email" required className="w-full border border-[#D1D1D1]" />
                     </label>
                     <label className="flex flex-wrap w-full">
-                        <span className="w-full text-sm  mb-1">Enter Password</span>
-                        <Input name="email" invalidmessage="Please enter a valid email." className='w-full border border-[#D1D1D1]' />
+                        <span className="w-full text-sm mb-1">Enter Password</span>
+                        <Input type="password" name="password" required className="w-full border border-[#D1D1D1]" />
                     </label>
-                    <div className='w-full mt-2 flex items-center justify-between'>
-                        <Button variant='outline' onClick={() => setNewUser(false)}>Cancel</Button>
-                        <Button>Create Account</Button>
+                    <div className="w-full mt-2 flex items-center justify-between">
+                        <button
+                            type="button"
+                            onClick={() => setNewUser(false)}
+                            className="px-4 py-2 border rounded text-sm bg-gray-200"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="px-4 py-2 bg-blue-500 text-white rounded text-sm"
+                        >
+                            Create Account
+                        </button>
                     </div>
-                </div>
+                </form>
             </div>}
 
             {activeTab === 'Account management' &&
@@ -163,7 +203,7 @@ const page = () => {
 
             {activeTab === 'User Overview' && <UserManagementTable payload={payload} setPayload={setPayload} data={userOverview} loading={loading} />}
             {activeTab === 'Account management' && <AccountManagementTable setPayload={setPayload} payload={payload} />}
-            {activeTab === 'Issues' && <IssuesTable payload={payload} setPayload={setPayload}  />}
+            {activeTab === 'Issues' && <IssuesTable payload={payload} setPayload={setPayload} />}
             {/* {activeTab === 'Access' &&
                 <>
                     <span className='font-medium text-lg'>Search User</span>
