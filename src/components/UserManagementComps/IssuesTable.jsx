@@ -18,6 +18,7 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { getUsersIssue } from "@/serviceAPI/tennant";
 import dayjs from "dayjs";
+import { truncateName } from "@/utils/helpers";
 
 const IssuesTable = ({payload,setPayload}) => {
   const router = useRouter()
@@ -68,6 +69,13 @@ const IssuesTable = ({payload,setPayload}) => {
           </TableRow>
         </TableHeader>
         <TableBody>
+        {!loading && data.results.length === 0 && (
+            <TableRow>
+              <TableCell colSpan="6" className="text-center py-4">
+                <p className="text-base text-black">No data found..</p>
+              </TableCell>
+            </TableRow>
+          )}
           {data?.results?.map((item, index) => (
             <TableRow
               key={index}
@@ -76,8 +84,8 @@ const IssuesTable = ({payload,setPayload}) => {
               <TableCell className='flex min-w-[160px]'>
                 <Link href={`/user-management/${item._id}`} className="flex items-center gap-2">
                   <Image src={item?.user?.profilePic?.url || '/notAvailable.jpg'} width={36} height={36} alt='profile pic' />
-                  <span className="text-[#454545] font-semibold text-sm text-left truncate...">
-                    {item?.name}
+                  <span title={item?.name} className="text-[#454545] font-semibold text-sm text-left ">
+                    {truncateName(item?.name)}
                   </span>
                 </Link>
 

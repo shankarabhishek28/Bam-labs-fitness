@@ -17,6 +17,7 @@ import { deleteNotification, getNotification } from "@/serviceAPI/tennant";
 import dayjs from "dayjs";
 import { Button } from "../ui/button";
 import Popup from "../ui/Popup";
+import { truncateDescription, truncateName } from "@/utils/helpers";
 
 const NotificationTable = ({tableData, loading,fetchNotification}) => {
   const [selectedNotificationId, setSelectedNotificationId] = useState(null);
@@ -75,18 +76,18 @@ const NotificationTable = ({tableData, loading,fetchNotification}) => {
             >
               <TableCell className="max-w-[140px] overflow-hidden mt-1 truncate">
                 <span
-                  className="text-[#454545] font-semibold text-sm text-left truncate"
+                  className="text-[#454545] font-semibold text-sm text-left "
                   title={item.title}
                 >
-                  {item.title}
+                  {truncateName(item.title)}
                 </span>
               </TableCell>
               <TableCell className="max-w-[160px] overflow-hidden truncate">
                 <span
-                  className="text-[#454545] font-normal text-sm text-left truncate"
+                  className="text-[#454545] font-normal text-sm text-left "
                   title={item.description}
                 >
-                  {item.description}
+                  {truncateDescription(item.description)}
                 </span>
               </TableCell>
               <TableCell className="min-w-[140px]">
@@ -95,12 +96,12 @@ const NotificationTable = ({tableData, loading,fetchNotification}) => {
                 </span>
               </TableCell>
               <TableCell>
-                <span className="text-[#0076AB] font-normal text-sm text-left truncate...">
+                <span className="text-[#0076AB] font-normal text-sm text-left capitalize">
                   {item.type}
                 </span>
               </TableCell>
               <TableCell>
-                <span className="text-[#454545] font-normal text-sm text-left truncate...">
+                <span className="text-[#454545] font-normal text-sm text-left capitalize">
                   {item.userType}
                 </span>
               </TableCell>
@@ -108,9 +109,9 @@ const NotificationTable = ({tableData, loading,fetchNotification}) => {
                 <Button
                   variant="outline"
                   onClick={() => handleDeleteConfirmation(item?._id)}
-                  className="flex items-center justify-between"
+                  className="flex items-center justify-between bg-red-500"
                 >
-                  <Trash2 color="#888888" />
+                  <Trash2 color="black" />
                 </Button>
               </TableCell>
             </TableRow>

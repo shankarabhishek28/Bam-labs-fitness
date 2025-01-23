@@ -1,31 +1,41 @@
-import { useState } from 'react';
-import { Input } from '../ui/input';
-import { addNewNotification } from '@/serviceAPI/tennant';
-import { useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
+import { useState } from "react";
+import { Input } from "../ui/input";
+import { addNewNotification } from "@/serviceAPI/tennant";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
-const AddNotification = ({ setNewNotification,setActiveTab, fetchNotification, activeTab }) => {
-  const [selectedBilling, setSelectedBilling] = useState('all');
+const AddNotification = ({
+  setNewNotification,
+  setActiveTab,
+  fetchNotification,
+  activeTab,
+}) => {
+  const [selectedBilling, setSelectedBilling] = useState("all");
   const [scheduleEnabled, setScheduleEnabled] = useState(false);
   const handleFormSubmit = async (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
-  
+
     // Create FormData instance
     const formData = new FormData(e.target);
-  
+
     // Check if all required fields are filled
     const userType = formData.get("userType");
     const title = formData.get("title");
     const description = formData.get("description");
     const type = formData.get("type");
     const date = scheduleEnabled ? formData.get("date") : null;
-  
-    if (!userType || !title || !description || !type || (scheduleEnabled && !date)) {
+
+    if (
+      !userType ||
+      !title ||
+      !description ||
+      !type ||
+      (scheduleEnabled && !date)
+    ) {
       toast.error("Please fill out all required fields.");
       return; // Stop the function if any required field is missing
     }
-  
-    
+
     const payload = {
       userType,
       title,
@@ -33,26 +43,23 @@ const AddNotification = ({ setNewNotification,setActiveTab, fetchNotification, a
       type,
       schedule: date,
     };
-  
+
     try {
       const res = await addNewNotification(payload);
       if (res?.status) {
         setNewNotification(false);
-        if(activeTab === 'all'){
+        if (activeTab === "all") {
           fetchNotification();
+        } else {
+          fetchNotification({ userType: "individual" });
         }
-        else{
-          fetchNotification({ userType: 'individual' })
-        }
-        
       }
     } catch (error) {
       console.error("Error adding notification:", error);
     }
-  
+
     console.log("Payload:", payload);
   };
-  
 
   return (
     <form
@@ -69,7 +76,7 @@ const AddNotification = ({ setNewNotification,setActiveTab, fetchNotification, a
               name="userType"
               value="all"
               defaultChecked
-              onChange={() => setSelectedBilling('all')}
+              onChange={() => setSelectedBilling("all")}
               className="mr-1 transform scale-150"
             />
             <span className="mb-[1px]">All Users</span>
@@ -79,7 +86,7 @@ const AddNotification = ({ setNewNotification,setActiveTab, fetchNotification, a
               type="radio"
               name="userType"
               value="individual"
-              onChange={() => setSelectedBilling('annual')}
+              onChange={() => setSelectedBilling("annual")}
               className="mr-1 transform scale-150"
             />
             <span className="mb-[1px]">Personalised</span>
@@ -93,7 +100,9 @@ const AddNotification = ({ setNewNotification,setActiveTab, fetchNotification, a
         <Input
           type="text"
           name="title"
-          requi
+          required
+          minLength={5}
+          maxLength={40}
           placeholder="Title"
           className="w-full p-2 mt-1 border border-gray-300 rounded-md"
         />
@@ -105,6 +114,7 @@ const AddNotification = ({ setNewNotification,setActiveTab, fetchNotification, a
         <Input
           as="textarea"
           name="description"
+          required
           maxLength={200}
           placeholder="Write your description here (max 200 characters)"
           minLength={10}
@@ -117,9 +127,13 @@ const AddNotification = ({ setNewNotification,setActiveTab, fetchNotification, a
         <label className="block text-sm font-medium">Type</label>
         <select
           name="type"
+          required
+          defaultValue={""}
           className="w-full p-2 mt-1 border border-gray-300 rounded-md"
         >
-          <option value="">Select</option>
+          <option disabled value="">
+            Select
+          </option>
           <option value="PUSH">Push</option>
           <option value="SMS">SMS</option>
         </select>
@@ -160,7 +174,7 @@ const AddNotification = ({ setNewNotification,setActiveTab, fetchNotification, a
           type="submit"
           className="px-4 py-2 text-white bg-primary rounded-md"
         >
-          Create Notification
+          {!scheduleEnabled ? "Create Notification" : "Schedule Notification"}
         </button>
       </div>
     </form>

@@ -145,7 +145,10 @@ export const downloadCSV = (columns, data) => {
 
 export async function downloadFile(url, filename) {
   try {
-    const fileName = window.prompt("Enter file name for the CSD Form", "csdForm.pdf");
+    const fileName = window.prompt(
+      "Enter file name for the CSD Form",
+      "csdForm.pdf"
+    );
 
     if (!fileName) {
       return;
@@ -180,10 +183,8 @@ export function removeIds(obj) {
 }
 
 export function stripHTML(html) {
-  return html?.replace(/<[^>]*>/g, ''); // Removes all tags
+  return html?.replace(/<[^>]*>/g, ""); // Removes all tags
 }
-
-
 
 export const comparePasswords = (a, b, message = true) => {
   if (a != b) {
@@ -199,9 +200,28 @@ export const comparePasswords = (a, b, message = true) => {
 
 export function formatNumber(num) {
   if (num >= 1_000_000) {
-      return `${Math.floor(num / 1_000_000)}M`; // Millions
+    return `${Math.floor(num / 1_000_000)}M`; // Millions
   } else if (num >= 1_000) {
-      return `${Math.floor(num / 1_000)}k`; // Thousands
+    return `${Math.floor(num / 1_000)}k`; // Thousands
   }
   return num.toString(); // Less than a thousand
 }
+
+export const truncateDescription = (description) => {
+  if (typeof description !== "string") {
+    return "NA"; // Fallback if description is not a string
+  }
+  if (description && description.length > 80) {
+    return description.substring(0, 80) + "...";
+  }
+  return description || "";
+};
+export const truncateName = (Name) => {
+  if (typeof Name !== "string") {
+    return "NA"; // Fallback if description is not a string
+  }
+  if (Name && Name.length > 40) {
+    return Name.substring(0, 40) + "...";
+  }
+  return Name || ""; // Return empty string if Name is undefined or null
+};
