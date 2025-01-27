@@ -16,10 +16,12 @@ import {
 
 const page = () => {
   const [data, setData] = useState(null);
+  const [payload, setPayload] = useState({ page: 1, limit: 10 });
+
   const [loading, setLoading] = useState(true);
 
   const fetchAllHabits = async () => {
-    const res = await getAllHabits();
+    const res = await getAllHabits(payload);
     if (res?.status) {
       setData(res?.data);
       setLoading(false);
@@ -27,7 +29,7 @@ const page = () => {
   };
   useEffect(() => {
     fetchAllHabits();
-  }, []);
+  }, [payload]);
 
   const [activeTab, setActiveTab] = useState("Category");
   const [habitName, setHabitName] = useState("");
@@ -52,21 +54,19 @@ const page = () => {
       <div className="mb-2 mt-4 flex justify-between items-center">
         <div className="flex space-x-8 ">
           <button
-            className={`pb-2 ${
-              activeTab === "Category"
+            className={`pb-2 ${activeTab === "Category"
                 ? "border-b-2 border-primary  text-base font-semibold text-secondary "
                 : " text-neutral font-semibold text-secondary"
-            }`}
+              }`}
             onClick={() => setActiveTab("Category")}
           >
             Category
           </button>
           <button
-            className={`pb-2 ${
-              activeTab === "Habits"
+            className={`pb-2 ${activeTab === "Habits"
                 ? "border-b-2 border-primary  text-base font-semibold text-secondary "
                 : " text-neutral font-semibold text-secondary"
-            }`}
+              }`}
             onClick={() => setActiveTab("Habits")}
           >
             Habits
@@ -104,6 +104,8 @@ const page = () => {
         <HabitsTable
           data={data}
           loading={loading}
+          payload={payload}
+          setPayload={setPayload}
           fetchAllHabits={fetchAllHabits}
         />
       )}
@@ -133,7 +135,7 @@ const page = () => {
               <Button variant="outline" onClick={() => setNewHabit(false)}>
                 Discard
               </Button>
-              <Button disabled={pLoading || habitName.length===0} type="submit">
+              <Button disabled={pLoading || habitName.length === 0} type="submit">
                 Create Habit
               </Button>
             </div>

@@ -63,7 +63,7 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {!loading && data.results.length === 0 && (
+          {!loading && data?.results?.length === 0 && (
                       <TableRow>
                         <TableCell colSpan="7" className="text-center ">
                           <p className="text-base text-black">No data found..</p>

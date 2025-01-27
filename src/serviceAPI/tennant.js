@@ -381,10 +381,11 @@ export const addNewCategory = async (payload) => {
 };
 
 
-export const getAllHabits = async () => {
+export const getAllHabits = async (payload) => {
     let endpoint = `${URL}/admin/tracker/habits`;
    
-    
+    const queryParams = appendQueryParams(payload);
+    endpoint += queryParams;
 
     const token = await getAuthToken();
     console.log("Token",token)
@@ -539,7 +540,7 @@ export const deleteStrengthContent = async (id) => {
     try {
         const response = await fetch(`${endpoint}`, requestOptions);
         // console.log("RES--->",response)
-        return responseValidator(response,true)
+        return responseValidator(response,false)
 
     } catch (error) {
         return apiError(error)

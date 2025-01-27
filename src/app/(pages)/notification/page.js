@@ -19,34 +19,42 @@ const page = () => {
     const [personalizedNotification, setPersonalizedNotification] = useState(false);
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [payload, setPayload] = useState({  search:'',page: 1, limit: 10 });
 
 
-    const fetchNotification = async (payload) => {
-        const res = await getNotification(payload);
-        if (res?.status) {
-            setTableData(res?.data?.results);
+    const fetchNotification = async () => {
+        setLoading(true);
+        try {
+            const updatedPayload = activeTab === "All" ? payload : { ...payload, userType: "individual" };
+            const res = await getNotification(updatedPayload);
+            if (res?.status) {
+                setTableData(res?.data || []);
+            }
+        } catch (error) {
+            console.error("Error fetching notifications:", error);
+        } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        if (activeTab === 'All') {
-            fetchNotification()
-        }
-        else {
-            fetchNotification({ userType: 'individual' });
-        }
-
-    }, [activeTab]);
-    const [searchTerm, setSearchTerm] = React.useState("wewe");
+        fetchNotification();
+    }, [activeTab, payload]);
 
     return (
-        <div className='px-6 py-8'>
+        <div className='px-6 py-8 overflow-hidden'>
             <Head>
                 <title>Analytics - BAM Labs Admin</title>
                 <meta name="description" content="" />
             </Head>
-            <span className='text-secondary font-semibold text-xl'>Notifications</span>
+            <div className='flex items-center justify-between'>
+                <span className='text-secondary font-semibold text-xl'>Notifications</span>
+
+                <div className="flex items-center justify-end mt-2">
+                    <Button onClick={() => setNewNotification(true)} className='gap-2'><Plus color='white' />Create New Notification</Button>
+
+                </div>
+            </div>
             <div className="mb-2 mt-4 flex justify-between items-center">
                 <div className="flex space-x-8 ">
                     <button
@@ -74,19 +82,18 @@ const page = () => {
                     <InputWithLabel
                         placeholder="Search"
                         className="text-zinc-500 w-[300px] rounded-[8px] focus:border"
-                        inputClass='bg-primaryLite h-[40px] rounded-[8px]'
-                        // inputParent='bg-primaryLite focus-within:border-primary rounded-[8px]'
+                        // InputClass='bg-primaryLite h-[40px] rounded-[8px]'
+                        // InputParent='bg-primaryLite focus-within:border-primary rounded-[8px]'
                         iconType={"pre"}
+                        value={payload?.search}
+                        onChange={(e) => setPayload((prev) => ({ ...prev, search: e.target.value, page: 1 }))}
                     >
                         <SearchIcon />
                     </InputWithLabel>
                     <div className="p-2 mt-2 bg-primaryLite rounded-[8px]">
                         <FilterIcon />
                     </div>
-                    <div className="flex items-center justify-end mt-2">
-                        <Button onClick={() => setNewNotification(true)} className='gap-2'><Plus color='white' />Create New Notification</Button>
 
-                    </div>
                 </div>
                 {/* {newNotification && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
                     <AddNotification fetchNotification={fetchNotification} setNewNotification={setNewNotification} />
@@ -107,8 +114,8 @@ const page = () => {
 
 
 
-            {activeTab === 'All' && <NotificationTable fetchNotification={fetchNotification} tableData={tableData} loading={loading} />}
-            {activeTab === 'Personalized' && <PersonalizedNotificationTable fetchNotification={fetchNotification} tableData={tableData} loading={loading} />}
+            {activeTab === 'All' && <NotificationTable payload={payload} setPayload={setPayload} fetchNotification={fetchNotification} data={tableData} loading={loading} />}
+            {activeTab === 'Personalized' && <PersonalizedNotificationTable fetchNotification={fetchNotification} data={tableData} payload={payload} setPayload={setPayload} loading={loading} />}
 
 
 

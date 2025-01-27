@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import React, { useEffect, useState } from "react";
 import {
   Table,
@@ -8,20 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import {
-  ArrowLeft,
-  ArrowRight,
-  ArrowUp,
-  ArrowDown,
-  Eye,
-  Ban,
-  SearchIcon,
-  Filter,
-  CheckCircle,
-  CheckCircleIcon,
-  CheckCircle2,
-  CircleX,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown, Eye, Ban, SearchIcon, Filter, CheckCircle, CheckCircleIcon, CheckCircle2, CircleX } from "lucide-react";
 import Link from "next/link";
 import Popuplist from "../ui/Popuplist";
 import Image from "next/image";
@@ -30,19 +17,10 @@ import FilterIcon from "../../../public/Icons/FilterIcon";
 import { Button } from "../ui/button";
 import { getUsersAccount } from "@/serviceAPI/tennant";
 import dayjs from "dayjs";
-import { truncateName } from "@/utils/helpers";
 
-const AccountManagementTable = ({ payload, setPayload }) => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const fetchUsersAccount = async () => {
-    const res = await getUsersAccount(payload);
-    setData(res?.data);
-    setLoading(false);
-  };
-  useEffect(() => {
-    fetchUsersAccount();
-  }, [payload]);
+const AccountManagementTable = ({ payload, setPayload, loading, data }) => {
+  
+  
   return (
     <div className="pt-2 ">
       {loading && (
@@ -67,6 +45,7 @@ const AccountManagementTable = ({ payload, setPayload }) => {
               Plan
             </TableHead> */}
 
+
             <TableHead className="text-white font-bold text-sm text-left">
               Phone no.
             </TableHead>
@@ -79,46 +58,30 @@ const AccountManagementTable = ({ payload, setPayload }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {!loading && data.results.length === 0 && (
-            <TableRow>
-              <TableCell colSpan="6" className="text-center py-4">
-                <p className="text-base text-black">No data found..</p>
-              </TableCell>
-            </TableRow>
-          )}
           {data?.results?.map((item, index) => (
             <TableRow
               key={index}
               className="bg-white hover:bg-white cursor-pointer"
             >
-              <TableCell className="flex min-w-[160px]">
-                <Link
-                  href={`/user-management/${item._id}`}
-                  className="flex items-center gap-2"
-                >
-                  <Image
-                    src={"/dummyUser.png"}
-                    width={36}
-                    height={36}
-                    alt="profile pic"
-                  />
-                  <span
-                    title={item?.name}
-                    className="text-[#454545] font-semibold text-sm text-left truncate..."
-                  >
-                    {truncateName(item?.name)}
+              <TableCell className='flex min-w-[160px]'>
+                <Link href={`/user-management/${item._id}`} className="flex items-center gap-2">
+                  <Image src={'/dummyUser.png'} width={36} height={36} alt='profile pic' />
+                  <span className="text-[#454545] font-semibold text-sm text-left truncate...">
+                    {item?.name}
                   </span>
                 </Link>
+
               </TableCell>
-              <TableCell className="min-w-[140px] ">
+              <TableCell className='min-w-[140px] '>
                 <span className="text-[#454545] font-normal text-sm text-left truncate...">
                   {item?._id}
                 </span>
               </TableCell>
 
-              <TableCell className="min-w-[140px]">
+              <TableCell className='min-w-[140px]'>
                 <span className="text-[#454545] font-normal  text-sm text-left truncate...">
                   {dayjs(item?.createdAt).format("DD/MM/YYYY")}
+
                 </span>
               </TableCell>
 
@@ -130,38 +93,21 @@ const AccountManagementTable = ({ payload, setPayload }) => {
               <TableCell className="max-w-[180px] overflow-hidden truncate">
                 <span className="text-[#454545] font-normal text-sm text-left gap-2 flex items-center truncate">
                   <span className="truncate">{item?.phone}</span>
-                  <CheckCircle2
-                    fill="#ED2015"
-                    color="white"
-                    className="w-4 h-4 flex-shrink-0"
-                  />
+                  <CheckCircle2 fill="#ED2015" color="white" className="w-4 h-4 flex-shrink-0" />
                 </span>
               </TableCell>
               <TableCell>
-                <span
-                  title={item?.email}
-                  className="text-[#454545] font-normal text-sm text-left gap-2 flex truncate..."
-                >
-                  {truncateName(item?.email)}
-                  <CircleX fill="#ED2015" color="white" />
+                <span className="text-[#454545] font-normal text-sm text-left gap-2 flex truncate...">
+                  {item?.email}<CircleX fill="#ED2015" color="white" />
                 </span>
               </TableCell>
 
               <TableCell>
+
                 <div className="flex items-center justify-start gap-2">
-                  <Button
-                    disabled={!item?.isEmailVerified}
-                    className=" px-2 h-8 text-[12px]"
-                  >
-                    Verify Email
-                  </Button>
-                  <Button
-                    disabled={!item?.isPhoneVerified}
-                    className="px-2 h-8 text-[12px]"
-                  >
-                    Verify Number
-                  </Button>
+                  <Button disabled={!(item?.isEmailVerified)} className=' px-2 h-8 text-[12px]'>Verify Email</Button><Button disabled={!(item?.isPhoneVerified)} className='px-2 h-8 text-[12px]'>Verify Number</Button>
                 </div>
+
               </TableCell>
             </TableRow>
           ))}
@@ -170,9 +116,7 @@ const AccountManagementTable = ({ payload, setPayload }) => {
       <div className="flex bg-white items-center justify-between p-4">
         {/* Entries Per Page */}
         <div className="flex items-center">
-          <label htmlFor="entries" className="text-sm text-[#828282] mr-2">
-            Entries per page
-          </label>
+          <label htmlFor="entries" className="text-sm text-[#828282] mr-2">Entries per page</label>
           <select
             id="entries"
             className="bg-white border border-black rounded-[4px] mx-1 px-4 text-sm p-1 focus:border-primary focus:outline-none "
@@ -181,7 +125,7 @@ const AccountManagementTable = ({ payload, setPayload }) => {
               setPayload((prev) => ({
                 ...prev,
                 limit: e.target.value,
-                page: 1, // Update the 'limit' in state with selected value
+                page: 1 // Update the 'limit' in state with selected value
               }))
             }
           >
@@ -211,11 +155,10 @@ const AccountManagementTable = ({ payload, setPayload }) => {
             <>
               {/* First Page */}
               <button
-                className={`px-3 py-1 border border-primary rounded-full mx-1 ${
-                  payload?.page === 1
-                    ? "bg-primary text-white"
-                    : "text-[#828282] hover:bg-primary hover:text-white"
-                }`}
+                className={`px-3 py-1 border border-primary rounded-full mx-1 ${payload?.page === 1
+                  ? "bg-primary text-white"
+                  : "text-[#828282] hover:bg-primary hover:text-white"
+                  }`}
                 onClick={() =>
                   setPayload((prev) => ({
                     ...prev,
@@ -236,11 +179,10 @@ const AccountManagementTable = ({ payload, setPayload }) => {
                   return (
                     <button
                       key={pageNumber}
-                      className={`px-3 py-1 border border-primary rounded-full mx-1 ${
-                        payload?.page === pageNumber
-                          ? "bg-primary text-white"
-                          : "text-[#828282] hover:bg-primary hover:text-white"
-                      }`}
+                      className={`px-3 py-1 border border-primary rounded-full mx-1 ${payload?.page === pageNumber
+                        ? "bg-primary text-white"
+                        : "text-[#828282] hover:bg-primary hover:text-white"
+                        }`}
                       onClick={() =>
                         setPayload((prev) => ({
                           ...prev,
@@ -256,17 +198,14 @@ const AccountManagementTable = ({ payload, setPayload }) => {
               })}
 
               {/* Ellipsis after the visible range */}
-              {payload?.page < data?.totalPages - 2 && (
-                <span className="px-2">...</span>
-              )}
+              {payload?.page < data?.totalPages - 2 && <span className="px-2">...</span>}
 
               {/* Last Page */}
               <button
-                className={`px-3 py-1 border border-primary rounded-full mx-1 ${
-                  payload?.page === data?.totalPages
-                    ? "bg-primary text-white"
-                    : "text-[#828282] hover:bg-primary hover:text-white"
-                }`}
+                className={`px-3 py-1 border border-primary rounded-full mx-1 ${payload?.page === data?.totalPages
+                  ? "bg-primary text-white"
+                  : "text-[#828282] hover:bg-primary hover:text-white"
+                  }`}
                 onClick={() =>
                   setPayload((prev) => ({
                     ...prev,
@@ -284,11 +223,10 @@ const AccountManagementTable = ({ payload, setPayload }) => {
               return (
                 <button
                   key={pageNumber}
-                  className={`px-3 py-1 border border-primary rounded-full mx-1 ${
-                    payload?.page === pageNumber
-                      ? "bg-primary text-white"
-                      : "text-[#828282] hover:bg-primary hover:text-white"
-                  }`}
+                  className={`px-3 py-1 border border-primary rounded-full mx-1 ${payload?.page === pageNumber
+                    ? "bg-primary text-white"
+                    : "text-[#828282] hover:bg-primary hover:text-white"
+                    }`}
                   onClick={() =>
                     setPayload((prev) => ({
                       ...prev,
@@ -315,6 +253,7 @@ const AccountManagementTable = ({ payload, setPayload }) => {
             Next
           </button>
         </div>
+
       </div>
     </div>
   );

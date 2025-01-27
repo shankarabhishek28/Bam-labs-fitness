@@ -69,7 +69,7 @@ const IssuesTable = ({payload,setPayload}) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-        {!loading && data.results.length === 0 && (
+        {!loading && data?.results?.length === 0 && (
             <TableRow>
               <TableCell colSpan="6" className="text-center py-4">
                 <p className="text-base text-black">No data found..</p>
