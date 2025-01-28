@@ -19,7 +19,7 @@ const page = () => {
     const [activeTab, setActiveTab] = React.useState("User Overview");
     const [payload, setPayload] = useState({ search: "", page: 1, limit: 10 });
     const router = useRouter();
-    const [accountData, setAccountData] = useState([]) 
+    const [accountData, setAccountData] = useState([])
     const [newUser, setNewUser] = React.useState(false);
     const [userOverview, setUserOverview] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -36,16 +36,26 @@ const page = () => {
         const res = await getUsersAccount(payload);
         setAccountData(res?.data);
         setLoading(false);
-    
-      }
-      useEffect(() => {
+
+    }
+    useEffect(() => {
         fetchUsersAccount();
-      }, [payload])
+    }, [payload])
+    const [showOptions, setShowOptions] = useState(false);
+
+    const handleOptionClick = (option) => {
+        if(option === "newest" ){
+            setPayload((prev)=>({...prev,sortOrder:'desc' ,sortBy:'createdAt'}))
+        }
+        else if(option === "oldest" ){
+            setPayload((prev)=>({...prev,sortOrder:'asc' ,sortBy:'createdAt'}))
+        }
+        setShowOptions(false); // Hide options after selection
+    };
     // Debounced version of fetUserOverview
     const debouncedFetch = React.useMemo(() => debounce(fetchUserOverview, 500), [payload]);
 
     useEffect(() => {
-        // For the first fetch, no delay
         if (activeTab === "User Overview") {
             if (isFirstFetch) {
                 fetchUserOverview();
@@ -57,7 +67,7 @@ const page = () => {
 
         return () => debouncedFetch.cancel(); // Cleanup debounce when component unmounts or searchTerm changes
     }, [payload, debouncedFetch]);
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
 
@@ -69,16 +79,16 @@ const page = () => {
             dob: formData.get('dob'),
             phone: formData.get('phone'),
         };
-        if(!verifyEmail(payload?.email)){
-            return 
+        if (!verifyEmail(payload?.email)) {
+            return
         }
-        const res =  await registerNewUser(payload);
-        if(res?.status){
+        const res = await registerNewUser(payload);
+        if (res?.status) {
             fetchUsersAccount();
             setNewUser(false);
             setActiveTab('Account management')
         }
-        
+
 
         console.log(payload);
     };
@@ -140,9 +150,37 @@ const page = () => {
                     >
                         <SearchIcon />
                     </InputWithLabel>
-                    <div className="p-2 mt-2 bg-primaryLite rounded-[8px]">
-                        <FilterIcon />
+                    <div className="relative inline-block">
+                        {/* Button */}
+                        <button
+                            className="p-2 mt-2 bg-primaryLite rounded-[8px]"
+                            onClick={() => setShowOptions(!showOptions)}
+                        >
+                            <FilterIcon />
+                        </button>
+
+                        {/* Options Dropdown */}
+                        {showOptions && (
+                            <div
+                                className="absolute top-full mt-2 w-[150px] bg-white shadow-lg rounded-lg z-10 overflow-hidden right-8"
+                                
+                            >
+                                <button
+                                    className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                                    onClick={() => handleOptionClick("newest")}
+                                >
+                                    Newest
+                                </button>
+                                <button
+                                    className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                                    onClick={() => handleOptionClick("oldest")}
+                                >
+                                    Oldest
+                                </button>
+                            </div>
+                        )}
                     </div>
+
                 </div>}
                 {
                     activeTab === 'Access' && <div className="flex items-center justify-end mt-2">
@@ -179,7 +217,7 @@ const page = () => {
                     </div>
                     <label className="flex flex-wrap w-full">
                         <span className="w-full text-sm mb-1">Enter Phone No.</span>
-                        <Input type="tel" name="phone" required className="w-full border border-[#D1D1D1]" pattern="[0-9]+"/>
+                        <Input type="tel" name="phone" required className="w-full border border-[#D1D1D1]" pattern="[0-9]+" />
                     </label>
                     <label className="flex flex-wrap w-full">
                         <span className="w-full text-sm mb-1">Enter Email</span>
@@ -214,7 +252,7 @@ const page = () => {
                 </div>}
 
             {activeTab === 'User Overview' && <UserManagementTable payload={payload} setPayload={setPayload} data={userOverview} loading={loading} />}
-            {activeTab === 'Account management' && <AccountManagementTable  loading={loading} data={accountData} setPayload={setPayload} payload={payload} />}
+            {activeTab === 'Account management' && <AccountManagementTable loading={loading} data={accountData} setPayload={setPayload} payload={payload} />}
             {activeTab === 'Issues' && <IssuesTable payload={payload} setPayload={setPayload} />}
             {/* {activeTab === 'Access' &&
                 <>

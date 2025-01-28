@@ -42,6 +42,31 @@ export const forgotPassword = async (payload) => {
     }
   };
 
+  export const deactivateUser = async (userId) => {
+    const endpoint = `${URL}/admin/users/status/${userId}?action=softDelete&`;
+    const token = await getAuthToken();
+    
+    // Set up headers with authorization
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/json"); // Specify JSON content type for PATCH requests
+
+    // Define request options for PATCH
+    const requestOptions = {
+        method: "PATCH",
+        headers: myHeaders,
+       // Convert `userData` to JSON for the body
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        console.log("Response",response)
+        return responseValidator(response,false); // Validate response or handle accordingly
+    } catch (error) {
+        return apiError(error); // Handle API error
+    }
+};
 export const uploadFiles = async (file) => {
     const sanitizedBaseUrl = URL.replace(/\/admin$/, "");
     const endpoint = `${sanitizedBaseUrl}/upload/files`;

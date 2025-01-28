@@ -1,15 +1,18 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import { getUserDetails } from '@/serviceAPI/tennant'
+import Popup from '@/components/ui/Popup'
+import { deactivateUser, getUserDetails } from '@/serviceAPI/tennant'
 import dayjs from 'dayjs'
 import { ArrowLeft, ArrowLeftIcon, BlocksIcon, ChevronLeft, Delete, RemoveFormatting } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 
 const page = ({ params }) => {
     console.log("params_id", params.id)
     const router = useRouter();
+    const [isModalOpen,setIsModalOpen] = useState(false)
     const [details, setUserDetails] = useState([]);
     const [loading, setLoading] = useState(true);
     const fetchThisUsersDetail = async () => {
@@ -27,6 +30,21 @@ const page = ({ params }) => {
     useEffect(() => {
         fetchThisUsersDetail()
     }, [])
+
+    const handleDeactivateUser = async () => {
+        if (params?.id) {
+         const res = await deactivateUser(params?.id);
+         if(res?.status){
+            toast.success('User Deactivated Successfully');
+            setIsModalOpen(false);
+         }
+         return
+           
+        }
+    
+        // Perform deactivation logic here (e.g., API call)
+        toast.error('Couldnt deactivate! please visit the page again')
+    };
     return (
         <div className="px-6 py-8">
             {loading && (
@@ -63,7 +81,7 @@ const page = ({ params }) => {
                         </div>
                     </div>
                     {/* Deactivate Button */}
-                    <button className="bg-primary text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+                    <button onClick={()=>setIsModalOpen(true)} className="bg-primary text-white px-4 py-2 rounded-lg flex items-center space-x-2">
                         <Delete />
                         <span>Deactivate</span>
                     </button>
@@ -155,6 +173,24 @@ const page = ({ params }) => {
                     </div>
                 </div>
             </div>
+             <Popup
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    title="Deactivate User?"
+                    footerButtons={[
+                      {
+                        label: "Cancel",
+                        onClick: () => setIsModalOpen(false),
+                      },
+                      {
+                        label: "Deactivate",
+                        onClick: handleDeactivateUser,
+                        variant: "primary",
+                      },
+                    ]}
+                  >
+                    <p>Are you sure you want to deactivate this user?</p>
+                  </Popup>
         </div>
     )
 }
