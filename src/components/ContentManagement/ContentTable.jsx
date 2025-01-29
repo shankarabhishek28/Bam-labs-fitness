@@ -32,7 +32,7 @@ const ContentTable = () => {
         <div className="pt-2 ">
             {loading && (
                 <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-                    <div className="w-6 h-6 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <span class="loader"></span>
                 </div>
             )}
             <Table className="min-w-full overflow-x-auto border border-b">

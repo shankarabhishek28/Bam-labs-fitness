@@ -66,7 +66,7 @@ const page = ({ params }) => {
         <div className="px-6 py-8">
             {loading && (
                 <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-                    <div className="w-6 h-6 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <span class="loader"></span>
                 </div>
             )}
             <span className="text-secondary font-semibold text-xl">Content Management</span>

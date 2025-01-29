@@ -46,7 +46,9 @@ const Categories = () => {
   return (
     <div className="flex flex-col gap-4">
       {loading ? (
-        <p>Loading exercises...</p>
+         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+        <span class="loader"></span>
+        </div>
       ) : (
         excerciseData?.map((item, index) => (
           <CategoryCard
