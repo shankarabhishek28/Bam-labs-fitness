@@ -33,6 +33,7 @@ const page = () => {
         console.log("res-->", res);
     };
     const fetchUsersAccount = async () => {
+        console.log('tried');
         const res = await getUsersAccount(payload);
         setAccountData(res?.data);
         setLoading(false);
@@ -252,7 +253,7 @@ const page = () => {
                 </div>}
 
             {activeTab === 'User Overview' && <UserManagementTable payload={payload} setPayload={setPayload} data={userOverview} loading={loading} />}
-            {activeTab === 'Account management' && <AccountManagementTable loading={loading} data={accountData} setPayload={setPayload} payload={payload} />}
+            {activeTab === 'Account management' && <AccountManagementTable fetchUsersAccount={fetchUsersAccount} setActiveTab={setActiveTab} loading={loading} data={accountData} setPayload={setPayload} payload={payload} />}
             {activeTab === 'Issues' && <IssuesTable payload={payload} setPayload={setPayload} />}
             {/* {activeTab === 'Access' &&
                 <>

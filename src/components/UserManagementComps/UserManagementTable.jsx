@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -25,8 +25,26 @@ import { InputWithLabel } from "../ui/InputWithLabel";
 import FilterIcon from "../../../public/Icons/FilterIcon";
 import dayjs from "dayjs";
 import { truncateName } from "@/utils/helpers";
+import Popup from "../ui/Popup";
+import { suspendUser } from "@/serviceAPI/tennant";
+import { toast } from "react-toastify";
 
 const UserManagementTable = ({ data, loading, payload, setPayload }) => {
+  const [isModalOpen, setIsModalOpen] = useState({open:false, id:0})
+ const handleSuspendUser = async (id) => {
+        if (id) {
+         const res = await suspendUser(id);
+         if(res?.status){
+            toast.success('User Deactivated Successfully');
+            setIsModalOpen((prev)=>({...prev, open:false}));
+         }
+         return
+           
+        }
+    
+        // Perform deactivation logic here (e.g., API call)
+        toast.error('Couldnt deactivate! please visit the page again')
+    };
   return (
     <div className="pt-2 ">
       {loading && (
@@ -64,12 +82,12 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
         </TableHeader>
         <TableBody>
           {!loading && data?.results?.length === 0 && (
-                      <TableRow>
-                        <TableCell colSpan="7" className="text-center ">
-                          <p className="text-base text-black">No data found..</p>
-                        </TableCell>
-                      </TableRow>
-                    )}
+            <TableRow>
+              <TableCell colSpan="7" className="text-center ">
+                <p className="text-base text-black">No data found..</p>
+              </TableCell>
+            </TableRow>
+          )}
           {data?.results?.map((item, index) => (
             <TableRow
               key={index}
@@ -116,8 +134,14 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
 
               <TableCell>
                 <div className="flex items-center justify-between gap-2">
+                  <Link href={`/user-management/${item._id}`}>
                   <Eye color="#888888" />
-                  <Ban color="#888888" />
+                  </Link>
+                  
+                  <button onClick={() => setIsModalOpen({open:true,id:item?._id})}>
+                  <Ban  color="#888888" />
+                  </button>
+                  
                 </div>
               </TableCell>
             </TableRow>
@@ -168,11 +192,10 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
             <>
               {/* First Page */}
               <button
-                className={`px-3 py-1 border border-primary rounded-full mx-1 ${
-                  payload?.page === 1
-                    ? "bg-primary text-white"
-                    : "text-[#828282] hover:bg-primary hover:text-white"
-                }`}
+                className={`px-3 py-1 border border-primary rounded-full mx-1 ${payload?.page === 1
+                  ? "bg-primary text-white"
+                  : "text-[#828282] hover:bg-primary hover:text-white"
+                  }`}
                 onClick={() =>
                   setPayload((prev) => ({
                     ...prev,
@@ -193,11 +216,10 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
                   return (
                     <button
                       key={pageNumber}
-                      className={`px-3 py-1 border border-primary rounded-full mx-1 ${
-                        payload?.page === pageNumber
-                          ? "bg-primary text-white"
-                          : "text-[#828282] hover:bg-primary hover:text-white"
-                      }`}
+                      className={`px-3 py-1 border border-primary rounded-full mx-1 ${payload?.page === pageNumber
+                        ? "bg-primary text-white"
+                        : "text-[#828282] hover:bg-primary hover:text-white"
+                        }`}
                       onClick={() =>
                         setPayload((prev) => ({
                           ...prev,
@@ -219,11 +241,10 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
 
               {/* Last Page */}
               <button
-                className={`px-3 py-1 border border-primary rounded-full mx-1 ${
-                  payload?.page === data?.totalPages
-                    ? "bg-primary text-white"
-                    : "text-[#828282] hover:bg-primary hover:text-white"
-                }`}
+                className={`px-3 py-1 border border-primary rounded-full mx-1 ${payload?.page === data?.totalPages
+                  ? "bg-primary text-white"
+                  : "text-[#828282] hover:bg-primary hover:text-white"
+                  }`}
                 onClick={() =>
                   setPayload((prev) => ({
                     ...prev,
@@ -241,11 +262,10 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
               return (
                 <button
                   key={pageNumber}
-                  className={`px-3 py-1 border border-primary rounded-full mx-1 ${
-                    payload?.page === pageNumber
-                      ? "bg-primary text-white"
-                      : "text-[#828282] hover:bg-primary hover:text-white"
-                  }`}
+                  className={`px-3 py-1 border border-primary rounded-full mx-1 ${payload?.page === pageNumber
+                    ? "bg-primary text-white"
+                    : "text-[#828282] hover:bg-primary hover:text-white"
+                    }`}
                   onClick={() =>
                     setPayload((prev) => ({
                       ...prev,
@@ -273,6 +293,24 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
           </button>
         </div>
       </div>
+      <Popup
+        isOpen={isModalOpen?.open}
+        onClose={() => setIsModalOpen({open:false})}
+        title="Deactivate User?"
+        footerButtons={[
+          {
+            label: "Cancel",
+            onClick: () => setIsModalOpen({open:false}),
+          },
+          {
+            label: "Suspend",
+            onClick: ()=>handleSuspendUser(isModalOpen?.id),
+            variant: "primary",
+          },
+        ]}
+      >
+        <p>Are you sure you want to Suspend this user?</p>
+      </Popup>
     </div>
   );
 };

@@ -43,7 +43,7 @@ export const forgotPassword = async (payload) => {
   };
 
   export const deactivateUser = async (userId) => {
-    const endpoint = `${URL}/admin/users/status/${userId}?action=softDelete&`;
+    const endpoint = `${URL}/admin/users/status/${userId}?action=block&`;
     const token = await getAuthToken();
     
     // Set up headers with authorization
@@ -62,6 +62,57 @@ export const forgotPassword = async (payload) => {
     try {
         const response = await fetch(endpoint, requestOptions);
         console.log("Response",response)
+        return responseValidator(response,false); // Validate response or handle accordingly
+    } catch (error) {
+        return apiError(error); // Handle API error
+    }
+};
+
+export const suspendUser = async (userId) => {
+    const endpoint = `${URL}/admin/users/status/${userId}?action=softDelete&`;
+    const token = await getAuthToken();
+    
+    // Set up headers with authorization
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/json"); // Specify JSON content type for PATCH requests
+
+    // Define request options for PATCH
+    const requestOptions = {
+        method: "PATCH",
+        headers: myHeaders,
+       // Convert `userData` to JSON for the body
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        console.log("Response",response);
+        return responseValidator(response,false); // Validate response or handle accordingly
+    } catch (error) {
+        return apiError(error); // Handle API error
+    }
+};
+export const verify = async (userId,verifyType) => {
+    const endpoint = `${URL}/admin/users/verify/${userId}?verifyType=${verifyType}`;
+    const token = await getAuthToken();
+    
+    // Set up headers with authorization
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/json"); // Specify JSON content type for PATCH requests
+
+    // Define request options for PATCH
+    const requestOptions = {
+        method: "PATCH",
+        headers: myHeaders,
+       // Convert `userData` to JSON for the body
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        console.log("Response",response);
         return responseValidator(response,false); // Validate response or handle accordingly
     } catch (error) {
         return apiError(error); // Handle API error
@@ -289,6 +340,30 @@ export const getUserDetails = async (userId) => {
     let endpoint = `${URL}/admin/users/user/${userId}`;
     // const queryParams = appendQueryParams(payload);
     // endpoint += queryParams;
+
+    const token = await getAuthToken();
+    console.log("Token",token)
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
+export const getSessionDetails = async (userId,payload) => {
+    let endpoint = `${URL}/admin/users/session/${userId}`;
+    const queryParams = appendQueryParams(payload);
+    endpoint += queryParams;
 
     const token = await getAuthToken();
     console.log("Token",token)

@@ -1,7 +1,7 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import Popup from '@/components/ui/Popup'
-import { deactivateUser, getUserDetails } from '@/serviceAPI/tennant'
+import { deactivateUser, getSessionDetails, getUserDetails } from '@/serviceAPI/tennant'
 import dayjs from 'dayjs'
 import { ArrowLeft, ArrowLeftIcon, BlocksIcon, ChevronLeft, Delete, RemoveFormatting } from 'lucide-react'
 import Image from 'next/image'
@@ -14,22 +14,66 @@ const page = ({ params }) => {
     const router = useRouter();
     const [isModalOpen,setIsModalOpen] = useState(false)
     const [details, setUserDetails] = useState([]);
+    const [sessionDetails, setSessionDetails] = useState([]);
+
     const [loading, setLoading] = useState(true);
-    const fetchThisUsersDetail = async () => {
-        if (params?.id) {
-            const res = await getUserDetails(params.id);
-            if (res?.status) {
-                setUserDetails(res?.data);
-            }
-            setLoading(false);
+    // const fetchThisUsersDetail = async () => {
+    //     if (params?.id) {
+    //         const res = await getUserDetails(params.id);
+    //         if (res?.status) {
+    //             setUserDetails(res?.data);
+    //         }
+    //         setLoading(false);
 
 
-        }
+    //     }
 
-    }
+    // }
+    // const fetchSessionDetails = async() => {
+    //     if (params?.id) {
+    //         const res = await getSessionDetails(params.id);
+    //         if (res?.status) {
+    //             setSessionDetails(res?.data);
+    //         }
+    //         setLoading(false);
+
+
+    //     }
+    // }
+
+    
     useEffect(() => {
-        fetchThisUsersDetail()
-    }, [])
+        const fetchData = async () => {
+            if (!params?.id) return;
+    
+            setLoading(true);
+    
+            try {
+                const [userRes, sessionRes] = await Promise.all([
+                    getUserDetails(params.id),
+                    getSessionDetails(params.id,{page:1,limit:10}),
+                ]);
+    
+                if (userRes?.status) {
+                    setUserDetails(userRes.data);
+                }
+    
+                if (sessionRes?.status) {
+                    setSessionDetails(sessionRes.data);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                toast.error("Failed to fetch user details. Please try again.");
+            } finally {
+                setLoading(false); // Ensure loading is stopped in all cases
+            }
+        };
+    
+        fetchData();
+    }, [params?.id]); // Add params.id as a dependency
+    
+
+
 
     const handleDeactivateUser = async () => {
         if (params?.id) {
@@ -140,20 +184,20 @@ const page = ({ params }) => {
                     <table className="min-w-full bg-white border border-gray-200 text-left text-sm">
                         <thead className="bg-primary text-white">
                             <tr>
+                                <th className="py-3 px-4">Session Name</th>
+                                <th className="py-3 px-4">Session Date</th>
                                 <th className="py-3 px-4">Time Stamp</th>
-                                <th className="py-3 px-4">Session Time</th>
-                                <th className="py-3 px-4">Action</th>
-                                <th className="py-3 px-4">Recent Habit</th>
+
+                                
                             </tr>
                         </thead>
                         <tbody>
                             {/* Table Data Rows */}
-                            {[...Array(5)].map((_, idx) => (
+                            {sessionDetails?.results?.map((item, idx) => (
                                 <tr key={idx} className="border-t border-gray-200">
-                                    <td className="py-3 px-4">24/08/2024</td>
-                                    <td className="py-3 px-4">2 hrs 10 mins</td>
-                                    <td className="py-3 px-4">Stretch session</td>
-                                    <td className="py-3 px-4">Drinking water</td>
+                                    <td className="py-3 px-4">{item?.sessionName}</td>
+                                    <td className="py-3 px-4">{dayjs(item?.sessionDate).format('DD/MM/YYYY') }</td>
+                                    <td className="py-3 px-4">{dayjs(item?.timestamp).format('DD/MM/YYYY') }</td>
                                 </tr>
                             ))}
                         </tbody>

@@ -28,7 +28,7 @@ export default function Popup({ isOpen, onClose, title, children, footerButtons 
                   key={index}
                   className={`px-4 py-2 flex-1 rounded-full ${
                     button.variant === "primary"
-                      ? "bg-red-500 text-white text-sm font-medium"
+                      ? "bg-primary text-white text-sm font-medium"
                       : "border border-primary text-sm font-medium text-primary"
                   }`}
                   onClick={button.onClick}
