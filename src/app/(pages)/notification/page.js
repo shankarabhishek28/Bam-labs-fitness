@@ -20,7 +20,15 @@ const page = () => {
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [payload, setPayload] = useState({  search:'',page: 1, limit: 10 });
+    const [showOptions, setShowOptions] = useState(false);
 
+    const handleOptionClick = (option) => {
+        
+            setPayload((prev)=>({...prev,userType:option}))
+       
+        
+        setShowOptions(false); // Hide options after selection
+    };
 
     const fetchNotification = async () => {
         setLoading(true);
@@ -90,9 +98,47 @@ const page = () => {
                     >
                         <SearchIcon />
                     </InputWithLabel>
-                    <div className="p-2 mt-2 bg-primaryLite rounded-[8px]">
-                        <FilterIcon />
-                    </div>
+                    <div className="relative inline-block">
+                    <button
+                            className="p-2 mt-2 bg-primaryLite rounded-[8px]"
+                            onClick={() => setShowOptions(!showOptions)}
+                        >
+                            <FilterIcon />
+                        </button>
+
+                        {/* Options Dropdown */}
+                        {showOptions && (
+                            <div
+                                className="absolute top-full mt-2 w-[150px] bg-white shadow-lg rounded-lg z-10 overflow-hidden right-8"
+                                
+                            >
+                                <button
+                                    className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                                    onClick={() => handleOptionClick("individual")}
+                                >
+                                    Individual
+                                </button>
+                                <button
+                                    className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                                    onClick={() => handleOptionClick("monthly")}
+                                >
+                                    Monthly
+                                </button>
+                                <button
+                                    className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                                    onClick={() => handleOptionClick("all")}
+                                >
+                                    All
+                                </button>
+                                <button
+                                    className="w-full px-4 py-2 text-left hover:bg-gray-100"
+                                    onClick={() => handleOptionClick("annual")}
+                                >
+                                    Annual
+                                </button>
+                            </div>
+                        )}
+                        </div>
 
                 </div>
                 {/* {newNotification && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
