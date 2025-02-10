@@ -13,10 +13,9 @@ import Popup from '@/components/ui/Popup';
 import { Input } from '@/components/ui/input';
 import VideoUpload from '@/components/TrackerManagement/VideoUpload';
 import MetricsForm from '@/components/TrackerManagement/MetricsForm';
-import { addExcerciseForAMuscle, deleteMuscle, editStrengthContent, getSpecificStrengthContent } from '@/serviceAPI/tennant';
+import { addExcerciseForAMuscle, addMuscleForCategory, deleteMuscle, editStrengthContent, getSpecificStrengthContent } from '@/serviceAPI/tennant';
 import MultiSelectDropdown from '@/components/ui/MultiSelectDropdown';
 import UploadAnyVideo from '@/components/ui/UploadAnyVideo';
-import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import DynamicBreadcrumb from '@/components/ui/DynamicBreadcrumb';
 
@@ -30,10 +29,12 @@ const page = ({ params }) => {
     const id = params?.editCategoryId;
     const [excerciseName, setExcerciseName] = useState([]);
     const [selectedMuscle, setSelectedMuscle] = useState('');
-
+    const [muscleName , setMuscleName] = useState('')
     const [selectedMetrices, setSelectedMetrices] = useState([]);
     const [editMuscle, setEditMuscle] = useState({ "ok": false, "id": 0 });
     const [addExcercise, setAddExercise] = useState(false);
+    const [addMuscle, setAddMuscle] = useState(false);
+
     const handleCancel = () => setEditMuscle({ "ok": false, "id": 0 });
     const fetchThisEditContent = async () => {
         if (!id) {
@@ -61,6 +62,36 @@ const page = ({ params }) => {
     useEffect(() => {
         fetchThisEditContent()
     }, [id])
+
+    const handleAddMuscle = async () => {
+        // Prevent double clicks
+        if (isLoading) return;
+
+        setIsLoading(true); // Set loading state
+        let payload = {
+            categoryId: id,
+            muscleName: muscleName,
+            
+        };
+
+        
+
+        
+
+
+        try {
+            const res = await addMuscleForCategory(payload);
+            if (res?.status) {
+                setAddMuscle(false);
+                fetchThisEditContent();
+               
+            }
+        } catch (error) {
+            toast.error("Something went wrong!");
+        } finally {
+            setIsLoading(false); 
+        }
+    };
 
     const handleAddExercise = async () => {
         // Prevent double clicks
@@ -167,7 +198,8 @@ const page = ({ params }) => {
                             </div>
                         </Button>
                     </Link>
-                    <div className="flex items-center justify-end mt-2">
+                    <div className="flex items-center justify-end mt-2 gap-2">
+                    <Button onClick={() => setAddMuscle(true)} className='gap-2'><Plus color='white' />Add Muscle </Button>
                         <Button onClick={() => setAddExercise(true)} className='gap-2'><Plus color='white' />Add Exercise </Button>
 
                     </div>
@@ -222,6 +254,37 @@ const page = ({ params }) => {
 
             <Popup title={'Are you sure you wish to delete this muscle?'} isOpen={deleteMuscleModal.open} onClose={() => setDeleteMuscleModal({ id: 0, open: false })} footerButtons={[{ label: 'Cancel', onClick: () => setDeleteMuscleModal({ open: false, id: 0 }) }, { label: 'Confirm', variant: 'primary', onClick: () => deleteThisMuscle(deleteMuscleModal?.id) }]}>
                 <p>This Muscle and its corresponding exercises will no longer be available in app!</p>
+            </Popup>
+
+            <Popup isOpen={addMuscle} onClose={() => setAddMuscle(false)} footerButtons={[{ label: 'Cancel', onClick: () => setAddMuscle(false) }, {
+                label: isLoading ? 'Processing...' : 'Confirm',
+                variant: 'primary',
+                onClick: handleAddMuscle,
+                disabled: isLoading // Disable button while loading
+            }]}>
+               
+                <div className="mb-4">
+                    <label htmlFor="muscleName" className="block text-textColor font-semibold mb-2 ">
+                        Muscle name
+                    </label>
+                    <Input
+                        id="muscleName"
+                        type='text'
+                        value={muscleName}
+                        maxLength={30}
+                        placeholder="Add Muscle"
+                        onChange={(e) => setMuscleName(e.target.value)}
+                        className="w-full"
+                    />
+                </div>
+
+                
+
+
+
+                
+               
+
             </Popup>
 
             <Popup isOpen={addExcercise} onClose={() => setAddExercise(false)} footerButtons={[{ label: 'Cancel', onClick: () => setAddExercise(false) }, {
