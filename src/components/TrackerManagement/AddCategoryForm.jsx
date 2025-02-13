@@ -93,7 +93,7 @@ export default function AddCategoryForm({ setCanMove }) {
             <hr className="mt-0" />
 
             <div className="mb-4 mt-4">
-                <label className="block text-gray-700 mb-2">Upload Image</label>
+                <label className="block text-gray-700 mb-2">Upload Image<span className='text-red-600'>*</span></label>
                 <div className="border-dashed border-2 border-gray-300 rounded-md w-32 h-32 flex items-center justify-center relative">
                     {trackerData.image?.url ? (
                         <img
@@ -115,7 +115,7 @@ export default function AddCategoryForm({ setCanMove }) {
             </div>
 
             <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Category name</label>
+                <label className="block text-gray-700 mb-2">Category name<span className='text-red-600'>*</span></label>
                 <input
                     type="text"
                     placeholder="Lower body"
@@ -132,7 +132,7 @@ export default function AddCategoryForm({ setCanMove }) {
             </div>
 
             <div className="mb-4 flex w-1/2 items-center justify-start gap-12">
-                <label className="block text-gray-700 mb-2">Targeted muscle</label>
+                <label className="block text-gray-700 mb-2">Targeted muscle<span className='text-red-600'>*</span></label>
                 <div className="flex items-center gap-2 mb-2">
                     <button
                         onClick={removeMuscleInput}
@@ -152,8 +152,8 @@ export default function AddCategoryForm({ setCanMove }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 mb-4">
                 {trackerData?.targetMuscle?.map((muscle, index) => {
-                    // Calculate the total length of all muscle names up to the current input
-                    const totalLength = trackerData?.targetMuscle?.reduce((acc, curr) => acc + (curr.muscleName?.length || 0), 0);
+                    // Calculate the length of the current muscle name
+                    const charCount = muscle.muscleName?.length || 0;
 
                     return (
                         <div key={index} className="mb-3">
@@ -166,12 +166,11 @@ export default function AddCategoryForm({ setCanMove }) {
                                 className="border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
                             />
                             <div className="text-xs text-gray-500 mt-1">
-                                {totalLength}/{40}characters used
+                                {charCount}/40 characters used
                             </div>
                         </div>
                     );
                 })}
-
             </div>
 
             <button onClick={handleSubmit}

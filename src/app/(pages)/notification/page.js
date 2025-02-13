@@ -34,10 +34,13 @@ const page = () => {
         setLoading(true);
         try {
             const updatedPayload = activeTab === "All" ? payload : { ...payload, userType: "individual" };
-            const res = await getNotification(updatedPayload);
+            if(payload.search.length > 3 || payload.search.length < 1 ){
+                const res = await getNotification(updatedPayload);
             if (res?.status) {
                 setTableData(res?.data || []);
             }
+            }
+            
         } catch (error) {
             console.error("Error fetching notifications:", error);
         } finally {
@@ -46,7 +49,9 @@ const page = () => {
     };
 
     useEffect(() => {
-        fetchNotification();
+            fetchNotification();
+       
+        
     }, [activeTab, payload]);
 
     return (
@@ -56,7 +61,7 @@ const page = () => {
                 <meta name="description" content="" />
             </Head>
             <div className='flex items-center justify-between'>
-                <span className='text-secondary font-semibold text-xl'>Notifications</span>
+                <span className='text-secondary font-semibold text-xl'>Notification</span>
 
                 <div className="flex items-center justify-end mt-2">
                     <Button onClick={() => setNewNotification(true)} className='gap-2'><Plus color='white' />Create New Notification</Button>

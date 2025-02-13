@@ -240,7 +240,7 @@ const page = ({ params }) => {
             <Popup isOpen={editMuscle.ok} onClose={() => setEditMuscle({ "ok": false })} footerButtons={[{ label: 'Cancel', onClick: handleCancel }, { label: 'Confirm', variant: 'primary', onClick: saveEditMuscleName }]}>
                 <div className="mb-2">
                     <label htmlFor="exerciseName" className="block text-gray-700 text-sm mb-2">
-                        Muscle name
+                        Muscle name<span className='text-red-600'>*</span>
                     </label>
                     <Input
                         id="exerciseName"
@@ -265,7 +265,7 @@ const page = ({ params }) => {
                
                 <div className="mb-4">
                     <label htmlFor="muscleName" className="block text-textColor font-semibold mb-2 ">
-                        Muscle name
+                        Muscle name<span className='text-red-600'>*</span>
                     </label>
                     <Input
                         id="muscleName"
@@ -295,7 +295,7 @@ const page = ({ params }) => {
             }]}>
                 <div className="mb-4">
                     <label className="block text-textColor font-semibold mb-2 ">
-                        Choose Muscle
+                        Choose Muscle<span className='text-red-600'>*</span>
                     </label>
 
                     <select
@@ -315,7 +315,7 @@ const page = ({ params }) => {
                 </div>
                 <div className="mb-4">
                     <label htmlFor="exerciseName" className="block text-textColor font-semibold mb-2 ">
-                        Exercise name
+                        Exercise name<span className='text-red-600'>*</span>
                     </label>
                     <Input
                         id="exerciseName"
@@ -330,7 +330,7 @@ const page = ({ params }) => {
 
                 <div>
                     <label htmlFor="exerciseName" className="block text-textColor font-semibold mb-2 ">
-                        Metrices
+                        Metrices<span className='text-red-600'>*</span>
                     </label>
                     <MultiSelectDropdown
                         options={["date", "sessionTime", "reps", "sets", "weight", "totalReps"]}

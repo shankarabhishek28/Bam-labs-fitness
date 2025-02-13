@@ -19,6 +19,20 @@ export const verifyEmail = (email, message = true) => {
   return isValidEmail;
 };
 
+export function verifyPhoneNumber(phoneNumber) {
+  // Regex to check for 10 digits, allowing spaces, dashes, and parentheses
+  const phonePattern = /^[+\d]?(?:[\d-.\s()]*)$/;
+  // Remove non-numeric characters and check if the length is 10
+  const cleanedNumber = phoneNumber.replace(/\D/g, '');
+  return phonePattern.test(phoneNumber) && cleanedNumber.length === 12;
+}
+
+// Example usage
+
+
+
+
+
 export const verifyPassword = (password, message = true) => {
   if (!password || password.trim() === "") {
     if (message) {

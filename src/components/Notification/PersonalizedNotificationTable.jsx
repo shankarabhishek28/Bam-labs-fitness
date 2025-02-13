@@ -220,31 +220,35 @@ const PersonalizedNotificationTable = ({ data, loading, fetchNotification, paylo
                 {data?.totalPages}
               </button>
             </>
-          ) : (
-            // Show all pages when totalPages <= 5
-            Array.from({ length: data?.totalPages }, (_, index) => {
-              const pageNumber = index + 1;
-              return (
-                <button
-                  key={pageNumber}
-                  className={`px-3 py-1 border border-primary rounded-full mx-1 ${payload?.page === pageNumber
-                    ? "bg-primary text-white"
-                    : "text-[#828282] hover:bg-primary hover:text-white"
+          ) : data?.totalPages > 1 && (
+            <div className="flex justify-center mt-4">
+              {Array.from({ length: data.totalPages }, (_, index) => {
+                const pageNumber = index + 1;
+                const isActive = payload?.page === pageNumber;
+                return (
+                  <button
+                    key={pageNumber}
+                    className={`px-3 py-1 border border-primary rounded-full mx-1 transition duration-300 ${
+                      isActive
+                        ? "bg-primary text-white"
+                        : "text-[#828282] hover:bg-primary hover:text-white"
                     }`}
-                  onClick={() =>
-                    setPayload((prev) => ({
-                      ...prev,
-                      page: pageNumber,
-                    }))
-                  }
-                >
-                  {pageNumber}
-                </button>
-              );
-            })
+                    aria-label={`Go to page ${pageNumber}`}
+                    onClick={() =>
+                      setPayload((prev) => ({
+                        ...prev,
+                        page: pageNumber,
+                      }))
+                    }
+                  >
+                    {pageNumber}
+                  </button>
+                );
+              })}
+            </div>
           )}
 
-          <button
+          {payload?.page === data?.totalPages ? <></> : <button
             className="px-3 py-1 text-sm text-[#828282] hover:text-primary"
             disabled={payload?.page === data?.totalPages}
             onClick={() =>
@@ -255,7 +259,7 @@ const PersonalizedNotificationTable = ({ data, loading, fetchNotification, paylo
             }
           >
             Next
-          </button>
+          </button>}
         </div>
 
       </div>

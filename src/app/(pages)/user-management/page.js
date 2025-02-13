@@ -12,13 +12,18 @@ import IssuesTable from '@/components/UserManagementComps/IssuesTable'
 import UserAccess from '@/components/UserManagementComps/UserAccess'
 import { getUsersAccount, getUsersOverview, registerNewUser } from '@/serviceAPI/tennant'
 import { debounce } from 'lodash'
-import { verifyEmail } from '@/utils/helpers'
+import { verifyEmail, verifyPhoneNumber } from '@/utils/helpers'
 import { useRouter } from 'next/navigation'
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
+import { toast } from 'react-toastify'
 
 const page = () => {
     const [activeTab, setActiveTab] = React.useState("User Overview");
     const [payload, setPayload] = useState({ search: "", page: 1, limit: 10 });
     const router = useRouter();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [accountData, setAccountData] = useState([])
     const [newUser, setNewUser] = React.useState(false);
     const [userOverview, setUserOverview] = useState([]);
@@ -45,11 +50,11 @@ const page = () => {
     const [showOptions, setShowOptions] = useState(false);
 
     const handleOptionClick = (option) => {
-        if(option === "newest" ){
-            setPayload((prev)=>({...prev,sortOrder:'desc' ,sortBy:'createdAt'}))
+        if (option === "newest") {
+            setPayload((prev) => ({ ...prev, sortOrder: 'desc', sortBy: 'createdAt' }))
         }
-        else if(option === "oldest" ){
-            setPayload((prev)=>({...prev,sortOrder:'asc' ,sortBy:'createdAt'}))
+        else if (option === "oldest") {
+            setPayload((prev) => ({ ...prev, sortOrder: 'asc', sortBy: 'createdAt' }))
         }
         setShowOptions(false); // Hide options after selection
     };
@@ -68,32 +73,72 @@ const page = () => {
 
         return () => debouncedFetch.cancel(); // Cleanup debounce when component unmounts or searchTerm changes
     }, [payload, debouncedFetch]);
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     const formData = new FormData(e.target);
+
+    //     const payload = {
+    //         email: formData.get('email'),
+    //         password: formData.get('password'),
+    //         name: formData.get('name'),
+    //         gender: formData.get('gender'),
+    //         dob: formData.get('dob'),
+    //         phone: formData.get('phone'),
+    //     };
+    //     if (!verifyEmail(payload?.email)) {
+    //         return
+    //     }
+    //     const res = await registerNewUser(payload);
+    //     if (res?.status) {
+    //         fetchUsersAccount();
+    //         setNewUser(false);
+    //         setActiveTab('Account management')
+    //     }
+
+
+    //     console.log(payload);
+    // };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
+        if (isSubmitting) return; // Prevent double submission
+        setIsSubmitting(true);
+        // const phone = document.querySelector('input[name="phone"]').value;
 
+       
+        const formData = new FormData(e.target);
+        const phone = document.querySelector('input[name="phone"]').value;
+    
+        if (!verifyPhoneNumber(phone)) {
+            console.log("phone",phone);
+            toast.error('Invalid phone number. Please include country code and at least 10 digits.');
+            console.log('not valid')
+            setIsSubmitting(false);
+            return;
+        }
         const payload = {
             email: formData.get('email'),
             password: formData.get('password'),
             name: formData.get('name'),
             gender: formData.get('gender'),
             dob: formData.get('dob'),
-            phone: formData.get('phone'),
+            phone: phone,
         };
+
         if (!verifyEmail(payload?.email)) {
-            return
+            setIsSubmitting(false);
+            return;
         }
+        console.log("payload",payload)
         const res = await registerNewUser(payload);
         if (res?.status) {
             fetchUsersAccount();
             setNewUser(false);
-            setActiveTab('Account management')
+            setActiveTab('Account management');
+            e.target.reset(); // Clear form fields
         }
 
-
-        console.log(payload);
+        setIsSubmitting(false);
     };
-
     return (
         <div className='px-6 py-8'>
             <span className='text-secondary font-semibold text-xl'>Users</span>
@@ -164,7 +209,7 @@ const page = () => {
                         {showOptions && (
                             <div
                                 className="absolute top-full mt-2 w-[150px] bg-white shadow-lg rounded-lg z-10 overflow-hidden right-8"
-                                
+
                             >
                                 <button
                                     className="w-full px-4 py-2 text-left hover:bg-gray-100"
@@ -193,58 +238,70 @@ const page = () => {
 
 
             </div>
-            {newUser && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
-                <form
-                    onSubmit={handleSubmit}
-                    className="w-[408px] md:w-[450px] bg-white px-5 py-7 gap-3 rounded-xl flex flex-wrap shadow"
-                >
-                    <label className="flex flex-wrap w-full">
-                        <span className="w-full text-sm mb-1">Enter Full Name</span>
-                        <Input name="name" required className="w-full border border-[#D1D1D1]" />
-                    </label>
-                    <div className="flex w-full gap-4">
-                        <label className="flex flex-wrap w-1/2">
-                            <span className="w-full text-sm mb-1">Enter DOB</span>
-                            <Input type="date" name="dob" required className="w-full border border-[#D1D1D1]" />
+            {newUser && (
+                <div className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
+                    <form
+                        onSubmit={handleSubmit}
+                        className="w-[408px] md:w-[450px] bg-white px-5 py-7 gap-3 rounded-xl flex flex-wrap shadow"
+                    >
+                        <label className="flex flex-wrap w-full">
+                            <span className="w-full text-sm mb-1">Enter Full Name<span className='text-red-600'>*</span></span>
+                            <Input name="name" required className="w-full border border-[#D1D1D1]" />
                         </label>
-                        <label className="flex flex-wrap w-1/2">
-                            <span className="w-full text-sm mb-1">Enter Gender</span>
-                            <select name="gender" required className="w-full border border-[#D1D1D1]">
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
-                            </select>
+                        <div className="flex w-full gap-4">
+                            <label className="flex flex-wrap w-1/2">
+                                <span className="w-full text-sm mb-1">Enter DOB<span className='text-red-600'>*</span></span>
+                                <Input type="date" name="dob" required className="w-full border border-[#D1D1D1]" />
+                            </label>
+                            <label className="flex flex-wrap w-1/2">
+                                <span className="w-full text-sm mb-1">Enter Gender<span className='text-red-600'>*</span></span>
+                                <select name="gender" required className="w-full border border-[#D1D1D1]">
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </label>
+                        </div>
+                        <label className="flex flex-wrap w-full">
+                            <span className="w-full text-sm mb-1">Enter Phone No.<span className='text-red-600'>*</span></span>
+                            <PhoneInput
+                                country={'us'}
+                                inputProps={{
+                                    name: 'phone',
+                                    required: true
+                                }}
+                                containerClass="w-full"
+                                inputClass="!w-full border border-[#D1D1D1] rounded"
+                            />
                         </label>
-                    </div>
-                    <label className="flex flex-wrap w-full">
-                        <span className="w-full text-sm mb-1">Enter Phone No.</span>
-                        <Input type="tel" name="phone" required className="w-full border border-[#D1D1D1]" pattern="[0-9]+" />
-                    </label>
-                    <label className="flex flex-wrap w-full">
-                        <span className="w-full text-sm mb-1">Enter Email</span>
-                        <Input type="email" name="email" required className="w-full border border-[#D1D1D1]" />
-                    </label>
-                    <label className="flex flex-wrap w-full">
-                        <span className="w-full text-sm mb-1">Enter Password</span>
-                        <Input type="password" name="password" required className="w-full border border-[#D1D1D1]" />
-                    </label>
-                    <div className="w-full mt-2 flex items-center justify-between">
-                        <button
-                            type="button"
-                            onClick={() => setNewUser(false)}
-                            className="px-4 py-2 border rounded text-sm bg-gray-200"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            className="px-4 py-2 bg-blue-500 text-white rounded text-sm"
-                        >
-                            Create Account
-                        </button>
-                    </div>
-                </form>
-            </div>}
+
+                        <label className="flex flex-wrap w-full">
+                            <span className="w-full text-sm mb-1">Enter Email<span className='text-red-600'>*</span></span>
+                            <Input type="email" name="email" required className="w-full border border-[#D1D1D1]" />
+                        </label>
+                        <label className="flex flex-wrap w-full">
+                            <span className="w-full text-sm mb-1">Enter Password<span className='text-red-600'>*</span></span>
+                            <Input type="password" name="password" required className="w-full border border-[#D1D1D1]" />
+                        </label>
+                        <div className="w-full mt-2 flex items-center justify-between">
+                            <button
+                                type="button"
+                                onClick={() => setNewUser(false)}
+                                className="px-4 py-2 border rounded text-sm bg-gray-200"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className={`px-4 py-2 text-white rounded text-sm ${isSubmitting ? 'bg-gray-400' : 'bg-blue-500'}`}
+                            >
+                                {isSubmitting ? 'Creating...' : 'Create Account'}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
 
             {activeTab === 'Account management' &&
                 <div className="flex items-center justify-end mt-3 mb-2">

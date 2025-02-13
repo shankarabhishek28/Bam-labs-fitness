@@ -19,7 +19,7 @@ import { Button } from "../ui/button";
 import Popup from "../ui/Popup";
 import { truncateDescription, truncateName } from "@/utils/helpers";
 
-const NotificationTable = ({data, loading, fetchNotification, payload, setPayload}) => {
+const NotificationTable = ({ data, loading, fetchNotification, payload, setPayload }) => {
   const [selectedNotificationId, setSelectedNotificationId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -120,7 +120,7 @@ const NotificationTable = ({data, loading, fetchNotification, payload, setPayloa
       </Table>
 
       {/* Pagination */}
-      <div className="flex bg-white items-center justify-between p-4">
+        <div className="flex bg-white items-center justify-between p-4">
         {/* Entries Per Page */}
         <div className="flex items-center">
           <label htmlFor="entries" className="text-sm text-[#828282] mr-2">Entries per page</label>
@@ -224,31 +224,35 @@ const NotificationTable = ({data, loading, fetchNotification, payload, setPayloa
                 {data?.totalPages}
               </button>
             </>
-          ) : (
-            // Show all pages when totalPages <= 5
-            Array.from({ length: data?.totalPages }, (_, index) => {
-              const pageNumber = index + 1;
-              return (
-                <button
-                  key={pageNumber}
-                  className={`px-3 py-1 border border-primary rounded-full mx-1 ${payload?.page === pageNumber
-                    ? "bg-primary text-white"
-                    : "text-[#828282] hover:bg-primary hover:text-white"
+          ) : data?.totalPages > 1 && (
+            <div className="flex justify-center mt-4">
+              {Array.from({ length: data.totalPages }, (_, index) => {
+                const pageNumber = index + 1;
+                const isActive = payload?.page === pageNumber;
+                return (
+                  <button
+                    key={pageNumber}
+                    className={`px-3 py-1 border border-primary rounded-full mx-1 transition duration-300 ${
+                      isActive
+                        ? "bg-primary text-white"
+                        : "text-[#828282] hover:bg-primary hover:text-white"
                     }`}
-                  onClick={() =>
-                    setPayload((prev) => ({
-                      ...prev,
-                      page: pageNumber,
-                    }))
-                  }
-                >
-                  {pageNumber}
-                </button>
-              );
-            })
+                    aria-label={`Go to page ${pageNumber}`}
+                    onClick={() =>
+                      setPayload((prev) => ({
+                        ...prev,
+                        page: pageNumber,
+                      }))
+                    }
+                  >
+                    {pageNumber}
+                  </button>
+                );
+              })}
+            </div>
           )}
 
-          <button
+          {payload?.page === data?.totalPages ? <></> : <button
             className="px-3 py-1 text-sm text-[#828282] hover:text-primary"
             disabled={payload?.page === data?.totalPages}
             onClick={() =>
@@ -259,10 +263,11 @@ const NotificationTable = ({data, loading, fetchNotification, payload, setPayloa
             }
           >
             Next
-          </button>
+          </button>}
         </div>
 
       </div>
+    
 
       {/* Confirmation Modal */}
       <Popup

@@ -23,14 +23,14 @@ const AddNotification = ({
     const title = formData.get("title");
     const description = formData.get("description");
     const type = formData.get("type");
-    const date = scheduleEnabled ? formData.get("date") : null;
+    const date =  formData.get("date");
 
     if (
       !userType ||
       !title ||
       !description ||
       !type ||
-      (scheduleEnabled && !date)
+      !date
     ) {
       toast.error("Please fill out all required fields.");
       return; // Stop the function if any required field is missing
@@ -146,18 +146,9 @@ const AddNotification = ({
           <Input
             type="datetime-local"
             name="date"
-            disabled={!scheduleEnabled}
             className="w-full p-2 mt-1 border border-gray-300 rounded-md"
           />
-          <label className="relative inline-flex items-center cursor-pointer ml-4">
-            <Input
-              type="checkbox"
-              checked={scheduleEnabled}
-              onChange={() => setScheduleEnabled(!scheduleEnabled)}
-              className="sr-only peer"
-            />
-            <div className="w-11 h-6 bg-gray-500 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-          </label>
+
         </div>
       </div>
 

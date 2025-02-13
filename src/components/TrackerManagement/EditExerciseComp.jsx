@@ -27,7 +27,7 @@ const EditExerciseComp = ({exerciseName,videoUrl,setSelectedItem,metrics}) => {
             {/* Exercise Name Input */}
             <div className="mb-6">
                 <label htmlFor="exerciseName" className="block text-textColor font-semibold mb-2 ">
-                    Exercise name
+                    Exercise name<span className='text-red-600'>*</span>
                 </label>
                 <Input
                     id="exerciseName"
@@ -42,7 +42,7 @@ const EditExerciseComp = ({exerciseName,videoUrl,setSelectedItem,metrics}) => {
             
             <div>
             <label htmlFor="exerciseName" className="block text-textColor font-semibold mb-2 ">
-                    Metrices
+                    Metrices<span className='text-red-600'>*</span>
                 </label>
             <MultiSelectDropdown
                     preFetched = {metrics}

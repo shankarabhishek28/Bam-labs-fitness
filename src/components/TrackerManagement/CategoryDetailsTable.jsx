@@ -15,38 +15,47 @@ import EditExerciseComp from "./EditExerciseComp";
 import dayjs from "dayjs";
 import { deleteExcercise, editStrengthContent } from "@/serviceAPI/tennant";
 
-const CategoryDetailsTable = ({ data , fetchThisEditContent}) => {
+const CategoryDetailsTable = ({ data, fetchThisEditContent }) => {
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
+    const [deleteModal, setDeleteModal] = useState({ id: null, open: false });
+
     const handleCancel = () => {
         setIsEditOpen(false);
-        setSelectedItem(null); // Clear the selected item when closing the popup
+        setSelectedItem(null); 
     };
 
     const handleEditExercise = async () => {
         const payload = {
             type: "excercise",
-            id:selectedItem._id,
-            metrices:selectedItem.metrices,
-            video:selectedItem?.video,
-            name:selectedItem?.exerciseName
+            id: selectedItem._id,
+            metrices: selectedItem.metrices,
+            video: selectedItem?.video,
+            name: selectedItem?.exerciseName
         };
-        
+
         const res = await editStrengthContent(payload);
-        if(res?.status){
+        if (res?.status) {
             fetchThisEditContent();
             setIsEditOpen(false);
         }
     };
+
     const deleteThisExcercise = async (id) => {
         const res = await deleteExcercise(id);
         fetchThisEditContent();
-    }
+        setDeleteModal({ id: null, open: false });
+    };
+
     const openEditPopup = (item) => {
-        setSelectedItem(item); // Store the selected item's data
+        setSelectedItem(item);
         setIsEditOpen(true);
     };
-    
+
+    const openDeleteModal = (id) => {
+        setDeleteModal({ id, open: true });
+    };
+
     return (
         <div className="pt-2">
             <Table className="min-w-full overflow-x-auto border border-b rounded-lg">
@@ -103,7 +112,10 @@ const CategoryDetailsTable = ({ data , fetchThisEditContent}) => {
                                     >
                                         <Pencil color="white" size={20} />
                                     </Button>
-                                    <Button onClick={()=>deleteThisExcercise(item?._id)} className="px-2 h-8 text-[14px] flex gap-2 items-center">
+                                    <Button
+                                        onClick={() => openDeleteModal(item?._id)}
+                                        className="px-2 h-8 text-[14px] flex gap-2 items-center"
+                                    >
                                         <Trash2 size={20} color="white" />
                                     </Button>
                                 </div>
@@ -112,6 +124,7 @@ const CategoryDetailsTable = ({ data , fetchThisEditContent}) => {
                     ))}
                 </TableBody>
             </Table>
+
             {isEditOpen && selectedItem && (
                 <Popup
                     isOpen={isEditOpen}
@@ -128,6 +141,29 @@ const CategoryDetailsTable = ({ data , fetchThisEditContent}) => {
                         exerciseName={selectedItem.exerciseName}
                         metrics={selectedItem.metrices}
                     />
+                </Popup>
+            )}
+
+            {deleteModal.open && (
+                <Popup
+                    title={'Are you sure you wish to delete this Exercise?'}
+                    isOpen={deleteModal.open}
+                    onClose={() => setDeleteModal({ id: null, open: false })}
+                    footerButtons={[
+                        {
+                            label: 'Cancel',
+                            onClick: () => setDeleteModal({ id: null, open: false }),
+                        },
+                        {
+                            label: 'Confirm',
+                            variant: 'primary',
+                            onClick: () => deleteThisExcercise(deleteModal.id),
+                        },
+                    ]}
+                >
+                    <p>
+                        This Exercise and its corresponding data will no longer be available in the app!
+                    </p>
                 </Popup>
             )}
         </div>
