@@ -141,7 +141,7 @@ const PersonalizedNotificationTable = ({ data, loading, fetchNotification, paylo
 
         {/* Page Navigation */}
         <div className="flex items-center">
-          <button
+          {payload?.page === 1 ? <></> : <button
             className="px-3 py-1 text-sm text-[#828282] hover:text-primary"
             disabled={payload?.page === 1}
             onClick={() =>
@@ -152,7 +152,8 @@ const PersonalizedNotificationTable = ({ data, loading, fetchNotification, paylo
             }
           >
             Previous
-          </button>
+          </button>}
+
 
           {data?.totalPages > 5 ? (
             <>

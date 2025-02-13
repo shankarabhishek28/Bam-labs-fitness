@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 import { capitalizeFirstLetter } from "@/serviceAPI/allFunctions";
 import Popup from "../ui/Popup";
 
-const AccountManagementTable = ({ payload, setPayload, loading, data,fetchUsersAccount,setActiveTab }) => {
+const AccountManagementTable = ({ payload, setPayload, loading, data, fetchUsersAccount, setActiveTab }) => {
   const [isModalOpen, setIsModalOpen] = useState({ open: false, id: null, type: "", value: "" });
 
   const handleVerify = async () => {
@@ -38,12 +38,20 @@ const AccountManagementTable = ({ payload, setPayload, loading, data,fetchUsersA
 
   return (
     <div className="pt-2">
+
       {loading && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <span className="loader"></span>
         </div>
       )}
       <Table className="min-w-full overflow-x-auto">
+        {!loading && data?.results?.length === 0 && (
+          <TableRow>
+            <TableCell colSpan="6" className="text-center py-4">
+              <p className="text-base text-black">No data found..</p>
+            </TableCell>
+          </TableRow>
+        )}
         <TableHeader className="border-t-1">
           <TableRow className="bg-primary hover:bg-liteOrange">
             <TableHead className="text-white font-bold text-sm text-left">Name</TableHead>
@@ -57,10 +65,10 @@ const AccountManagementTable = ({ payload, setPayload, loading, data,fetchUsersA
         <TableBody>
           {data?.results?.map((item, index) => (
             <TableRow key={index} className="bg-white hover:bg-white cursor-pointer">
-              <TableCell className="flex min-w-[160px]">
+              <TableCell className="flex min-w-[50px]">
                 <Link href={`/user-management/${item._id}`} className="flex items-center gap-2">
                   {/* <Image src={"/dummyUser.png"} width={36} height={36} alt="profile pic" /> */}
-                  <span className="text-[#454545] font-semibold text-sm truncate">
+                  <span className="text-[#454545] font-semibold text-sm truncate flex-wrap">
                     {item?.name}
                   </span>
                 </Link>
@@ -142,7 +150,7 @@ const AccountManagementTable = ({ payload, setPayload, loading, data,fetchUsersA
 
         {/* Page Navigation */}
         <div className="flex items-center">
-          <button
+          {payload?.page === 1 ? <></> : <button
             className="px-3 py-1 text-sm text-[#828282] hover:text-primary"
             disabled={payload?.page === 1}
             onClick={() =>
@@ -153,7 +161,9 @@ const AccountManagementTable = ({ payload, setPayload, loading, data,fetchUsersA
             }
           >
             Previous
-          </button>
+          </button>}
+
+
 
           {data?.totalPages > 5 ? (
             <>
@@ -216,7 +226,7 @@ const AccountManagementTable = ({ payload, setPayload, loading, data,fetchUsersA
                     page: data?.totalPages,
                   }))
                 }
-      >
+              >
                 {data?.totalPages}
               </button>
             </>
@@ -243,8 +253,7 @@ const AccountManagementTable = ({ payload, setPayload, loading, data,fetchUsersA
               );
             })
           )}
-
-          <button
+          {payload?.page === data?.totalPages ? <></>: <button
             className="px-3 py-1 text-sm text-[#828282] hover:text-primary"
             disabled={payload?.page === data?.totalPages}
             onClick={() =>
@@ -255,7 +264,8 @@ const AccountManagementTable = ({ payload, setPayload, loading, data,fetchUsersA
             }
           >
             Next
-          </button>
+          </button>}
+
         </div>
 
       </div>

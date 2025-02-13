@@ -193,6 +193,13 @@ const page = ({ params }) => {
                         </thead>
                         <tbody>
                             {/* Table Data Rows */}
+                            {!loading && sessionDetails?.results?.length === 0 && (
+                                      <tr>
+                                        <td colSpan="7" className="text-center ">
+                                          <p className="text-base text-black">No data found..</p>
+                                        </td>
+                                      </tr>
+                                    )}
                             {sessionDetails?.results?.map((item, idx) => (
                                 <tr key={idx} className="border-t border-gray-200">
                                     <td className="py-3 px-4">{item?.sessionName}</td>

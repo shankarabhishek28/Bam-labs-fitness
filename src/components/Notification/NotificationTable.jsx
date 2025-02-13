@@ -145,7 +145,7 @@ const NotificationTable = ({data, loading, fetchNotification, payload, setPayloa
 
         {/* Page Navigation */}
         <div className="flex items-center">
-          <button
+          {payload?.page === 1 ? <></> : <button
             className="px-3 py-1 text-sm text-[#828282] hover:text-primary"
             disabled={payload?.page === 1}
             onClick={() =>
@@ -156,7 +156,8 @@ const NotificationTable = ({data, loading, fetchNotification, payload, setPayloa
             }
           >
             Previous
-          </button>
+          </button>}
+
 
           {data?.totalPages > 5 ? (
             <>

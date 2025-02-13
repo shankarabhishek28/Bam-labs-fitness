@@ -194,7 +194,7 @@ const HabitsTable = ({ data, loading, fetchAllHabits, setNewHabit, payload, setP
 
         {/* Page Navigation */}
         <div className="flex items-center">
-          <button
+          {payload?.page === 1 ? <></> : <button
             className="px-3 py-1 text-sm text-[#828282] hover:text-primary"
             disabled={payload?.page === 1}
             onClick={() =>
@@ -205,7 +205,8 @@ const HabitsTable = ({ data, loading, fetchAllHabits, setNewHabit, payload, setP
             }
           >
             Previous
-          </button>
+          </button>}
+
 
           {data?.totalPages > 5 ? (
             <>

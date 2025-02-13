@@ -30,21 +30,21 @@ import { suspendUser } from "@/serviceAPI/tennant";
 import { toast } from "react-toastify";
 
 const UserManagementTable = ({ data, loading, payload, setPayload }) => {
-  const [isModalOpen, setIsModalOpen] = useState({open:false, id:0})
- const handleSuspendUser = async (id) => {
-        if (id) {
-         const res = await suspendUser(id);
-         if(res?.status){
-            toast.success('User Deactivated Successfully');
-            setIsModalOpen((prev)=>({...prev, open:false}));
-         }
-         return
-           
-        }
-    
-        // Perform deactivation logic here (e.g., API call)
-        toast.error('Couldnt deactivate! please visit the page again')
-    };
+  const [isModalOpen, setIsModalOpen] = useState({ open: false, id: 0 })
+  const handleSuspendUser = async (id) => {
+    if (id) {
+      const res = await suspendUser(id);
+      if (res?.status) {
+        toast.success('User Deactivated Successfully');
+        setIsModalOpen((prev) => ({ ...prev, open: false }));
+      }
+      return
+
+    }
+
+    // Perform deactivation logic here (e.g., API call)
+    toast.error('Couldnt deactivate! please visit the page again')
+  };
   return (
     <div className="pt-2 ">
       {loading && (
@@ -53,6 +53,13 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
         </div>
       )}
       <Table className="min-w-full overflow-x-auto">
+        {!loading && data?.results?.length === 0 && (
+          <TableRow>
+            <TableCell colSpan="7" className="text-center ">
+              <p className="text-base text-black">No data found..</p>
+            </TableCell>
+          </TableRow>
+        )}
         <TableHeader className="border-t-1">
           <TableRow className="bg-primary hover:bg-liteOrange">
             <TableHead className="text-white font-bold text-sm text-left">
@@ -81,13 +88,7 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {!loading && data?.results?.length === 0 && (
-            <TableRow>
-              <TableCell colSpan="7" className="text-center ">
-                <p className="text-base text-black">No data found..</p>
-              </TableCell>
-            </TableRow>
-          )}
+
           {data?.results?.map((item, index) => (
             <TableRow
               key={index}
@@ -135,13 +136,13 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
               <TableCell>
                 <div className="flex items-center justify-between gap-2">
                   <Link href={`/user-management/${item._id}`}>
-                  <Eye color="#888888" />
+                    <Eye color="#888888" />
                   </Link>
-                  
-                  <button onClick={() => setIsModalOpen({open:true,id:item?._id})}>
-                  <Ban  color="#888888" />
+
+                  <button onClick={() => setIsModalOpen({ open: true, id: item?._id })}>
+                    <Ban color="#888888" />
                   </button>
-                  
+
                 </div>
               </TableCell>
             </TableRow>
@@ -175,7 +176,7 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
 
         {/* Page Navigation */}
         <div className="flex items-center">
-          <button
+          {payload?.page === 1 ? <></> : <button
             className="px-3 py-1 text-sm text-[#828282] hover:text-primary"
             disabled={payload?.page === 1}
             onClick={() =>
@@ -186,7 +187,8 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
             }
           >
             Previous
-          </button>
+          </button>}
+
 
           {data?.totalPages > 5 ? (
             <>
@@ -279,7 +281,7 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
             })
           )}
 
-          <button
+          {payload?.page === data?.totalPages ? <></> : <button
             className="px-3 py-1 text-sm text-[#828282] hover:text-primary"
             disabled={payload?.page === data?.totalPages}
             onClick={() =>
@@ -290,21 +292,21 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
             }
           >
             Next
-          </button>
+          </button>}
         </div>
       </div>
       <Popup
         isOpen={isModalOpen?.open}
-        onClose={() => setIsModalOpen({open:false})}
+        onClose={() => setIsModalOpen({ open: false })}
         title="Deactivate User?"
         footerButtons={[
           {
             label: "Cancel",
-            onClick: () => setIsModalOpen({open:false}),
+            onClick: () => setIsModalOpen({ open: false }),
           },
           {
             label: "Suspend",
-            onClick: ()=>handleSuspendUser(isModalOpen?.id),
+            onClick: () => handleSuspendUser(isModalOpen?.id),
             variant: "primary",
           },
         ]}
