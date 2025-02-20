@@ -46,6 +46,13 @@ const NotificationTable = ({ data, loading, fetchNotification, payload, setPaylo
         </div>
       )}
       <Table className="min-w-full overflow-x-auto">
+      {!loading && data?.results?.length === 0 && (
+          <TableRow>
+            <TableCell colSpan="7" className="text-center ">
+              <p className="text-base text-black">No data found..</p>
+            </TableCell>
+          </TableRow>
+        )}
         <TableHeader className="border-t-1">
           <TableRow className="bg-primary hover:bg-liteOrange">
             <TableHead className="text-white font-bold text-sm text-left">
@@ -120,7 +127,7 @@ const NotificationTable = ({ data, loading, fetchNotification, payload, setPaylo
       </Table>
 
       {/* Pagination */}
-        <div className="flex bg-white items-center justify-between p-4">
+      <div className="flex bg-white items-center justify-between p-4">
         {/* Entries Per Page */}
         <div className="flex items-center">
           <label htmlFor="entries" className="text-sm text-[#828282] mr-2">Entries per page</label>
@@ -206,7 +213,9 @@ const NotificationTable = ({ data, loading, fetchNotification, payload, setPaylo
               })}
 
               {/* Ellipsis after the visible range */}
-              {payload?.page < data?.totalPages - 2 && <span className="px-2">...</span>}
+              {payload?.page < data?.totalPages - 2 && (
+                <span className="px-2">...</span>
+              )}
 
               {/* Last Page */}
               <button
@@ -224,32 +233,28 @@ const NotificationTable = ({ data, loading, fetchNotification, payload, setPaylo
                 {data?.totalPages}
               </button>
             </>
-          ) : data?.totalPages > 1 && (
-            <div className="flex justify-center mt-4">
-              {Array.from({ length: data.totalPages }, (_, index) => {
-                const pageNumber = index + 1;
-                const isActive = payload?.page === pageNumber;
-                return (
-                  <button
-                    key={pageNumber}
-                    className={`px-3 py-1 border border-primary rounded-full mx-1 transition duration-300 ${
-                      isActive
-                        ? "bg-primary text-white"
-                        : "text-[#828282] hover:bg-primary hover:text-white"
+          ) : (
+            // Show all pages when totalPages <= 5
+            Array.from({ length: data?.totalPages }, (_, index) => {
+              const pageNumber = index + 1;
+              return (
+                <button
+                  key={pageNumber}
+                  className={`px-3 py-1 border border-primary rounded-full mx-1 ${payload?.page === pageNumber
+                    ? "bg-primary text-white"
+                    : "text-[#828282] hover:bg-primary hover:text-white"
                     }`}
-                    aria-label={`Go to page ${pageNumber}`}
-                    onClick={() =>
-                      setPayload((prev) => ({
-                        ...prev,
-                        page: pageNumber,
-                      }))
-                    }
-                  >
-                    {pageNumber}
-                  </button>
-                );
-              })}
-            </div>
+                  onClick={() =>
+                    setPayload((prev) => ({
+                      ...prev,
+                      page: pageNumber,
+                    }))
+                  }
+                >
+                  {pageNumber}
+                </button>
+              );
+            })
           )}
 
           {payload?.page === data?.totalPages ? <></> : <button
@@ -267,7 +272,7 @@ const NotificationTable = ({ data, loading, fetchNotification, payload, setPaylo
         </div>
 
       </div>
-    
+
 
       {/* Confirmation Modal */}
       <Popup

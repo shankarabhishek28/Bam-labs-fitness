@@ -10,6 +10,7 @@ import Analytics from '../../../public/Icons/Analytics';
 import Tracker from '../../../public/Icons/Tracker';
 import { removeToken, removeUser } from '@/serviceAPI/cookies';
 import Subscription from '../../../public/Icons/Subscription';
+import Popup from './Popup';
 
 
 export default function Sidebar() {
@@ -120,20 +121,21 @@ export default function Sidebar() {
                 </ul>
             </nav>
             {confirmation && (
-                <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm">
-                    <div className="w-[300px] md:w-[450px] bg-white px-5 py-7 rounded-xl flex flex-wrap shadow">
-                        <h2 className="font-mfaCustom text-2xl uppercase text-center w-full">
-                            Do you want to logout?
-                        </h2>
-                        <h3 className="w-full text-sm text-center my-3 text-neutral4">
-                            By clicking on Yes the current session will expire. All the cookies used during the session will be cleared as well.
-                        </h3>
-                        <div className="w-full grid grid-cols-2 mt-5 gap-3">
-                            <Button onClick={handleLogout} variant="primary" >Yes</Button>
-                            <Button variant="secondary" className='text-white' onClick={() => setConfirmation(false)}>No</Button>
-                        </div>
-                    </div>
-                </div>
+                <Popup isOpen={confirmation} onClose={() => setConfirmation(false)} title={'Do you want to logout?'} footerButtons={[{ label: 'No', onClick: () => setConfirmation(false) }, { label: 'Yes', variant: 'primary',onClick:handleLogout }]}>By clicking on Yes the current session will expire. All the cookies used during the session will be cleared as well.</Popup>
+                // <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm">
+                //     <div className="w-[300px] md:w-[450px] bg-white px-5 py-7 rounded-xl flex flex-wrap shadow">
+                //         <h2 className="font-mfaCustom text-2xl uppercase text-center w-full">
+                //             Do you want to logout?
+                //         </h2>
+                //         <h3 className="w-full text-sm text-center my-3 text-neutral4">
+                //             By clicking on Yes the current session will expire. All the cookies used during the session will be cleared as well.
+                //         </h3>
+                //         <div className="w-full grid grid-cols-2 mt-5 gap-3">
+                //             <Button onClick={handleLogout} variant="primary" >Yes</Button>
+                //             <Button variant="secondary" className='text-white' onClick={() => setConfirmation(false)}>No</Button>
+                //         </div>
+                //     </div>
+                // </div>
             )}
         </div>
     );

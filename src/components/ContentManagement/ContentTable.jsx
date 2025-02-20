@@ -39,7 +39,7 @@ const ContentTable = () => {
                 <TableHeader className="border-t-1">
                     <TableRow className="bg-primary hover:bg-liteOrange">
                         <TableHead className="text-white font-bold text-sm text-left">
-                            Sr.no.
+                            S.No.
                         </TableHead>
                         <TableHead className="text-white font-bold text-sm text-left">
                             Content Name
@@ -102,46 +102,7 @@ const ContentTable = () => {
                     ))}
                 </TableBody>
             </Table>
-            <div className="flex items-center  bg-white p-3 justify-between">
-                {/* Entries Per Page */}
-                <div className="flex items-center">
-                    <label htmlFor="entries" className="text-sm text-[#828282] mr-2">
-                        Entries per page
-                    </label>
-                    <select
-                        id="entries"
-                        className="bg-white border border-gray-400 rounded-[4px] mx-1 px-2 text-sm p-1 focus:border-primary focus:outline-none "
-                        defaultValue="10"
-                    >
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                    </select>
-                </div>
-
-                {/* Page Navigation */}
-                <div className="flex items-center">
-                    <button className="flex font-normal  items-center px-3 py-2 border border-gray-400 rounded-md mx-1 text-sm text-[#16161D] mr-4 hover:text-primary gap-2">
-                        <ArrowLeft size={16} /> Previous
-                    </button>
-                    <button className="py-2 mx-1 px-4 bg-[#E5F0FF] text-primary rounded-md">
-                        1
-                    </button>
-                    <button className="px-3 py-2 mx-1 text-black hover:bg-[#E5F0FF]  hover:text-primary rounded-md">
-                        2
-                    </button>
-                    <button className="px-3 py-2 mx-1 text-black hover:bg-[#E5F0FF] hover:text-primary rounded-md">
-                        3
-                    </button>
-                    <button className="px-3 py-2 mx-1 text-black hover:bg-[#E5F0FF] hover:text-primary rounded-md">
-                        4
-                    </button>
-                    <button className="flex font-normal items-center px-3 py-2 border border-gray-400 rounded-md mx-1 text-sm text-[#16161D] ml-4 hover:text-primary gap-2">
-                        Next <ArrowRight size={16} />{" "}
-                    </button>
-                </div>
-            </div>
+           
         </div>
     );
 };

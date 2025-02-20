@@ -42,6 +42,13 @@ const PersonalizedNotificationTable = ({ data, loading, fetchNotification, paylo
         </div>
       )}
       <Table className="min-w-full overflow-x-auto">
+        {!loading && data?.results?.length === 0 && (
+          <TableRow>
+            <TableCell colSpan="7" className="text-center ">
+              <p className="text-base text-black">No data found..</p>
+            </TableCell>
+          </TableRow>
+        )}
         <TableHeader className="border-t-1">
           <TableRow className="bg-primary hover:bg-liteOrange">
             <TableHead className="text-white font-bold text-sm text-left">
@@ -228,11 +235,10 @@ const PersonalizedNotificationTable = ({ data, loading, fetchNotification, paylo
                 return (
                   <button
                     key={pageNumber}
-                    className={`px-3 py-1 border border-primary rounded-full mx-1 transition duration-300 ${
-                      isActive
+                    className={`px-3 py-1 border border-primary rounded-full mx-1 transition duration-300 ${isActive
                         ? "bg-primary text-white"
                         : "text-[#828282] hover:bg-primary hover:text-white"
-                    }`}
+                      }`}
                     aria-label={`Go to page ${pageNumber}`}
                     onClick={() =>
                       setPayload((prev) => ({

@@ -8,13 +8,15 @@ import { getContentById, updateContent } from '@/serviceAPI/tennant';
 import ButtonWithLoader from '@/components/ui/ButtonWithLoader';
 import { stripHTML } from '@/utils/helpers';
 import { toast } from 'react-toastify';
+import { Breadcrumb } from '@/components/ui/breadcrumb';
+import DynamicBreadcrumb from '@/components/ui/DynamicBreadcrumb';
 
 // Dynamically import Jodit to avoid SSR issues
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
 const page = ({ params }) => {
     const editorRef = useRef(null);
-
+    
     const [loading, setLoading] = useState(true);
     const [prevContent, setPrevContent] = useState({ content: '', type: '' });
     const [content, setContent] = useState({ content: '', type: '' });
@@ -39,7 +41,10 @@ const page = ({ params }) => {
     const handleUpdateContent = async () => {
         const strippedPrevContent = stripHTML(prevContent.content);
         const strippedCurrentContent = stripHTML(content.content);
-
+        if (!strippedCurrentContent.trim()) {
+            toast.error('Content cannot be empty!');
+            return;
+        }
         if (strippedPrevContent === strippedCurrentContent) {
             toast.error('No changes detected!');
             return;
@@ -57,11 +62,25 @@ const page = ({ params }) => {
     };
 
     const config = {
-        readonly: false,
-        toolbar: true,
+        readonly: false, // Enable editing
+        enableDragAndDropFileToEditor: true,
+        pastePlainText: false, // Allow rich-text pasting
+        toolbarAdaptive: false,
+        toolbarSticky: false,
+        useSearch: false,
+        allowTabNavigation: false,
         height: 400,
+        askBeforePasteHTML: false, // Prevents asking before pasting HTML
+        askBeforePasteFromWord: false, // Avoids stripping Word formatting
+       
     };
+    
+    const breadcrumbs = [
+        { label: 'Content Management', href: '/content-management' },
+        { label: 'Edit Content', href: '' },
 
+       
+    ];
     return (
         <div className="px-6 py-8">
             {loading && (
@@ -69,7 +88,7 @@ const page = ({ params }) => {
                     <span class="loader"></span>
                 </div>
             )}
-            <span className="text-secondary font-semibold text-xl">Content Management</span>
+            <DynamicBreadcrumb breadcrumbs={breadcrumbs} />
             <Link href={'/content-management'}>
                 <Button variant="outline" className="flex items-center mb-6 space-x-2 gap-4 rounded-[8px] border border-textColor w-20 h-8 mt-4">
                     <div className="text-sm text-textColor flex items-center justify-center pr-1">
