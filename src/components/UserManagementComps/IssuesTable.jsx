@@ -124,7 +124,7 @@ const IssuesTable = ({ payload, setPayload }) => {
               <TableCell>
 
                 <div className="flex items-center justify-start gap-2">
-                  <Button onClick={() => router.push(`/user-management/issues/${item._id}`)} className=' px-2 h-8 text-[12px] flex gap-2 w-[90px]'><EyeIcon color="white" size={20} /> View</Button><Button className='px-2 h-8 text-[12px] flex gap-2 items-center w-[90px]'><Trash2 size={20} color="white" /> Delete</Button>
+                  <Button onClick={() => router.push(`/user-management/issues/${item._id}?userId=${item?.user?._id}`)} className=' px-2 h-8 text-[12px] flex gap-2 w-[90px]'><EyeIcon color="white" size={20} /> View</Button><Button className='px-2 h-8 text-[12px] flex gap-2 items-center w-[90px]'><Trash2 size={20} color="white" /> Delete</Button>
                 </div>
 
               </TableCell>

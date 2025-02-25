@@ -220,7 +220,7 @@ export const getExerciseStats = async () => {
     // endpoint += queryParams;
 
     const token = await getAuthToken();
-    console.log("Token",token)
+    
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
 
@@ -402,6 +402,54 @@ export const getUsersAccount = async (payload) => {
     try {
         const response = await fetch(endpoint, requestOptions);
         return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+
+export const getPrevIssue = async (userId) => {
+    let endpoint = `${URL}/contact-us/prevcomplaints?userId=${userId}`;
+    // if(payload){
+    //     const queryParams = appendQueryParams(payload);
+    //     endpoint += queryParams;
+    // }
+    
+
+    const token = await getAuthToken();
+    console.log("Token",token)
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
+export const postReply = async (payload,id) => {
+    const endpoint = `${URL}/contact-us/reply/${id}`;
+    const token = await getAuthToken();
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/json");
+
+    const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify(payload),
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response,true);
     } catch (error) {
         return apiError(error);
     }
