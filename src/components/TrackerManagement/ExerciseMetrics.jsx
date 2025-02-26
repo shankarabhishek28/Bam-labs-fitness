@@ -169,7 +169,7 @@ const ExerciseMetrics = () => {
             id="exerciseDropdown"
             value={selectedMuscleId}
             onChange={(e) => setSelectedMuscleId(Number(e.target.value))}
-            className="block w-full bg-white border border-gray-300 rounded-md p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="block w-3/4 bg-white border border-gray-300 rounded-md p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="" disabled>
               -- Select a Muscle --

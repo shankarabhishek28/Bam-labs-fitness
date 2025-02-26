@@ -27,18 +27,20 @@ const CategoryCard = ({ imageUrl, title, muscleGroups, onDelete, onEdit }) => {
                 {/* Exercise Info */}
                 <div className='max-w-[260px] overflow-hidden truncate'>
                     <h3 title={title} className="text-lg font-semibold truncate">{title?.toUpperCase()}</h3>
-                    <p className="text-gray-500 text-sm flex flex-wrap">
-                        {muscleGroups.map((item, index) => (
-                            <span
-                                title={item?.targetedMuscle}
-                                key={index}
-                                className="truncate"
-                            >
+                    <p className="text-gray-500 text-sm flex flex-wrap items-center">
+                        {muscleGroups.slice(0, 3).map((item, index) => (
+                            <span key={index} title={item?.targetedMuscle} className="truncate">
                                 {item?.targetedMuscle?.toUpperCase()}
-                                {index < muscleGroups.length - 1 && <span className="mx-1">•</span>}
+                                {index < 5 && <span className="mx-1">•</span>}
                             </span>
                         ))}
+                        {muscleGroups.length > 3 && (
+                            <span className="ml-1 text-xs text-gray-400">
+                                {`${muscleGroups.length - 3} more`}
+                            </span>
+                        )}
                     </p>
+
                 </div>
             </div>
 

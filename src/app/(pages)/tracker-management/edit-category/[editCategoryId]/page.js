@@ -149,6 +149,10 @@ const page = ({ params }) => {
             id: editMuscle?.id,
             name: editMuscle?.name,
         }
+        if(payload?.name.length < 1){
+            toast.error('Muscle Name Field Is Empty!');
+            return
+        }
         const res = await editStrengthContent(payload);
         if (res?.status) {
             fetchThisEditContent();
