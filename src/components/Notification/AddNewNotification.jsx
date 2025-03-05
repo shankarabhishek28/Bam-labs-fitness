@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
-import { addNewNotification } from "@/serviceAPI/tennant";
+import { addNewNotification, getUsersOverview } from "@/serviceAPI/tennant";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
@@ -12,6 +12,26 @@ const AddNotification = ({
 }) => {
   const [selectedBilling, setSelectedBilling] = useState("all");
   const [scheduleEnabled, setScheduleEnabled] = useState(false);
+  const [selectedUser, setSelectedUser] = useState("");
+
+  const handleChange = (event) => {
+    const selectedId = event.target.value;
+    setSelectedUser(selectedId);
+    console.log("Selected User ID:", selectedId);
+  };
+  const [userOverview, setUserOverview] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const fetchUserOverview = async () => {
+    setLoading(true);
+    const res = await getUsersOverview();
+    setUserOverview(res?.data);
+    setLoading(false);
+    console.log("res-->", res);
+  };
+  useEffect(() => {
+    fetchUserOverview();
+    console.log("IT ran")
+  }, [])
   const handleFormSubmit = async (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
 
@@ -23,13 +43,14 @@ const AddNotification = ({
     const title = formData.get("title");
     const description = formData.get("description");
     const type = formData.get("type");
-    const date =  formData.get("date");
+    const date = formData.get("date");
+    const userId = formData.get("notificationType")
 
     if (
       !userType ||
       !title ||
       !description ||
-      !type ||
+      !type || 
       !date
     ) {
       toast.error("Please fill out all required fields.");
@@ -42,6 +63,7 @@ const AddNotification = ({
       description,
       type,
       schedule: date,
+      userId
     };
 
     try {
@@ -86,14 +108,26 @@ const AddNotification = ({
               type="radio"
               name="userType"
               value="individual"
-              onChange={() => setSelectedBilling("annual")}
+              onChange={() => setSelectedBilling("personalized")}
               className="mr-1 transform scale-150"
             />
-            <span className="mb-[1px]">Personalised</span>
+            <span className="mb-[1px]">Personalized</span>
           </label>
         </div>
       </div>
-
+      {selectedBilling === 'personalized' ?   <select
+      className="border border-gray-300 rounded-md px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      onChange={handleChange}
+      value={selectedUser}
+      name='notificationType'
+    >
+      <option value="" disabled>Select a user</option>
+      {userOverview?.results?.map((user) => (
+        <option key={user._id} value={user._id}>
+          {user.name}
+        </option>
+      ))}
+    </select> : <></>}
       {/* Title Input */}
       <div className="mb-4">
         <label className="block text-sm font-medium">Title</label>
@@ -135,7 +169,7 @@ const AddNotification = ({
             Select
           </option>
           <option value="PUSH">Push</option>
-          <option value="SMS">SMS</option>
+          <option value="Email">Email</option>
         </select>
       </div>
 
