@@ -12,7 +12,7 @@ import { toast } from 'react-toastify'
 const page = ({ params }) => {
     console.log("params_id", params.id)
     const router = useRouter();
-    const [isModalOpen,setIsModalOpen] = useState(false)
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const [details, setUserDetails] = useState([]);
     const [sessionDetails, setSessionDetails] = useState([]);
 
@@ -41,23 +41,23 @@ const page = ({ params }) => {
     //     }
     // }
 
-    
+
     useEffect(() => {
         const fetchData = async () => {
             if (!params?.id) return;
-    
+
             setLoading(true);
-    
+
             try {
                 const [userRes, sessionRes] = await Promise.all([
                     getUserDetails(params.id),
-                    getSessionDetails(params.id,{page:1,limit:10}),
+                    getSessionDetails(params.id, { page: 1, limit: 10 }),
                 ]);
-    
+
                 if (userRes?.status) {
                     setUserDetails(userRes.data);
                 }
-    
+
                 if (sessionRes?.status) {
                     setSessionDetails(sessionRes.data);
                 }
@@ -68,24 +68,24 @@ const page = ({ params }) => {
                 setLoading(false); // Ensure loading is stopped in all cases
             }
         };
-    
+
         fetchData();
     }, [params?.id]); // Add params.id as a dependency
-    
+
 
 
 
     const handleDeactivateUser = async () => {
         if (params?.id) {
-         const res = await deactivateUser(params?.id);
-         if(res?.status){
-            toast.success('User Deactivated Successfully');
-            setIsModalOpen(false);
-         }
-         return
-           
+            const res = await deactivateUser(params?.id);
+            if (res?.status) {
+                toast.success('User Deactivated Successfully');
+                setIsModalOpen(false);
+            }
+            return
+
         }
-    
+
         // Perform deactivation logic here (e.g., API call)
         toast.error('Couldnt deactivate! please visit the page again')
     };
@@ -110,22 +110,26 @@ const page = ({ params }) => {
             <div className=" pt-2 rounded-lg">
                 <div className="flex justify-between items-center">
                     <div className="flex space-x-6 items-center">
-                        {/* Profile Picture */}
-                        <Image
-                            src={details?.profilePic ? details.profilePic?.url : '/noImage.png'} // replace with actual path
-                            alt="Profile Picture"
-                            width={120}
-                            height={120}
-                            className="rounded-md object-cover"
-                        />
+                        {/* Profile Picture Wrapper */}
+                        <div className="w-[120px] h-[120px] rounded-md overflow-hidden bg-gray-200">
+                            <Image
+                                src={details?.profilePic ? details.profilePic?.url : '/noImage.png'}
+                                alt="Profile Picture"
+                                width={120}
+                                height={120}
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+
                         {/* User Info */}
                         <div>
                             <h2 className="text-2xl font-semibold">{details?.name}</h2>
                             <p className="text-[#7B7B7B] text-md">ID: {details?._id}</p>
                         </div>
                     </div>
+
                     {/* Deactivate Button */}
-                    <button onClick={()=>setIsModalOpen(true)} className="bg-primary text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+                    <button onClick={() => setIsModalOpen(true)} className="bg-primary text-white px-4 py-2 rounded-lg flex items-center space-x-2">
                         <Delete />
                         <span>Deactivate</span>
                     </button>
@@ -155,7 +159,10 @@ const page = ({ params }) => {
                     </div>
                     <div>
                         <p className="font-semibold text-[#888888] text-xl">Gender</p>
-                        <p className='"text-textColor cursor-pointer text-[16px] pt-[4px] truncate w-full"'>{details?.gender || '--'}</p>
+                        <p className="text-textColor cursor-pointer text-[16px] pt-[4px] truncate w-full">
+                            {details?.gender ? details.gender.charAt(0).toUpperCase() + details.gender.slice(1) : '--'}
+                        </p>
+
                     </div>
                     <div>
                         <p className="font-semibold text-[#888888] text-xl">Height</p>
@@ -188,23 +195,23 @@ const page = ({ params }) => {
                                 <th className="py-3 px-4">Session Date</th>
                                 <th className="py-3 px-4">Time Stamp</th>
 
-                                
+
                             </tr>
                         </thead>
                         <tbody>
                             {/* Table Data Rows */}
                             {!loading && sessionDetails?.results?.length === 0 && (
-                                      <tr>
-                                        <td colSpan="7" className="text-center ">
-                                          <p className="text-base text-black">No data found..</p>
-                                        </td>
-                                      </tr>
-                                    )}
+                                <tr>
+                                    <td colSpan="7" className="text-center ">
+                                        <p className="text-base text-black">No data found..</p>
+                                    </td>
+                                </tr>
+                            )}
                             {sessionDetails?.results?.map((item, idx) => (
                                 <tr key={idx} className="border-t border-gray-200">
                                     <td className="py-3 px-4">{item?.sessionName}</td>
-                                    <td className="py-3 px-4">{dayjs(item?.sessionDate).format('DD/MM/YYYY') }</td>
-                                    <td className="py-3 px-4">{dayjs(item?.timestamp).format('DD/MM/YYYY') }</td>
+                                    <td className="py-3 px-4">{dayjs(item?.sessionDate).format('DD/MM/YYYY')}</td>
+                                    <td className="py-3 px-4">{dayjs(item?.timestamp).format('DD/MM/YYYY')}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -212,7 +219,7 @@ const page = ({ params }) => {
                 </div>
 
                 {/* Pagination */}
-                <div className="mt-4 flex items-center justify-between">
+                {/* <div className="mt-4 flex items-center justify-between">
                     <p className="text-gray-600 text-sm">1 - 10 of 52</p>
                     <div className="flex space-x-2">
                         <button className="p-2 border border-gray-300 rounded">
@@ -222,26 +229,26 @@ const page = ({ params }) => {
                             &gt;
                         </button>
                     </div>
-                </div>
+                </div> */}
             </div>
-             <Popup
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    title="Deactivate User?"
-                    footerButtons={[
-                      {
+            <Popup
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                title="Deactivate User?"
+                footerButtons={[
+                    {
                         label: "Cancel",
                         onClick: () => setIsModalOpen(false),
-                      },
-                      {
+                    },
+                    {
                         label: "Deactivate",
                         onClick: handleDeactivateUser,
                         variant: "primary",
-                      },
-                    ]}
-                  >
-                    <p>Are you sure you want to deactivate this user?</p>
-                  </Popup>
+                    },
+                ]}
+            >
+                <p>Are you sure you want to deactivate this user?</p>
+            </Popup>
         </div>
     )
 }
