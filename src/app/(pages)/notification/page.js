@@ -19,14 +19,14 @@ const page = () => {
     const [personalizedNotification, setPersonalizedNotification] = useState(false);
     const [tableData, setTableData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [payload, setPayload] = useState({  search:'',page: 1, limit: 10 });
+    const [payload, setPayload] = useState({ search: '', page: 1, limit: 10 });
     const [showOptions, setShowOptions] = useState(false);
 
     const handleOptionClick = (option) => {
-        
-            setPayload((prev)=>({...prev,userType:option}))
-       
-        
+
+        setPayload((prev) => ({ ...prev, userType: option }))
+
+
         setShowOptions(false); // Hide options after selection
     };
 
@@ -34,13 +34,12 @@ const page = () => {
         setLoading(true);
         try {
             const updatedPayload = activeTab === "All" ? payload : { ...payload, userType: "individual" };
-            if(payload.search.length > 3 || payload.search.length < 1 ){
                 const res = await getNotification(updatedPayload);
-            if (res?.status) {
-                setTableData(res?.data || []);
-            }
-            }
+                if (res?.status) {
+                    setTableData(res?.data || []);
+                }
             
+
         } catch (error) {
             console.error("Error fetching notifications:", error);
         } finally {
@@ -49,9 +48,9 @@ const page = () => {
     };
 
     useEffect(() => {
-            fetchNotification();
-       
-        
+        fetchNotification();
+
+
     }, [activeTab, payload]);
 
     return (
@@ -104,7 +103,7 @@ const page = () => {
                         <SearchIcon />
                     </InputWithLabel>
                     <div className="relative inline-block">
-                    <button
+                        <button
                             className="p-2 mt-2 bg-primaryLite rounded-[8px]"
                             onClick={() => setShowOptions(!showOptions)}
                         >
@@ -115,7 +114,7 @@ const page = () => {
                         {showOptions && (
                             <div
                                 className="absolute top-full mt-2 w-[150px] bg-white shadow-lg rounded-lg z-10 overflow-hidden right-8"
-                                
+
                             >
                                 <button
                                     className="w-full px-4 py-2 text-left hover:bg-gray-100"
@@ -143,7 +142,7 @@ const page = () => {
                                 </button>
                             </div>
                         )}
-                        </div>
+                    </div>
 
                 </div>
                 {/* {newNotification && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
