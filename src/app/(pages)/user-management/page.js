@@ -3,7 +3,7 @@ import { AMD, UAD, UserData } from '@/app/DummyData/UserData'
 import { Button } from '@/components/ui/button'
 import { InputWithLabel } from '@/components/ui/InputWithLabel'
 import UserManagementTable from '@/components/UserManagementComps/UserManagementTable'
-import { Plus, SearchIcon } from 'lucide-react'
+import { Plus, SearchIcon, SortAsc } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import FilterIcon from '../../../../public/Icons/FilterIcon'
 import AccountManagementTable from '@/components/UserManagementComps/AccountManagement'
@@ -202,7 +202,7 @@ const page = () => {
                             className="p-2 mt-2 bg-primaryLite rounded-[8px]"
                             onClick={() => setShowOptions(!showOptions)}
                         >
-                            <FilterIcon />
+                            <SortAsc />
                         </button>
 
                         {/* Options Dropdown */}

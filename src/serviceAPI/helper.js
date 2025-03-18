@@ -42,8 +42,10 @@ export const responseValidator = async (
       return { status: res.status, message: res.message };
     }
   } else if (response.status == 401) {
+    const res = await response.json();
+    console.log(response,res)
     toast.error(
-      "You are not logged in. Please login for accessing this section.",
+      res?.message,
       {
         toastId: "API-error-session-expired",
       }
