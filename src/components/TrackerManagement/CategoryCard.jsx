@@ -31,7 +31,7 @@ const CategoryCard = ({ imageUrl, title, muscleGroups, onDelete, onEdit }) => {
                         {muscleGroups.slice(0, 3).map((item, index) => (
                             <span key={index} title={item?.targetedMuscle} className="truncate">
                                 {item?.targetedMuscle?.toUpperCase()}
-                                {index < 5 && <span className="mx-1">•</span>}
+                                {index < 5 && muscleGroups?.length > 1 ?  <span className="mx-1">•</span>:<></>}
                             </span>
                         ))}
                         {muscleGroups.length > 3 && (

@@ -16,7 +16,7 @@ ChartJS.register(LineElement, BarElement, PointElement, LinearScale, CategorySca
 const page = () => {
 
   const [timePeriod, setTimePeriod] = useState('weekly');
-  const [ats,setAts] = useState('weekly')
+  const [ats, setAts] = useState('weekly')
   const [atsData, setAtsData] = useState({})
   const [signupStats, setSignupStats] = useState({})
   const [metrices, setMetrices] = useState({})
@@ -45,8 +45,8 @@ const page = () => {
     }
   };
 
-  const fetchTimeSpent = async() => {
-    const res =  await getTimeSpentStats({interval:ats});
+  const fetchTimeSpent = async () => {
+    const res = await getTimeSpentStats({ interval: ats });
     setAtsData(res?.data);
   }
   const fetchSignupSummary = async () => {
@@ -71,21 +71,21 @@ const page = () => {
   useEffect(() => {
     fetchTimeSpent(); // Fetch signup summary when timePeriod changes
   }, [ats]);
-let ageGenderLabel = [];
-let percentageOfTotal = [];
-let maleStat = [];
-let femaleStat = [];
-let other = [];
-if(ageGender){
-  ageGenderLabel = ageGender.map((item)=>item.ageGroup);
-  percentageOfTotal = ageGender.map((item)=>item.percentageOfTotal);
-  maleStat = ageGender.map((item)=>item.male);
-  femaleStat =  ageGender.map((item)=>item.female);
-  other =  ageGender.map((item)=>item.other)
+  let ageGenderLabel = [];
+  let percentageOfTotal = [];
+  let maleStat = [];
+  let femaleStat = [];
+  let other = [];
+  if (ageGender) {
+    ageGenderLabel = ageGender.map((item) => item.ageGroup);
+    percentageOfTotal = ageGender.map((item) => item.percentageOfTotal);
+    maleStat = ageGender.map((item) => item.male);
+    femaleStat = ageGender.map((item) => item.female);
+    other = ageGender.map((item) => item.other)
 
 
-  
-}
+
+  }
   const data2 = {
     labels: ageGenderLabel,
     datasets: [
@@ -253,15 +253,15 @@ if(ageGender){
       },
     },
   };
-  
+
   return (
     <div className='px-6 py-8'>
-      
+
       {isLoading && (
-                <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-                    <span class="loader"></span>
-                </div>
-            )}
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <span class="loader"></span>
+        </div>
+      )}
       <div className="grid gap-8 mb-12 grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         <MetricsCard data={formatNumber(metrices?.totalUsers || 0)} title="Total Users" />
         <MetricsCard data={formatNumber(metrices?.activeUsers || 0)} title="Active Users" />
@@ -328,7 +328,7 @@ if(ageGender){
         <div className="xl:w-1/2 w-full mb-6 px-4 py-2 bg-white rounded-lg border-[1px]">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">Users By Age</h2>
-            
+
           </div>
           <Bar data={data2} options={options2} />
         </div>
