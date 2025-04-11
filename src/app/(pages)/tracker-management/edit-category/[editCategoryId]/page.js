@@ -337,6 +337,7 @@ const page = ({ params }) => {
                         Metrices<span className='text-red-600'>*</span>
                     </label>
                     <MultiSelectDropdown
+                        preFetched={['date','sets','reps','totalReps','sessionTime']}
                         options={["date", "sessionTime", "reps", "sets", "weight", "totalReps"]}
                         onSelectionChange={handleSelectionChange}
                         placeholder="Choose your options"
