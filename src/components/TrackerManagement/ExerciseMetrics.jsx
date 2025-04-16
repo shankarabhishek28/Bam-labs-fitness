@@ -197,7 +197,7 @@ const ExerciseMetrics = () => {
                 <input
                   id="exercise"
                   type="text"
-                  maxLength={30}
+                  maxLength={40}
                   placeholder="Add exercise"
                   value={exercise.name}
                   onChange={(e) =>
@@ -206,7 +206,7 @@ const ExerciseMetrics = () => {
                   className="w-full p-2 border rounded-md focus:outline-none focus:border-blue-500"
                 />
                 <div className="text-sm text-gray-500 mt-1">
-                  {exercise?.name?.length}/30 characters used
+                  {exercise?.name?.length}/40 characters used
                 </div>
               </div>
               <VideoUpload exerciseId={exercise.id} muscleId={selectedMuscleId} />
