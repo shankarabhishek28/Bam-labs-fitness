@@ -150,7 +150,7 @@ export default function AddCategoryForm({ setCanMove }) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-0 mb-4">
                 {trackerData?.targetMuscle?.map((muscle, index) => {
                     // Calculate the length of the current muscle name
                     const charCount = muscle.muscleName?.length || 0;
