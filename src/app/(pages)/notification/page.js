@@ -148,7 +148,7 @@ const page = () => {
                 {/* {newNotification && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
                     <AddNotification fetchNotification={fetchNotification} setNewNotification={setNewNotification} />
                 </div>} */}
-                {newNotification && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
+                {newNotification && <div style={{ zIndex: 99 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
                     <AddNotification activeTab={activeTab} setActiveTab={setActiveTab} fetchNotification={fetchNotification} setNewNotification={setNewNotification} />
                 </div>}
                 {/* {personalizedNotification && <div style={{ zIndex: 9999 }} className="fixed top-0 left-0 w-screen bg-[rgba(0,0,0,0.5)] h-screen flex items-center justify-center backdrop-blur-sm z-20">
