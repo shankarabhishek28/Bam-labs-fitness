@@ -266,6 +266,9 @@ const page = () => {
         <MetricsCard data={formatNumber(metrices?.totalUsers || 0)} title="Total Users" />
         <MetricsCard data={formatNumber(metrices?.activeUsers || 0)} title="Active Users" />
         <MetricsCard data={formatNumber(metrices?.engagementRate || 0)} title="Engagement Rate" />
+        <MetricsCard data={formatNumber(metrices?.todaySales || 0)} title="Today's Sales" />
+        <MetricsCard data={formatNumber(metrices?.monthSales || 0)} title="Sales this month" />
+        <MetricsCard data={formatNumber(metrices?.annualSales || 0)} title="Annual Sales" />
 
       </div>
 
