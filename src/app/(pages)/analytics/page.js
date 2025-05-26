@@ -4,7 +4,7 @@ import { Bar, Line } from 'react-chartjs-2';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, PointElement, LinearScale, CategoryScale, ArcElement, Tooltip, Legend, BarElement } from 'chart.js';
 import MetricsCard from '@/components/Analytics/MetricsCard';
-import { getAgeGenderStats, getExerciseStats, getHabitStat, getMetrices, getTimeSpentStats, getUserSignupStats } from '@/serviceAPI/tennant';
+import { getAgeGenderStats, getExerciseStats, getHabitStat, getMetrices, getSubsStat, getTimeSpentStats, getUserSignupStats } from '@/serviceAPI/tennant';
 import { formatNumber } from '@/utils/helpers';
 import { interval } from 'date-fns';
 import Head from 'next/head';
@@ -20,6 +20,7 @@ const page = () => {
   const [atsData, setAtsData] = useState({})
   const [signupStats, setSignupStats] = useState({})
   const [metrices, setMetrices] = useState({})
+  const [subsStat, setSubsStat] = useState({});
   const [habitStat, setHabitStat] = useState({})
   const [exerciseStats, setExerciseStats] = useState({})
   const [isLoading, setIsLoading] = useState(true);
@@ -28,13 +29,15 @@ const page = () => {
   const fetchData = async () => {
     try {
       setIsLoading(true); // Show loader while fetching data
-      const [metricesRes, habitStatRes, exerciseStatsRes, ageGenderStats] = await Promise.all([
+      const [metricesRes, habitStatRes, exerciseStatsRes, ageGenderStats,subStatRes] = await Promise.all([
         getMetrices(),
         getHabitStat(),
         getExerciseStats(),
         getAgeGenderStats(),
+        getSubsStat(),
       ]);
       setMetrices(metricesRes?.data);
+      setSubsStat(subStatRes?.data)
       setHabitStat(habitStatRes?.data);
       setExerciseStats(exerciseStatsRes?.data);
       setAgeGender(ageGenderStats?.data);
@@ -342,9 +345,9 @@ const page = () => {
             <Pie data={pieData2} options={pieOptions2} />
           </div>
           <div className="space-y-4 w-1/2">
-            <MetricsCard data="23" title="Total Users" />
-            <MetricsCard data="23" title="Total Users" />
-            <MetricsCard data="23" title="Total Users" />
+            <MetricsCard data={subsStat?.monthlyUsers} title="Monthly Users" />
+            <MetricsCard data={subsStat?.annualUsers} title="Annual Users" />
+            <MetricsCard data={subsStat?.freeTrialUsers} title="Free Trial Users" />
           </div>
         </div>
 
