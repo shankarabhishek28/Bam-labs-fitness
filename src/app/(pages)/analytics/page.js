@@ -263,12 +263,12 @@ const page = () => {
         </div>
       )}
       <div className="grid gap-8 mb-12 grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        <MetricsCard data={formatNumber(metrices?.totalUsers || 0)} title="Total Users" />
-        <MetricsCard data={formatNumber(metrices?.activeUsers || 0)} title="Active Users" />
+        <MetricsCard data={formatNumber(metrices?.totalUsers?.toFixed(2) || 0)} title="Total Users" />
+        <MetricsCard data={formatNumber(metrices?.activeUsers?.toFixed(2) || 0)} title="Active Users" />
         <MetricsCard data={formatNumber(metrices?.engagementRate || 0)} title="Engagement Rate" />
-        <MetricsCard data={formatNumber(metrices?.todaySales || 0)} title="Today's Sales" />
-        <MetricsCard data={formatNumber(metrices?.monthSales || 0)} title="Sales this month" />
-        <MetricsCard data={formatNumber(metrices?.annualSales || 0)} title="Annual Sales" />
+        <MetricsCard data={formatNumber(metrices?.todaySales?.toFixed(2) || 0)} title="Today's Sales" />
+        <MetricsCard data={formatNumber(metrices?.monthSales?.toFixed(2) || 0)} title="Sales this month" />
+        <MetricsCard data={formatNumber(metrices?.annualSales?.toFixed(2) || 0)} title="Annual Sales" />
 
       </div>
 
