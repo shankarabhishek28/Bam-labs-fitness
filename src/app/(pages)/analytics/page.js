@@ -238,10 +238,10 @@ const page = () => {
   };
 
   const pieData2 = {
-    labels: ['Monthly Plan', 'Annual Plan'],
+    labels: ['Monthly Rev.($)', 'Annual Rev.($)'],
     datasets: [
       {
-        data: [60, 40],
+        data: [subsStat?.revenueByPlan?.monthly, subsStat?.revenueByPlan?.annual],
         backgroundColor: ['#00BFFF', '#FFA29D'],
         hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
       },
@@ -345,9 +345,9 @@ const page = () => {
             <Pie data={pieData2} options={pieOptions2} />
           </div>
           <div className="space-y-4 w-1/2">
-            <MetricsCard data={subsStat?.monthlyUsers} title="Monthly Users" />
-            <MetricsCard data={subsStat?.annualUsers} title="Annual Users" />
-            <MetricsCard data={subsStat?.freeTrialUsers} title="Free Trial Users" />
+            <MetricsCard data={formatNumber(subsStat?.monthlyUsers || 0)} title="Monthly Users" />
+            <MetricsCard data={formatNumber(subsStat?.annualUsers || 0)} title="Annual Users" />
+            <MetricsCard data={formatNumber(subsStat?.freeTrialUsers || 0)} title="Free Trial Users" />
           </div>
         </div>
 
