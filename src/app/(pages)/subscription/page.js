@@ -1,21 +1,37 @@
 'use client'
-import { getAllSubscription } from "@/serviceAPI/tennant";
+import SubscriptionTable from "@/components/Subscription/SubscriptionTable";
+import { getAllSubscription, getUsersSubscribed } from "@/serviceAPI/tennant";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const Index = () => {
     const [subscriptions, setSubscriptions] = useState([]);
     const [openIndex, setOpenIndex] = useState(null);
+    const [usersSubscribed, setUsersSubscribed] = useState([])
+
 
     useEffect(() => {
-        const fetchAllSubscription = async () => {
-            const res = await getAllSubscription();
-            if (res?.status) {
-                setSubscriptions(res?.data || []);
+        const fetchData = async () => {
+            try {
+                const [subscriptionRes, usersRes] = await Promise.all([
+                    getAllSubscription(),
+                    getUsersSubscribed({}),
+                ]);
+                console.log(usersRes.data.results)
+                if (subscriptionRes?.status) {
+                    setSubscriptions(subscriptionRes?.data || []);
+                }
+                if (usersRes?.status) {
+                    setUsersSubscribed(usersRes?.data?.results || []);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
             }
         };
-        fetchAllSubscription();
+
+        fetchData();
     }, []);
+
 
     const toggleOpen = (index) => {
         setOpenIndex(openIndex === index ? null : index);
@@ -23,10 +39,11 @@ const Index = () => {
 
     return (
         <div className='px-6 py-8 space-y-4'>
+            
             <div className="md:w-full xl:w-1/2 grid grid-cols-2 gap-4">
                 {subscriptions.map((subscription, index) => (
                     <div key={subscription._id}>
-                        <div className="w-full p-4 flex shadow-md rounded-md cursor-pointer" onMouseLeave={()=>setOpenIndex(null)} onMouseEnter={() => toggleOpen(index)}>
+                        <div className="w-full p-4 flex shadow-md rounded-md cursor-pointer" onMouseLeave={() => setOpenIndex(null)} onMouseEnter={() => toggleOpen(index)}>
                             <div className="w-1/4">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="54" height="52" viewBox="0 0 54 52" fill="none">
                                     <rect width="54" height="52" rx="8" fill="#00BFFF" />
@@ -44,14 +61,14 @@ const Index = () => {
 
                         {/* Toggle details */}
                         {openIndex === index && (
-                            <div className="mt-2 ml-4 p-4 border rounded-md shadow-sm bg-[#f9f9f9] text-sm space-y-2">
-                                <div><strong>Name:</strong> {subscription.subscriptionName}</div>
-                                <div><strong>Description:</strong> {subscription.description}</div>
-                                <div><strong>Price:</strong> {subscription.basePlans?.[0]?.amount}</div>
-                                <div><strong>Status:</strong> {subscription.basePlans?.[0]?.status}</div>
-                                <div><strong>Auto Renewing:</strong> {subscription.basePlans?.[0]?.autoRenewing ? "Yes" : "No"}</div>
-                                <div><strong>Created At:</strong> {new Date(subscription.createdAt).toLocaleDateString()}</div>
-                                <div><strong>Benefits:</strong>
+                            <div className="absolute bg-primary z-30 mt-2 ml-4 p-4 border rounded-md shadow-sm  text-sm space-y-2">
+                                <div className="text-white"><strong>Name:</strong> {subscription.subscriptionName}</div>
+                                <div className="text-white"><strong>Description:</strong> {subscription.description}</div>
+                                <div className="text-white"><strong>Price:</strong> {subscription.basePlans?.[0]?.amount}</div>
+                                <div className="text-white"><strong>Status:</strong> {subscription.basePlans?.[0]?.status}</div>
+                                <div className="text-white"><strong>Auto Renewing:</strong> {subscription.basePlans?.[0]?.autoRenewing ? "Yes" : "No"}</div>
+                                <div className="text-white"><strong>Created At:</strong> {new Date(subscription.createdAt).toLocaleDateString()}</div>
+                                <div className="text-white"><strong>Benefits:</strong>
                                     <ul className="list-disc pl-5">
                                         {subscription.benefits.map((benefit, i) => (
                                             <li key={i}>{benefit}</li>
@@ -62,6 +79,9 @@ const Index = () => {
                         )}
                     </div>
                 ))}
+            </div>
+            <div>
+                <SubscriptionTable data={usersSubscribed} />
             </div>
         </div>
     );

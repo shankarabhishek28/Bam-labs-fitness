@@ -212,7 +212,29 @@ export const getSubsStat = async () => {
         return apiError(error);
     }
 };
+export const getUsersSubscribed = async (payload) => {
+    let endpoint = `${URL}/admin/dashboard/user-subscriptions`;
+    const queryParams = appendQueryParams(payload);
+    endpoint += queryParams;
 
+    const token = await getAuthToken();
+    console.log("Token",token)
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(endpoint, requestOptions);
+        return responseValidator(response);
+    } catch (error) {
+        return apiError(error);
+    }
+};
 export const getAllSubscription = async () => {
     let endpoint = `${URL}/admin/dashboard/subscriptionDetails`;
     // const queryParams = appendQueryParams(payload);

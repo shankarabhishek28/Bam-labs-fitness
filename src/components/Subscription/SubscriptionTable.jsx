@@ -10,6 +10,7 @@ import {
 } from "../ui/table";
 import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown, Eye, Ban, SearchIcon, Filter, Delete, Trash2, Pencil } from "lucide-react";
 import { Button } from "../ui/button";
+import dayjs from 'dayjs'
 
 
 const SubscriptionTable = ({ data }) => {
@@ -25,11 +26,18 @@ const SubscriptionTable = ({ data }) => {
                             Subscription
                         </TableHead>
                         <TableHead className="text-white font-bold text-sm text-left">
-                            Created On
+                            User
                         </TableHead>
                         <TableHead className="text-white font-bold text-sm text-left">
                             Price
                         </TableHead>
+                         <TableHead className="text-white font-bold text-sm text-left">
+                            Order Id
+                        </TableHead>
+                        <TableHead className="text-white font-bold text-sm text-left">
+                            Activation date
+                        </TableHead>
+
 
                         <TableHead className="text-white font-bold text-sm text-left">
                             Status
@@ -37,13 +45,13 @@ const SubscriptionTable = ({ data }) => {
 
 
 
-                        <TableHead className="text-white font-bold text-sm text-left">
+                        {/* <TableHead className="text-white font-bold text-sm text-left">
                             Action
-                        </TableHead>
+                        </TableHead> */}
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data.map((item, index) => (
+                    {data?.map((item, index) => (
                         <TableRow
                             key={index}
                             className="bg-white hover:bg-white cursor-pointer"
@@ -51,22 +59,33 @@ const SubscriptionTable = ({ data }) => {
                             <TableCell className='flex min-w-[160px]  mt-1'>
                                 <div className="flex items-center gap-2">
                                     <span className="text-[#454545] font-semibold text-sm text-left truncate...">
-                                        {item.subscription}
+                                        {item?.productId}
                                     </span>
                                 </div>
 
                             </TableCell>
+                            <TableCell>
+                                <span className="text-[#0076AB] font-normal text-sm text-left truncate...">
+                                    {item?.user?.name}
+                                </span>
+                            </TableCell>
+                            <TableCell className='min-w-[140px]'>
+                                <span className="text-[#454545] font-normal  text-sm text-left truncate...">
+                                    ${item.amount}
+                                </span>
+                            </TableCell>
+                            <TableCell className='min-w-[140px]'>
+                                <span className="text-[#454545] font-normal  text-sm text-left truncate...">
+                                    {item.orderId || 'NIL'}
+                                </span>
+                            </TableCell>
                             <TableCell className='min-w-[140px] '>
                                 <span className="text-[#454545] font-normal text-sm text-left truncate...">
-                                    {item.createdAt}
+                                    {dayjs(item?.startDate).format('DD/MM/YYYY')}
                                 </span>
                             </TableCell>
 
-                            <TableCell className='min-w-[140px]'>
-                                <span className="text-[#454545] font-normal  text-sm text-left truncate...">
-                                    ${item.price}
-                                </span>
-                            </TableCell>
+
 
                             <TableCell>
                                 <span className="text-[#0076AB] font-normal text-sm text-left truncate...">
@@ -76,7 +95,7 @@ const SubscriptionTable = ({ data }) => {
 
 
 
-                            <TableCell>
+                            {/* <TableCell>
 
                                 <div className="flex items-center justify-start gap-8">
 
@@ -85,7 +104,7 @@ const SubscriptionTable = ({ data }) => {
                                     <Button className='px-2 h-8 text-[14px] flex gap-2 items-center w-[40px]'><Trash2 size={20} color="white" /></Button>
                                 </div>
 
-                            </TableCell>
+                            </TableCell> */}
                         </TableRow>
                     ))}
                 </TableBody>
