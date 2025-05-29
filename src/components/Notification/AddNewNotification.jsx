@@ -37,7 +37,7 @@ const AddNotification = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const limit = 10;
+  const limit = 1000;
 
   const fetchUserOverview = async (search = "", page = 1) => {
     setLoading(true);

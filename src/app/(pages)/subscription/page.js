@@ -7,30 +7,44 @@ import { useEffect, useState } from "react";
 const Index = () => {
     const [subscriptions, setSubscriptions] = useState([]);
     const [openIndex, setOpenIndex] = useState(null);
-    const [usersSubscribed, setUsersSubscribed] = useState([])
-
-
+    const [usersSubscribed, setUsersSubscribed] = useState([]);
+    const [payload, setPayload] = useState({ page: 1, limit: 10, search: '' });
+    const [isLoading, setIsloading] = useState(true)
     useEffect(() => {
-        const fetchData = async () => {
+        // Fetch subscriptions only once when component mounts
+        const fetchSubscriptions = async () => {
             try {
-                const [subscriptionRes, usersRes] = await Promise.all([
-                    getAllSubscription(),
-                    getUsersSubscribed({}),
-                ]);
-                console.log(usersRes.data.results)
+                const subscriptionRes = await getAllSubscription();
                 if (subscriptionRes?.status) {
+                    setIsloading(false);
                     setSubscriptions(subscriptionRes?.data || []);
                 }
-                if (usersRes?.status) {
-                    setUsersSubscribed(usersRes?.data?.results || []);
-                }
             } catch (error) {
-                console.error("Error fetching data:", error);
+                console.error("Error fetching subscriptions:", error);
             }
         };
 
-        fetchData();
+        fetchSubscriptions();
     }, []);
+
+    useEffect(() => {
+        // Fetch usersSubscribed when payload changes
+        const fetchUsersSubscribed = async () => {
+            try {
+                const usersRes = await getUsersSubscribed(payload);
+                console.log(usersRes.data.results);
+                if (usersRes?.status) {
+                    setIsloading(false);
+                    setUsersSubscribed(usersRes?.data || []);
+                }
+            } catch (error) {
+                console.error("Error fetching usersSubscribed:", error);
+            }
+        };
+
+        fetchUsersSubscribed();
+    }, [payload]);
+
 
 
     const toggleOpen = (index) => {
@@ -39,7 +53,11 @@ const Index = () => {
 
     return (
         <div className='px-6 py-8 space-y-4'>
-            
+            {isLoading && (
+                <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+                    <span class="loader"></span>
+                </div>
+            )}
             <div className="md:w-full xl:w-1/2 grid grid-cols-2 gap-4">
                 {subscriptions.map((subscription, index) => (
                     <div key={subscription._id}>
@@ -81,7 +99,7 @@ const Index = () => {
                 ))}
             </div>
             <div>
-                <SubscriptionTable data={usersSubscribed} />
+                <SubscriptionTable data={usersSubscribed} payload={payload} setPayload={setPayload} />
             </div>
         </div>
     );

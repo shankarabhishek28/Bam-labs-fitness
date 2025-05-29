@@ -41,9 +41,7 @@ const page = ({ params }) => {
     //     }
     // }
 
-
-    useEffect(() => {
-        const fetchData = async () => {
+    const fetchData = async () => {
             if (!params?.id) return;
 
             setLoading(true);
@@ -68,6 +66,8 @@ const page = ({ params }) => {
                 setLoading(false); // Ensure loading is stopped in all cases
             }
         };
+    useEffect(() => {
+    
 
         fetchData();
     }, [params?.id]); // Add params.id as a dependency
@@ -80,6 +80,7 @@ const page = ({ params }) => {
             const res = await deactivateUser(params?.id);
             if (res?.status) {
                 toast.success('User Deactivated Successfully');
+                await fetchData();
                 setIsModalOpen(false);
             }
             return
@@ -131,7 +132,7 @@ const page = ({ params }) => {
                     {/* Deactivate Button */}
                     <button onClick={() => setIsModalOpen(true)} className="bg-primary text-white px-4 py-2 rounded-lg flex items-center space-x-2">
                         <Delete />
-                        <span>Deactivate</span>
+                        <span>{details?.isBlock ? 'Activate' : 'Deactivate'}</span>
                     </button>
                 </div>
 
