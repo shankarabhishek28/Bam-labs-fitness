@@ -16,7 +16,7 @@ const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
 const page = ({ params }) => {
     const editorRef = useRef(null);
-    
+
     const [loading, setLoading] = useState(true);
     const [prevContent, setPrevContent] = useState({ content: '', type: '' });
     const [content, setContent] = useState({ content: '', type: '' });
@@ -45,7 +45,9 @@ const page = ({ params }) => {
             toast.error('Content cannot be empty!');
             return;
         }
-        if (strippedPrevContent === strippedCurrentContent) {
+        const normalizeHtml = (html) => html.replace(/\s+/g, ' ').trim();
+
+        if (normalizeHtml(prevContent.content) === normalizeHtml(content.content)) {
             toast.error('No changes detected!');
             return;
         }
@@ -72,14 +74,14 @@ const page = ({ params }) => {
         height: 400,
         askBeforePasteHTML: false, // Prevents asking before pasting HTML
         askBeforePasteFromWord: false, // Avoids stripping Word formatting
-       
+
     };
-    
+
     const breadcrumbs = [
         { label: 'Content Management', href: '/content-management' },
         { label: 'Edit Content', href: '' },
 
-       
+
     ];
     return (
         <div className="px-6 py-8">
