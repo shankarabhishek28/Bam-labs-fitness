@@ -71,7 +71,7 @@ const SubscriptionTable = ({ data, payload, setPayload }) => {
                             </TableCell>
                             <TableCell className='min-w-[140px]'>
                                 <span className="text-[#454545] font-normal  text-sm text-left truncate...">
-                                    ${item.amount}
+                                    {item.amount} {item.currency}
                                 </span>
                             </TableCell>
                             <TableCell className='min-w-[140px]'>
