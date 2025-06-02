@@ -16,7 +16,7 @@ import { InputWithLabel } from "../ui/InputWithLabel";
 import FilterIcon from "../../../public/Icons/FilterIcon";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { getUsersIssue } from "@/serviceAPI/tennant";
+import { deleteIssue, getUsersIssue } from "@/serviceAPI/tennant";
 import dayjs from "dayjs";
 import { truncateName } from "@/utils/helpers";
 
@@ -34,6 +34,12 @@ const IssuesTable = ({ payload, setPayload }) => {
   }, [payload])
   if (data?.length < 1) {
     return <div>No Data</div>;
+  }
+  const removeTheIssue = async (id) => {
+    const res = await deleteIssue(id);
+    if (res.status) {
+      await fetchUserIssues();
+    }
   }
   return (
     <div className="pt-2 ">
@@ -87,15 +93,27 @@ const IssuesTable = ({ payload, setPayload }) => {
               key={index}
               className="bg-white hover:bg-white cursor-pointer"
             >
-              <TableCell className='flex min-w-[160px]'>
+              <TableCell className="min-w-[160px]">
                 <Link href={`/user-management/${item._id}`} className="flex items-center gap-2">
-                  <Image src={item?.user?.profilePic?.url || '/notAvailable.jpg'} width={36} height={36} alt='profile pic' />
-                  <span title={item?.name} className="text-[#454545] font-semibold text-sm text-left ">
+
+                  <div className="w-9 h-9 relative shrink-0">
+                    <Image
+                      src={item?.user?.profilePic?.url || '/notAvailable.jpg'}
+                      fill
+                      className="rounded-full object-cover"
+                      alt="profile pic"
+                    />
+                  </div>
+
+                  <span
+                    title={item?.name}
+                    className="text-[#454545] font-semibold text-sm text-left truncate"
+                  >
                     {truncateName(item?.name)}
                   </span>
                 </Link>
-
               </TableCell>
+
               <TableCell className='min-w-[140px] '>
                 <span className="text-[#454545] font-normal text-sm text-left truncate...">
                   {item?.ticketNo}
@@ -124,7 +142,7 @@ const IssuesTable = ({ payload, setPayload }) => {
               <TableCell>
 
                 <div className="flex items-center justify-start gap-2">
-                  <Button onClick={() => router.push(`/user-management/issues/${item._id}?userId=${item?.user?._id}`)} className=' px-2 h-8 text-[12px] flex gap-2 w-[90px]'><EyeIcon color="white" size={20} /> View</Button><Button className='px-2 h-8 text-[12px] flex gap-2 items-center w-[90px]'><Trash2 size={20} color="white" /> Delete</Button>
+                  <Button onClick={() => router.push(`/user-management/issues/${item._id}?userId=${item?.user?._id}`)} className=' px-2 h-8 text-[12px] flex gap-2 w-[90px]'><EyeIcon color="white" size={20} /> View</Button><Button onClick={() => removeTheIssue(item._id)} className='px-2 h-8 text-[12px] flex gap-2 items-center w-[90px]'><Trash2 size={20} color="white" /> Delete</Button>
                 </div>
 
               </TableCell>

@@ -135,11 +135,11 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
 
               <TableCell>
                 <div className="flex items-center justify-between gap-2">
-                  <Link href={`/user-management/${item._id}`}>
+                  <Link href={`/user-management/${item._id}`} title='View'>
                     <Eye color="#888888" />
                   </Link>
 
-                  <button onClick={() => setIsModalOpen({ open: true, id: item?._id })}>
+                  <button onClick={() => setIsModalOpen({ open: true, id: item?._id })} title='Deactivate User'>
                     <Ban color="#888888" />
                   </button>
 

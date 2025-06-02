@@ -67,7 +67,29 @@ export const forgotPassword = async (payload) => {
         return apiError(error); // Handle API error
     }
 };
+export const deleteIssue = async (id) => {
+    let endpoint = `${URL}/contact-us/delete/${id}`
+    const token = await getAuthToken();
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    
+    const requestOptions = {
+        method: "DELETE",
+        headers: myHeaders,
+        redirect: "follow"
+    };
 
+
+    try {
+        const response = await fetch(`${endpoint}`, requestOptions);
+        // console.log("RES--->",response)
+        return responseValidator(response,true)
+
+    } catch (error) {
+        return apiError(error)
+    }
+
+}
 export const suspendUser = async (userId) => {
     const endpoint = `${URL}/admin/users/status/${userId}?action=softDelete&`;
     const token = await getAuthToken();
