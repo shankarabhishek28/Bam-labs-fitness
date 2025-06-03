@@ -139,9 +139,9 @@ const UserManagementTable = ({ data, loading, payload, setPayload }) => {
                     <Eye color="#888888" />
                   </Link>
 
-                  <button onClick={() => setIsModalOpen({ open: true, id: item?._id })} title='Deactivate User'>
+                  {/* <button onClick={() => setIsModalOpen({ open: true, id: item?._id })} title='Deactivate User'>
                     <Ban color="#888888" />
-                  </button>
+                  </button> */}
 
                 </div>
               </TableCell>

@@ -78,8 +78,10 @@ const page = ({ params }) => {
     const handleDeactivateUser = async () => {
         if (params?.id) {
             const res = await deactivateUser(params?.id);
+            console.log('D-->',details,'SD-->',sessionDetails)
             if (res?.status) {
-                toast.success('User Deactivated Successfully');
+                toast.success(`User ${details.isBlocked ? 'Activated' : 'Deactivated'} Successfully`);
+                console.log(params?.id)
                 await fetchData();
                 setIsModalOpen(false);
             }
@@ -132,7 +134,7 @@ const page = ({ params }) => {
                     {/* Deactivate Button */}
                     <button onClick={() => setIsModalOpen(true)} className="bg-primary text-white px-4 py-2 rounded-lg flex items-center space-x-2">
                         <Delete />
-                        <span>{details?.isBlock ? 'Activate' : 'Deactivate'}</span>
+                        <span>{details?.isBlocked ? 'Activate' : 'Deactivate'}</span>
                     </button>
                 </div>
 
@@ -235,20 +237,20 @@ const page = ({ params }) => {
             <Popup
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                title="Deactivate User?"
+                title={details?.isBlocked ? 'Activate User ? ' : 'Deactivate User ?'}
                 footerButtons={[
                     {
                         label: "Cancel",
                         onClick: () => setIsModalOpen(false),
                     },
                     {
-                        label: "Deactivate",
+                        label: 'Confirm',
                         onClick: handleDeactivateUser,
                         variant: "primary",
                     },
                 ]}
             >
-                <p>Are you sure you want to deactivate this user?</p>
+                <p>Are you sure you want to {details?.isBlocked ? 'Activate' : 'Deactivate'} this user?</p>
             </Popup>
         </div>
     )
