@@ -1,14 +1,15 @@
 'use client'
 import SubscriptionTable from "@/components/Subscription/SubscriptionTable";
+import { InputWithLabel } from "@/components/ui/InputWithLabel";
 import { getAllSubscription, getUsersSubscribed } from "@/serviceAPI/tennant";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, SearchIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const Index = () => {
     const [subscriptions, setSubscriptions] = useState([]);
     const [openIndex, setOpenIndex] = useState(null);
     const [usersSubscribed, setUsersSubscribed] = useState([]);
-    const [payload, setPayload] = useState({ page: 1, limit: 10, search: '' });
+    const [payload, setPayload] = useState({ page: 1, limit: 10, search: '', status: 'ACTIVE' });
     const [isLoading, setIsloading] = useState(true)
     useEffect(() => {
         // Fetch subscriptions only once when component mounts
@@ -53,11 +54,13 @@ const Index = () => {
 
     return (
         <div className='px-6 py-8 space-y-4'>
+
             {isLoading && (
                 <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
                     <span class="loader"></span>
                 </div>
             )}
+
             <div className="md:w-full xl:w-1/2 grid grid-cols-2 gap-4">
                 {subscriptions.map((subscription, index) => (
                     <div key={subscription._id}>
@@ -75,6 +78,7 @@ const Index = () => {
                                 </div>
                                 <ChevronRight className={`${openIndex === index ? "rotate-90" : ""} transition-transform duration-300`} />
                             </div>
+
                         </div>
 
                         {/* Toggle details */}
@@ -97,7 +101,40 @@ const Index = () => {
                         )}
                     </div>
                 ))}
+
             </div>
+            <div className="flex w-full items-center  justify-between">
+                <div className="flex flex-col md:flex-row gap-4">
+                    <InputWithLabel
+                        placeholder="Search"
+                        className="text-zinc-500 w-[300px] rounded-[8px] focus:border"
+                        // InputClass='bg-primaryLite h-[40px] rounded-[8px]'
+                        // InputParent='bg-primaryLite focus-within:border-primary rounded-[8px]'
+                        iconType={"pre"}
+                        value={payload?.search}
+                        onChange={(e) => setPayload((prev) => ({ ...prev, search: e.target.value}))}
+                    >
+                        <SearchIcon />
+                    </InputWithLabel>
+
+
+                </div>
+                <div className="flex  items-center gap-4">
+                    <label htmlFor="statusFilter" className="text-sm font-medium text-gray-700">Filter by Status:</label>
+                    <select
+                        id="statusFilter"
+                        className="border border-gray-300 rounded px-3 py-1 text-sm"
+                        value={payload.status}
+                        onChange={(e) => setPayload(prev => ({ ...prev, status: e.target.value }))}
+                    >
+                        {/* <option value="">All</option> */}
+                        <option  value="ACTIVE">Active</option>
+                        <option value="EXPIRED">Expired</option>
+                    </select>
+                </div>
+
+            </div>
+
             <div>
                 <SubscriptionTable data={usersSubscribed} payload={payload} setPayload={setPayload} />
             </div>

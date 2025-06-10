@@ -50,6 +50,13 @@ const SubscriptionTable = ({ data, payload, setPayload }) => {
                         </TableHead> */}
                     </TableRow>
                 </TableHeader>
+                  {data?.results?.length === 0 && (
+                          <TableRow>
+                            <TableCell colSpan="7" className="text-center ">
+                              <p className="text-base text-black">No data found..</p>
+                            </TableCell>
+                          </TableRow>
+                        )}
                 <TableBody>
                     {data?.results?.map((item, index) => (
                         <TableRow
