@@ -32,7 +32,7 @@ const AddNotification = ({
   const [selectedUserId, setSelectedUserId] = useState("");
   const [userOverview, setUserOverview] = useState([]);
   const [loading, setLoading] = useState(false);
-  
+
   // New state for pagination and search
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -100,7 +100,8 @@ const AddNotification = ({
       description,
       type,
       schedule: date,
-      userId: userType === "individual" ? selectedUserId : null
+      userId: userType === "individual" ? selectedUserId : null,
+      offset: -new Date().getTimezoneOffset()
     };
 
     try {
@@ -172,8 +173,8 @@ const AddNotification = ({
             </PopoverTrigger>
             <PopoverContent className="w-full p-0 z-[999]">
               <Command shouldFilter={false}>
-                <CommandInput 
-                  placeholder="Search users by name..." 
+                <CommandInput
+                  placeholder="Search users by name..."
                   className="h-9"
                   value={searchTerm}
                   onValueChange={handleSearch}
