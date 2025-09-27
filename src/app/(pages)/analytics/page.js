@@ -15,8 +15,8 @@ ChartJS.register(LineElement, BarElement, PointElement, LinearScale, CategorySca
 
 const page = () => {
 
-  const [timePeriod, setTimePeriod] = useState('weekly');
-  const [ats, setAts] = useState('weekly')
+  const [timePeriod, setTimePeriod] = useState('yearly');
+  const [ats, setAts] = useState('yearly')
   const [atsData, setAtsData] = useState({})
   const [signupStats, setSignupStats] = useState({})
   const [metrices, setMetrices] = useState({})
