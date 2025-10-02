@@ -8,6 +8,7 @@ import { setToken, setUser } from "@/serviceAPI/cookies";
 import { useState } from "react";
 import { verifyEmail, verifyPassword } from "@/utils/helpers";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   const router = useRouter();
@@ -54,6 +55,14 @@ export default function Home() {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center relative">
+      <Image
+        src="/loginbg.jpg"
+        alt="background preload"
+        fill
+        priority
+        className="hidden"
+      />
+
       <div
         className="absolute inset-0 z-0 bg-cover bg-center"
         style={{ backgroundImage: `url("/loginbg.jpg")` }}
@@ -74,12 +83,16 @@ export default function Home() {
             type="email"
             placeholder="Enter your email"
             required
+            value={'bespada_6@hotmail.com'}
+
           />
           <InputWithLabel
             name="password"
             type={passwordVisible ? "text" : "password"}
             placeholder="Enter your password"
             iconType="post"
+            value={'Admin123@'}
+
           >
             {passwordVisible ? (
               <Eye onClick={togglePasswordVisibility} className="cursor-pointer" />
